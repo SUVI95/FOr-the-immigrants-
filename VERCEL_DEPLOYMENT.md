@@ -1,89 +1,87 @@
-# Vercel Deployment Guide for Knuut AI
+# Vercel Deployment Guide for Knuut AI Frontend
 
-## Important: This is NOT a Flask Application
+## Quick Deploy Steps
 
-This repository contains:
-- **Next.js Frontend** (in `avatars/tavus/voice-assistant-frontend/`) - Deploy this to Vercel
-- **Python LiveKit Agent** (in `avatars/tavus/tavus.py`) - Runs separately, NOT on Vercel
+### Option 1: Vercel Dashboard (Recommended)
 
-## Deployment Steps
+1. **Go to Vercel Dashboard**
+   - Visit: https://vercel.com/dashboard
+   - Sign in with GitHub
 
-### Option 1: Deploy via Vercel Dashboard (Recommended)
+2. **Import Project**
+   - Click "Add New..." → "Project"
+   - Import from GitHub: `SUVI95/FOr-the-immigrants-`
 
-1. Go to your Vercel project settings
-2. **Framework Preset**: Select **"Next.js"** (NOT Flask)
-3. **Root Directory**: Set to `avatars/tavus/voice-assistant-frontend`
-4. **Build Command**: `npm run build` (or leave default)
-5. **Output Directory**: `.next` (or leave default)
-6. **Install Command**: `npm install` (or leave default)
+3. **Configure Project**
+   - **Framework Preset**: Next.js (auto-detected)
+   - **Root Directory**: `avatars/tavus/voice-assistant-frontend`
+   - **Build Command**: `npm run build` (default)
+   - **Output Directory**: `.next` (default)
+   - **Install Command**: `npm install` (default)
 
-### Option 2: Use vercel.json (Already Created)
+4. **Add Environment Variables**
+   Go to Project Settings → Environment Variables, add:
 
-The `vercel.json` file in the root directory is already configured. Vercel should automatically detect it.
+   ```
+   NEXT_PUBLIC_LIVEKIT_URL=wss://YOUR.livekit.cloud
+   LIVEKIT_API_KEY=YOUR_LIVEKIT_API_KEY
+   LIVEKIT_API_SECRET=YOUR_LIVEKIT_API_SECRET
+   OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+   DEEPGRAM_API_KEY=YOUR_DEEPGRAM_API_KEY
+   DATABASE_URL=YOUR_DATABASE_URL
+   STACK_AUTH_PROJECT_ID=
+   STACK_AUTH_JWKS_URL=
+   ```
 
-### Environment Variables Needed
+   **Get your actual keys from**: `.env` file in the project root or your Railway environment variables.
 
-Add these in Vercel Dashboard → Settings → Environment Variables:
+   **Important**: 
+   - `NEXT_PUBLIC_LIVEKIT_URL` should be available to **Production, Preview, and Development**
+   - All other keys should be **Production and Preview only** (not Development for security)
 
+5. **Deploy**
+   - Click "Deploy"
+   - Wait for build to complete
+   - Your app will be live at: `https://your-project.vercel.app`
+
+### Option 2: Vercel CLI
+
+```bash
+cd avatars/tavus/voice-assistant-frontend
+npm install -g vercel
+vercel login
+vercel
 ```
-LIVEKIT_URL=wss://your-livekit-url.livekit.cloud
-LIVEKIT_API_KEY=your-api-key
-LIVEKIT_API_SECRET=your-api-secret
-NEXT_PUBLIC_LIVEKIT_URL=wss://your-livekit-url.livekit.cloud
-```
 
-**Note**: Variables starting with `NEXT_PUBLIC_` are exposed to the browser. Only add public variables that are safe to expose.
+Follow prompts to link project and deploy.
 
-## Python Agent Deployment
+## Post-Deployment
 
-The Python agent (`tavus.py`) does NOT run on Vercel. It needs to run on a server that supports:
-- Python 3.12+
-- Long-running processes
-- WebSocket connections
+1. **Test Your App**
+   - Visit the Vercel URL
+   - Test all pages: `/`, `/knuut-voice`, `/learn-finnish`, `/events`, `/groups`, `/volunteer`
 
-**Recommended hosting options:**
-- **Railway** (https://railway.app) - Easy Python deployment
-- **Render** (https://render.com) - Free tier available
-- **Fly.io** (https://fly.io) - Good for WebSocket apps
-- **Your own server** - VPS, EC2, etc.
+2. **Verify Agent Connection**
+   - Make sure your Railway agent is running
+   - Test voice assistant on `/knuut-voice` page
+   - Agent should connect via LiveKit
 
-The agent connects to LiveKit Cloud and handles voice interactions.
-
-## Project Structure
-
-```
-python-agents-examples/
-├── vercel.json                    # Vercel config (points to frontend)
-├── avatars/tavus/
-│   ├── tavus.py                  # Python agent (NOT for Vercel)
-│   └── voice-assistant-frontend/  # Next.js app (Deploy this to Vercel)
-│       ├── app/
-│       ├── components/
-│       ├── package.json
-│       └── ...
-```
+3. **Custom Domain (Optional)**
+   - Go to Project Settings → Domains
+   - Add your custom domain
 
 ## Troubleshooting
 
-### Error: "No flask entrypoint found"
-- **Solution**: Change Framework Preset to "Next.js" in Vercel settings
-- Or ensure `vercel.json` is in the root directory
+### Build Fails
+- Check Root Directory is set to `avatars/tavus/voice-assistant-frontend`
+- Verify all environment variables are set
+- Check build logs in Vercel dashboard
 
-### Build fails
-- Check that `rootDirectory` in `vercel.json` points to the correct path
-- Ensure `package.json` exists in the frontend directory
-- Check build logs for specific errors
+### Agent Not Connecting
+- Verify Railway agent is running
+- Check `NEXT_PUBLIC_LIVEKIT_URL` is correct
+- Verify `LIVEKIT_API_KEY` and `LIVEKIT_API_SECRET` are set
 
-### Environment variables not working
-- Make sure variables are added in Vercel Dashboard
-- Restart deployment after adding variables
-- Use `NEXT_PUBLIC_` prefix for client-side variables
-
-## Next Steps After Deployment
-
-1. **Deploy Python Agent** separately (Railway, Render, etc.)
-2. **Configure Environment Variables** in both Vercel and agent hosting
-3. **Test the connection** between frontend and agent
-4. **Set up database** (Neon, Supabase, etc.) if not already done
-5. **Configure email service** (Resend, SendGrid, etc.) for notifications
-
+### Environment Variables Not Working
+- Make sure `NEXT_PUBLIC_*` variables are set for Production, Preview, and Development
+- Redeploy after adding new environment variables
