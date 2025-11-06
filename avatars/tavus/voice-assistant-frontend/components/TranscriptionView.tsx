@@ -13,7 +13,7 @@ export default function TranscriptionView() {
   }, [combinedTranscriptions]);
 
   return (
-    <div className="relative h-[200px] w-[512px] max-w-[90vw] mx-auto">
+    <div className="relative h-[200px] w-full max-w-[90vw] mx-auto">
       {/* Fade-out gradient mask */}
       <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-[var(--lk-bg)] to-transparent z-10 pointer-events-none" />
       <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[var(--lk-bg)] to-transparent z-10 pointer-events-none" />
@@ -26,9 +26,13 @@ export default function TranscriptionView() {
             key={segment.id}
             className={
               segment.role === "assistant"
-                ? "p-2 self-start fit-content"
-                : "bg-gray-800 rounded-md p-2 self-end fit-content"
+                ? "p-3 rounded-lg bg-blue-50 border border-blue-200 text-gray-800 self-start max-w-[80%]"
+                : "p-3 rounded-lg bg-gray-100 border border-gray-300 text-gray-800 self-end max-w-[80%]"
             }
+            style={{
+              fontSize: "14px",
+              lineHeight: "1.5",
+            }}
           >
             {segment.text}
           </div>

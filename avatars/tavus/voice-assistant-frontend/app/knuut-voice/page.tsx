@@ -21,9 +21,9 @@ import { CloseIcon } from "@/components/CloseIcon";
 import { NoAgentNotification } from "@/components/NoAgentNotification";
 import FlashcardPanel from "@/components/FlashcardPanel";
 import useReduceConsoleNoise from "@/hooks/useReduceConsoleNoise";
-import type { ConnectionDetails } from "./api/connection-details/route";
+import type { ConnectionDetails } from "../api/connection-details/route";
 
-export default function Page() {
+export default function KnuutVoicePage() {
   const [room] = useState(new Room());
   const [activeTab, setActiveTab] = useState("explore");
   const [voiceEnabled, setVoiceEnabled] = useState(false);
@@ -32,7 +32,6 @@ export default function Page() {
     Array<{ type: "user" | "bot"; text: string }>
   >([]);
 
-  // Reduce console noise from LiveKit
   useReduceConsoleNoise();
 
   const onConnectButtonClicked = useCallback(async () => {
@@ -81,7 +80,7 @@ export default function Page() {
       setChatMessages([
         {
           type: "bot",
-          text: "👋 Hello! What would you like to do? I can search for city resources, explain processes, or connect you to local groups.",
+          text: "👋 Hello! I'm Knuut AI. I can help you with city services, integration, finding jobs, discovering events, and teaching Finnish. What would you like to do?",
         },
       ]);
     } else {
@@ -93,15 +92,25 @@ export default function Page() {
     setChatMessages((prev) => [
       ...prev,
       { type: "user", text: prompt },
-      { type: "bot", text: "Here's what I found. (Demo content)" },
     ]);
+
+    // If voice is enabled, send to agent
+    if (voiceEnabled && room.state === "connected") {
+      const remoteParticipants = Array.from(room.remoteParticipants.values());
+      const agent = remoteParticipants.find(p => p.identity === "assistant");
+      if (agent) {
+        room.localParticipant.performRpc({
+          destinationIdentity: agent.identity,
+          method: "agent.processUserInput",
+          payload: JSON.stringify({ text: prompt }),
+        }).catch(console.error);
+      }
+    }
   };
 
   const handleLearnFinnishClick = () => {
-    // Navigate to the Finnish learning page
     window.location.href = "/learn-finnish";
   };
-
 
   return (
     <RoomContext.Provider value={room}>
@@ -111,54 +120,10 @@ export default function Page() {
         <main>
           <div className="hero">
             <section className="welcome">
-              <h1>Welcome to Knuut AI</h1>
-              
-              {/* Quick Links Section */}
-              <div style={{ marginBottom: "24px", padding: "20px", background: "white", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "var(--shadow)" }}>
-                <h3 style={{ marginTop: 0, marginBottom: "16px", fontSize: "18px", fontWeight: 600, color: "var(--brand)" }}>
-                  Quick Links
-                </h3>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
-                  <a 
-                    href="/knuut-voice"
-                    style={{ 
-                      padding: "14px", 
-                      background: "#eff6ff", 
-                      border: "1px solid #bfdbfe", 
-                      borderRadius: "12px",
-                      textDecoration: "none",
-                      color: "#1e293b",
-                      display: "block"
-                    }}
-                  >
-                    <strong style={{ color: "var(--brand)" }}>🎤 Knuut AI Voice</strong>
-                    <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>
-                      Practice Finnish conversation and get help
-                    </p>
-                  </a>
-                  <a 
-                    href="/learn-finnish"
-                    style={{ 
-                      padding: "14px", 
-                      background: "#f0fdf4", 
-                      border: "1px solid #86efac", 
-                      borderRadius: "12px",
-                      textDecoration: "none",
-                      color: "#1e293b",
-                      display: "block"
-                    }}
-                  >
-                    <strong style={{ color: "#16a34a" }}>🇫🇮 Learn Finnish</strong>
-                    <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>
-                      Structured Finnish learning from textbook
-                    </p>
-                  </a>
-                </div>
-              </div>
-
-              <p>
-                Hi! I can help you discover resources, register for services, and explore events in
-                your city. Try voice or choose a suggestion below.
+              <h1>🎤 Knuut AI Voice Assistant</h1>
+              <p style={{ fontSize: "16px", color: "var(--muted)", marginBottom: "24px" }}>
+                Talk to Knuut AI in real-time! Ask questions about city services, integration help, 
+                job opportunities, events, or practice Finnish conversation.
               </p>
 
               <div
@@ -203,6 +168,12 @@ export default function Page() {
                 >
                   🏠 How do I register my address?
                 </div>
+                <div
+                  className="chip"
+                  onClick={() => handleChipClick("Teach me Finnish greetings")}
+                >
+                  🇫🇮 Teach me Finnish greetings
+                </div>
               </div>
 
               {voiceEnabled && (
@@ -218,89 +189,77 @@ export default function Page() {
             </section>
 
             <section className="panel">
-              <h3 style={{ marginTop: 0 }}>Quick Overview</h3>
-              <div className="grid">
-                <div className="tile">
-                  <strong>12</strong>
-                  <br />
-                  Upcoming Events
-                </div>
-                <div className="tile">
-                  <strong>38</strong>
-                  <br />
-                  Community Groups
-                </div>
-                <div className="tile">
-                  <strong>124</strong>
-                  <br />
-                  Verified Resources
-                </div>
-                <div className="tile">
-                  <strong>5</strong>
-                  <br />
-                  New this week
-                </div>
-                <div className="tile">
-                  <strong>3</strong>
-                  <br />
-                  Appointments booked
-                </div>
-                <div className="tile">
-                  <strong>24h</strong>
-                  <br />
-                  Avg. response time
-                </div>
-              </div>
+              <h3 style={{ marginTop: 0 }}>Voice Assistant</h3>
+              <p style={{ fontSize: "14px", color: "var(--muted)", marginBottom: "16px" }}>
+                Interactive flashcards and quizzes will appear here as you learn with Knuut.
+              </p>
               
-              {/* Flashcard Display */}
               <FlashcardPanel />
             </section>
-            </div>
+          </div>
         </main>
-            </div>
 
-            <RoomAudioRenderer />
+        <RoomAudioRenderer />
+      </div>
     </RoomContext.Provider>
   );
 }
 
 function VoiceAssistantContent() {
-  // This component is inside RoomContext, so hooks are safe
   const { state: agentState, videoTrack, audioTrack } = useVoiceAssistant();
 
-    return (
+  // Debug: Log audio track status
+  useEffect(() => {
+    if (audioTrack) {
+      console.log("✅ Audio track detected:", audioTrack);
+      console.log("Audio track state:", audioTrack?.state);
+      console.log("Audio track kind:", audioTrack?.kind);
+    } else {
+      console.log("❌ No audio track detected");
+    }
+  }, [audioTrack]);
+
+  return (
     <div style={{ marginTop: "14px" }}>
-      {/* Video or Audio Visualizer */}
       {videoTrack ? (
         <div style={{ borderRadius: "16px", overflow: "hidden", marginBottom: "14px" }}>
-        <VideoTrack trackRef={videoTrack} />
-      </div>
+          <VideoTrack trackRef={videoTrack} />
+        </div>
       ) : (
-        audioTrack && (
+        audioTrack ? (
           <div style={{ height: "100px", marginBottom: "14px" }}>
-      <BarVisualizer
-        state={agentState}
-        barCount={5}
-        trackRef={audioTrack}
-        className="agent-visualizer"
-        options={{ minHeight: 24 }}
-      />
-    </div>
+            <BarVisualizer
+              state={agentState}
+              barCount={5}
+              trackRef={audioTrack}
+              className="agent-visualizer"
+              options={{ minHeight: 24 }}
+            />
+          </div>
+        ) : (
+          <div style={{ 
+            padding: "16px", 
+            background: "#fef3c7", 
+            border: "1px solid #fde68a", 
+            borderRadius: "8px",
+            marginBottom: "14px"
+          }}>
+            <p style={{ margin: 0, fontSize: "14px", color: "#92400e" }}>
+              ⚠️ Waiting for audio track... Agent state: {agentState}
+            </p>
+          </div>
         )
       )}
 
-      {/* Transcription */}
       <div style={{ marginBottom: "14px" }}>
         <TranscriptionView />
       </div>
 
-      {/* Interactive Components */}
       <FlashCardContainer />
       <QuizContainer />
       <GroupContainer />
       <EventContainer />
 
-      {/* Control Bar */}
       <div
         style={{
           display: "flex",
@@ -320,8 +279,8 @@ function VoiceAssistantContent() {
         )}
       </div>
 
-      {/* Agent Status */}
       <NoAgentNotification state={agentState} />
     </div>
   );
 }
+
