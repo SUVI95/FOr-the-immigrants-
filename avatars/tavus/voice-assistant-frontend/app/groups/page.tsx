@@ -246,26 +246,22 @@ export default function GroupsPage() {
         }}>
           <div style={{ marginBottom: "40px" }}>
             <h1 style={{ 
-              fontSize: "2.5rem", 
+              fontSize: "3rem", 
               fontWeight: "bold", 
               color: "#1a1a1a",
-              marginBottom: "10px"
+              marginBottom: "10px",
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
             }}>
               Community Groups in Kajaani
             </h1>
             <p style={{ 
-              fontSize: "1.1rem", 
+              fontSize: "1.2rem", 
               color: "#666",
-              marginBottom: "10px"
+              maxWidth: "700px"
             }}>
-              Connect with others, get support, and build your community in Kajaani. 
-            </p>
-            <p style={{ 
-              fontSize: "1rem", 
-              color: "#888",
-              fontStyle: "italic"
-            }}>
-              These groups help with integration, retention, and building lasting connections in Kajaani.
+              Connect with others, get support, and build your community in Kajaani. These groups help with integration, retention, and building lasting connections.
             </p>
           </div>
 
@@ -407,21 +403,7 @@ export default function GroupsPage() {
             </div>
           )}
         </main>
-        {/* Buddy System & Host Toolkit CTA strip */}
-        <div style={{ position: "fixed", bottom: 20, right: 20, display: "flex", gap: 12, flexDirection: "column" }}>
-          <button
-            onClick={() => alert("Buddy System: We’ll pair you with a local mentor and send weekly check-ins. (Coming soon)")}
-            style={{ background: "#22c55e", color: "white", padding: "12px 16px", borderRadius: 12, border: "none", boxShadow: "0 4px 10px rgba(0,0,0,0.12)", cursor: "pointer" }}
-          >
-            🤝 Join Buddy System
-          </button>
-          <button
-            onClick={() => window.open("/host-toolkit", "_blank")}
-            style={{ background: "#0ea5e9", color: "white", padding: "12px 16px", borderRadius: 12, border: "none", boxShadow: "0 4px 10px rgba(0,0,0,0.12)", cursor: "pointer" }}
-          >
-            🧰 Host Toolkit
-          </button>
-        </div>
+        {/* CTAs moved to side menu as dedicated pages */}
       </div>
     </RoomContext.Provider>
   );

@@ -224,6 +224,24 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
           </button>
           <button
             className="nav-btn"
+            onClick={() => {
+              window.location.href = "/buddy-system";
+            }}
+          >
+            <span>🤝</span>
+            <span>Buddy System</span>
+          </button>
+          <button
+            className="nav-btn"
+            onClick={() => {
+              window.location.href = "/organizer-resources";
+            }}
+          >
+            <span>🧭</span>
+            <span>Organizer Resources</span>
+          </button>
+          <button
+            className="nav-btn"
             onClick={() => setShowCVTemplate(true)}
           >
             <i className="fa-solid fa-file-lines"></i>
