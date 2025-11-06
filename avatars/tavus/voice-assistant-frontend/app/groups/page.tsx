@@ -35,7 +35,7 @@ const mockGroups: (GroupData & { category?: string })[] = [
   {
     id: "3",
     name: "Mothers & Families Network Kajaani",
-    description: "A group for mothers and families in Kajaani. Share parenting tips, organize playdates, support each other with childcare, and help newcomers navigate Finnish family services. Both Finnish and international families welcome!",
+    description: "Warm, welcoming space for mums, dads, and little ones. Playdates, stroller walks, coffee chats, and real help with Finnish family services. Come as you are—make friends, swap tips, and let the kids have fun!",
     group_type: "mothers_with_kids",
     category: "Family & Community",
     member_count: 52,
@@ -107,7 +107,7 @@ const mockGroups: (GroupData & { category?: string })[] = [
   {
     id: "9",
     name: "Kajaani Students & Young Professionals",
-    description: "A community for students and young professionals (18-35) in Kajaani. Social events, study groups, career planning, and friendships. Help each other navigate life as a student or young professional in Finland.",
+    description: "Meet ambitious students and early‑career pros (18–35). Study jams, coffee meetups, career nights, and weekend adventures. Build your network—and your Finnish—while having fun.",
     group_type: "students_young_adults",
     category: "Students & Young Adults",
     member_count: 27,
@@ -115,6 +115,18 @@ const mockGroups: (GroupData & { category?: string })[] = [
     location_lat: 64.2271,
     location_lng: 27.7285,
     created_at: new Date(Date.now() - 50 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "13",
+    name: "Kajaani Youth Connect (13–19)",
+    description: "Safe, friendly hangouts for teens. Games, music, creative projects, and language practice. Make new friends, plan fun activities, and discover Kajaani together.",
+    group_type: "youth",
+    category: "Youth",
+    member_count: 36,
+    location_name: "Kajaani Youth House",
+    location_lat: 64.2262,
+    location_lng: 27.7291,
+    created_at: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "10",
@@ -183,7 +195,7 @@ export default function GroupsPage() {
   const getBadges = (g: GroupData & { category?: string }) => {
     const badges: string[] = [];
     if (g.category === "Language Learning" || g.group_type === "language_exchange") {
-      badges.push("Beginner Finnish OK");
+      badges.push("Beginner‑friendly Finnish");
     }
     if (g.category === "Family & Community" || g.group_type === "mothers_with_kids") {
       badges.push("Childcare-friendly");
@@ -209,7 +221,7 @@ export default function GroupsPage() {
   const filteredGroups = useMemo(() => {
     return groups.filter((g) => {
       const badges = getBadges(g);
-      if (showBeginnerFriendly && !badges.includes("Beginner Finnish OK")) return false;
+      if (showBeginnerFriendly && !badges.includes("Beginner‑friendly Finnish")) return false;
       if (showChildcareFriendly && !badges.includes("Childcare-friendly")) return false;
       if (showMentorAvailable && !badges.includes("Mentor available")) return false;
       return true;
@@ -326,7 +338,7 @@ export default function GroupsPage() {
             <button onClick={() => setShowBeginnerFriendly(v => !v)} style={{
               padding: "8px 12px", borderRadius: 20, border: "1px solid #e5e7eb",
               background: showBeginnerFriendly ? "#e0f2fe" : "#f9fafb", color: "#0c4a6e"
-            }}>Beginner Finnish OK</button>
+            }}>Beginner‑friendly Finnish</button>
             <button onClick={() => setShowChildcareFriendly(v => !v)} style={{
               padding: "8px 12px", borderRadius: 20, border: "1px solid #e5e7eb",
               background: showChildcareFriendly ? "#ecfccb" : "#f9fafb", color: "#365314"
