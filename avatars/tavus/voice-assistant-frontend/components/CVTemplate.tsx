@@ -2,7 +2,58 @@
 
 import { useState } from "react";
 
-export default function CVTemplate() {
+export default function CVTemplate({ language = "en" }: { language?: "en" | "fi" }) {
+  const t = (key: string) => {
+    const fi: Record<string, string> = {
+      title: "Nordic-tyylinen ansioluettelo",
+      editHint: "Muokkaa CV:täsi alla. Klikkaa mitä tahansa kenttää muokataksesi.",
+      personal: "Henkilötiedot",
+      summary: "Yhteenveto",
+      experience: "Työkokemus",
+      addExperience: "+ Lisää työkokemus",
+      education: "Koulutus",
+      addEducation: "+ Lisää koulutus",
+      skills: "Taidot",
+      addSkill: "+ Lisää taito",
+      languages: "Kielet",
+      exportJson: "Vie JSON",
+      print: "Tulosta / Tallenna PDF",
+      name: "Nimi",
+      email: "Sähköposti",
+      phone: "Puhelin",
+      address: "Osoite",
+      jobTitle: "Tehtävänimike",
+      company: "Yritys",
+      period: "Ajanjakso",
+      degree: "Tutkinto",
+      institution: "Oppilaitos",
+    };
+    const en: Record<string, string> = {
+      title: "Nordic CV Template",
+      editHint: "Edit your CV below. Click on any field to edit it.",
+      personal: "Personal Information",
+      summary: "Professional Summary",
+      experience: "Work Experience",
+      addExperience: "+ Add Experience",
+      education: "Education",
+      addEducation: "+ Add Education",
+      skills: "Skills",
+      addSkill: "+ Add Skill",
+      languages: "Languages",
+      exportJson: "Export JSON",
+      print: "Print / Save as PDF",
+      name: "Name",
+      email: "Email",
+      phone: "Phone",
+      address: "Address",
+      jobTitle: "Job Title",
+      company: "Company",
+      period: "Period",
+      degree: "Degree",
+      institution: "Institution",
+    };
+    return (language === "fi" ? fi : en)[key] || key;
+  };
   const [cvData, setCvData] = useState({
     name: "Your Name",
     email: "your.email@example.com",
@@ -57,20 +108,20 @@ export default function CVTemplate() {
   return (
     <div className="cv-container" style={{ padding: "24px", background: "white", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "var(--shadow)" }}>
       <h2 style={{ marginTop: 0, marginBottom: "24px", fontFamily: "Poppins, Inter, sans-serif", fontSize: "24px", fontWeight: 700 }}>
-        Nordic CV Template
+        {t("title")}
       </h2>
       <p style={{ color: "var(--muted)", marginBottom: "24px", fontSize: "14px" }}>
-        Edit your CV below. Click on any field to edit it.
+        {t("editHint")}
       </p>
 
       {/* Personal Information */}
       <section style={{ marginBottom: "32px" }}>
         <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "16px", color: "var(--brand)" }}>
-          Personal Information
+          {t("personal")}
         </h3>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" }}>
           <EditableField
-            label="Name"
+            label={t("name")}
             value={cvData.name}
             onChange={(v) => handleEdit("name", v)}
             editing={editingField === "name"}
@@ -78,7 +129,7 @@ export default function CVTemplate() {
             onBlur={() => setEditingField(null)}
           />
           <EditableField
-            label="Email"
+            label={t("email")}
             value={cvData.email}
             onChange={(v) => handleEdit("email", v)}
             editing={editingField === "email"}
@@ -86,7 +137,7 @@ export default function CVTemplate() {
             onBlur={() => setEditingField(null)}
           />
           <EditableField
-            label="Phone"
+            label={t("phone")}
             value={cvData.phone}
             onChange={(v) => handleEdit("phone", v)}
             editing={editingField === "phone"}
@@ -94,7 +145,7 @@ export default function CVTemplate() {
             onBlur={() => setEditingField(null)}
           />
           <EditableField
-            label="Address"
+            label={t("address")}
             value={cvData.address}
             onChange={(v) => handleEdit("address", v)}
             editing={editingField === "address"}
@@ -107,7 +158,7 @@ export default function CVTemplate() {
       {/* Professional Summary */}
       <section style={{ marginBottom: "32px" }}>
         <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "16px", color: "var(--brand)" }}>
-          Professional Summary
+          {t("summary")}
         </h3>
         <EditableTextarea
           value={cvData.summary}
@@ -121,12 +172,12 @@ export default function CVTemplate() {
       {/* Work Experience */}
       <section style={{ marginBottom: "32px" }}>
         <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "16px", color: "var(--brand)" }}>
-          Work Experience
+          {t("experience")}
         </h3>
         {cvData.experience.map((exp, idx) => (
           <div key={idx} style={{ marginBottom: "20px", padding: "16px", background: "#f8fafc", borderRadius: "12px" }}>
             <EditableField
-              label="Job Title"
+              label={t("jobTitle")}
               value={exp.title}
               onChange={(v) => {
                 const newExp = [...cvData.experience];
@@ -138,7 +189,7 @@ export default function CVTemplate() {
               onBlur={() => setEditingField(null)}
             />
             <EditableField
-              label="Company"
+              label={t("company")}
               value={exp.company}
               onChange={(v) => {
                 const newExp = [...cvData.experience];
@@ -150,7 +201,7 @@ export default function CVTemplate() {
               onBlur={() => setEditingField(null)}
             />
             <EditableField
-              label="Period"
+              label={t("period")}
               value={exp.period}
               onChange={(v) => {
                 const newExp = [...cvData.experience];
@@ -187,19 +238,19 @@ export default function CVTemplate() {
           className="btn"
           style={{ marginTop: "8px" }}
         >
-          + Add Experience
+          {t("addExperience")}
         </button>
       </section>
 
       {/* Education */}
       <section style={{ marginBottom: "32px" }}>
         <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "16px", color: "var(--brand)" }}>
-          Education
+          {t("education")}
         </h3>
         {cvData.education.map((edu, idx) => (
           <div key={idx} style={{ marginBottom: "16px", padding: "16px", background: "#f8fafc", borderRadius: "12px" }}>
             <EditableField
-              label="Degree"
+              label={t("degree")}
               value={edu.degree}
               onChange={(v) => {
                 const newEdu = [...cvData.education];
@@ -211,7 +262,7 @@ export default function CVTemplate() {
               onBlur={() => setEditingField(null)}
             />
             <EditableField
-              label="Institution"
+              label={t("institution")}
               value={edu.institution}
               onChange={(v) => {
                 const newEdu = [...cvData.education];
@@ -223,7 +274,7 @@ export default function CVTemplate() {
               onBlur={() => setEditingField(null)}
             />
             <EditableField
-              label="Period"
+              label={t("period")}
               value={edu.period}
               onChange={(v) => {
                 const newEdu = [...cvData.education];
@@ -246,7 +297,7 @@ export default function CVTemplate() {
           className="btn"
           style={{ marginTop: "8px" }}
         >
-          + Add Education
+          {t("addEducation")}
         </button>
       </section>
 
@@ -254,7 +305,7 @@ export default function CVTemplate() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
         <section>
           <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "16px", color: "var(--brand)" }}>
-            Skills
+            {t("skills")}
           </h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
             {cvData.skills.map((skill, idx) => (
@@ -285,13 +336,13 @@ export default function CVTemplate() {
             className="btn"
             style={{ marginTop: "8px", fontSize: "12px" }}
           >
-            + Add Skill
+            {t("addSkill")}
           </button>
         </section>
 
         <section>
           <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "16px", color: "var(--brand)" }}>
-            Languages
+            {t("languages")}
           </h3>
           {cvData.languages.map((lang, idx) => (
             <div key={idx} style={{ marginBottom: "8px", display: "flex", gap: "8px", alignItems: "center" }}>
@@ -346,13 +397,13 @@ export default function CVTemplate() {
             a.click();
           }}
         >
-          Export JSON
+          {t("exportJson")}
         </button>
         <button
           className="btn primary"
           onClick={() => window.print()}
         >
-          Print / Save as PDF
+          {t("print")}
         </button>
       </div>
     </div>
