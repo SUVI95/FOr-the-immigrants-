@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd avatars/tavus/voice-assistant-frontend && npm install && npm run build",
+  "outputDirectory": "avatars/tavus/voice-assistant-frontend/.next",
+  "installCommand": "cd avatars/tavus/voice-assistant-frontend && npm install",
+  "framework": "nextjs",
+  "rootDirectory": "avatars/tavus/voice-assistant-frontend"
+}
+
