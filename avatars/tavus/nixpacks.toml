@@ -12,5 +12,5 @@ cmds = [
 cmds = []
 
 [start]
-cmd = "livekit-agents start tavus.py"
+cmd = "python app.py"
 

@@ -1,2 +1,2 @@
-web: livekit-agents start tavus.py
+web: python app.py
 
