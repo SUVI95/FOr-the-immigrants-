@@ -158,51 +158,62 @@ export default function ResourcesPage() {
             }}>
               City & Integration Resources
             </h1>
-            <p style={{ color: "#666", fontSize: "1.1rem", maxWidth: 720 }}>
-              Quick access to official services and guides for living in Kajaani.
-            </p>
+            <div style={{
+              background: "white",
+              border: "1px solid #e5e7eb",
+              borderRadius: 12,
+              padding: 18,
+              boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
+              maxWidth: 820
+            }}>
+              <p style={{ color: "#374151", fontSize: "1.05rem", lineHeight: 1.7, margin: 0 }}>
+                This page collects trusted, official links you’ll need when moving to and living in Kajaani.
+                You can handle residence permits, population registration (DVV), social security (Kela), taxes (Vero),
+                employment and job search, and city services in one place. Save this page and share it with newcomers.
+              </p>
+            </div>
           </div>
 
-          {/* Kajaani City */}
-          <section style={{ background: "white", borderRadius: 12, boxShadow: "0 2px 4px rgba(0,0,0,0.08)", padding: 24, marginBottom: 24 }}>
-            <h2 style={{ fontSize: "1.4rem", fontWeight: 600, color: "#111", marginBottom: 16 }}>Kajaani City</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
-              {cityResources.map((r) => (
-                <a key={r.id} href={r.link} target="_blank" rel="noreferrer" style={{ display: "block", background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 12, padding: 16, color: "#111", textDecoration: "none" }}>
-                  <div style={{ fontSize: 28, marginBottom: 10 }}>{r.icon}</div>
-                  <div style={{ fontWeight: 700, marginBottom: 6 }}>{r.title}</div>
+          {/* Unified Resource Grid (no section labels) */}
+          <section style={{ background: "white", borderRadius: 12, boxShadow: "0 2px 6px rgba(0,0,0,0.06)", padding: 20 }}>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: 18
+            }}>
+              {[...cityResources, ...beforeArrival, ...afterArrival].map((r) => (
+                <a
+                  key={r.id}
+                  href={r.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    display: "block",
+                    background: "linear-gradient(180deg, #f9fafb 0%, #ffffff 100%)",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: 14,
+                    padding: 18,
+                    color: "#111",
+                    textDecoration: "none",
+                    transition: "transform .15s ease, box-shadow .15s ease, border-color .15s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-3px)";
+                    (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 18px rgba(0,0,0,0.08)";
+                    (e.currentTarget as HTMLAnchorElement).style.borderColor = "#c7d2fe";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)";
+                    (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 2px 6px rgba(0,0,0,0.06)";
+                    (e.currentTarget as HTMLAnchorElement).style.borderColor = "#e5e7eb";
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                    <div style={{ fontSize: 28 }}>{r.icon}</div>
+                    <div style={{ fontWeight: 800, fontSize: "1.05rem" }}>{r.title}</div>
+                  </div>
                   <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 10 }}>{r.category}</div>
-                  <div style={{ color: "#374151", lineHeight: 1.6 }}>{r.description}</div>
-                </a>
-              ))}
-            </div>
-          </section>
-
-          {/* Before You Move */}
-          <section style={{ background: "white", borderRadius: 12, boxShadow: "0 2px 4px rgba(0,0,0,0.08)", padding: 24, marginBottom: 24 }}>
-            <h2 style={{ fontSize: "1.4rem", fontWeight: 600, color: "#111", marginBottom: 16 }}>Before You Move</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
-              {beforeArrival.map((r) => (
-                <a key={r.id} href={r.link} target="_blank" rel="noreferrer" style={{ display: "block", background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 12, padding: 16, color: "#111", textDecoration: "none" }}>
-                  <div style={{ fontSize: 28, marginBottom: 10 }}>{r.icon}</div>
-                  <div style={{ fontWeight: 700, marginBottom: 6 }}>{r.title}</div>
-                  <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 10 }}>{r.category}</div>
-                  <div style={{ color: "#374151", lineHeight: 1.6 }}>{r.description}</div>
-                </a>
-              ))}
-            </div>
-          </section>
-
-          {/* After You Arrive */}
-          <section style={{ background: "white", borderRadius: 12, boxShadow: "0 2px 4px rgba(0,0,0,0.08)", padding: 24 }}>
-            <h2 style={{ fontSize: "1.4rem", fontWeight: 600, color: "#111", marginBottom: 16 }}>After You Arrive</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
-              {afterArrival.map((r) => (
-                <a key={r.id} href={r.link} target="_blank" rel="noreferrer" style={{ display: "block", background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 12, padding: 16, color: "#111", textDecoration: "none" }}>
-                  <div style={{ fontSize: 28, marginBottom: 10 }}>{r.icon}</div>
-                  <div style={{ fontWeight: 700, marginBottom: 6 }}>{r.title}</div>
-                  <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 10 }}>{r.category}</div>
-                  <div style={{ color: "#374151", lineHeight: 1.6 }}>{r.description}</div>
+                  <div style={{ color: "#374151", lineHeight: 1.65 }}>{r.description}</div>
                 </a>
               ))}
             </div>
