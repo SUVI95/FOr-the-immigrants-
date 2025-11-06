@@ -208,7 +208,7 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
           </button>
           <button
             className={`nav-btn ${activeTab === "resources" ? "active" : ""}`}
-            onClick={() => onTabChange("resources")}
+            onClick={() => { window.location.href = "/resources"; }}
           >
             <i className="fa-solid fa-book"></i>
             <span>Resources</span>
@@ -278,7 +278,7 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
           </button>
         </div>
 
-        {/* Content based on active tab */}
+        {/* Content based on active tab (resources moved to dedicated page) */}
         <div style={{ marginTop: "18px", maxHeight: "calc(100vh - 300px)", overflowY: "auto" }}>
           {activeTab === "events" && (
             <div>
@@ -324,28 +324,7 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
             </div>
           )}
 
-          {activeTab === "resources" && (
-            <div>
-              <div className="section-title">POPULAR RESOURCES</div>
-              <div className="res-list">
-                {resources.map((resource) => (
-                  <div
-                    key={resource.id}
-                    className="resource-card"
-                    onClick={() => handleResourceClick(resource.id)}
-                  >
-                    <h4>
-                      {resource.icon} {resource.title}
-                    </h4>
-                    <div className="pill">
-                      <i className={`fa-solid ${resource.iconClass}`}></i>
-                      <span>{resource.category}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {activeTab === "resources" && null}
 
           {activeTab === "create" && (
             <div>
