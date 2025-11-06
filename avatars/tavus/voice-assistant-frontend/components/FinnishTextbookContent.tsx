@@ -1361,6 +1361,972 @@ export default function FinnishTextbookContent() {
           },
         ],
       },
+      {
+        number: 4,
+        title: "Minä",
+        subtitle: "Perhe, ulkonäkö, Minulla on..., partitiivi, '–lla on' + kanssa",
+        vocabulary: {
+          title: "Sanasto",
+          items: [
+            {
+              category: "Perhe (Family)",
+              words: [
+                { finnish: "perhe", english: "family" },
+                { finnish: "isovanhemmat", english: "grandparents" },
+                { finnish: "isoisä / isoäiti", english: "grandfather / grandmother" },
+                { finnish: "vanhemmat", english: "parents" },
+                { finnish: "isä / äiti", english: "father / mother" },
+                { finnish: "lapsi", english: "child" },
+                { finnish: "poika / tytär", english: "son / daughter" },
+                { finnish: "veli / sisko", english: "brother / sister" },
+                { finnish: "isoveli / pikkusisko", english: "older brother / little sister" },
+                { finnish: "mies / vaimo", english: "husband / wife" },
+                { finnish: "tyttöystävä / poikaystävä", english: "girlfriend / boyfriend" },
+              ],
+            },
+            {
+              category: "Siviilisääty & työ (Status & work)",
+              words: [
+                { finnish: "naimisissa / naimaton (sinkku)", english: "married / single" },
+                { finnish: "kihloissa / eronnut", english: "engaged / divorced" },
+                { finnish: "olla töissä / työtön / opiskelija / eläkkeellä", english: "to be at work / unemployed / student / retired" },
+              ],
+            },
+            {
+              category: "Koti (Home)",
+              words: [
+                { finnish: "talo / kerros / huone / keittiö", english: "house / floor / room / kitchen" },
+                { finnish: "meillä on", english: "we have (at our place)" },
+                { finnish: "kauppa / pyörä", english: "shop / bicycle" },
+              ],
+            },
+            {
+              category: "Luonne (Character)",
+              words: [
+                { finnish: "iloinen / onnellinen / surullinen", english: "cheerful / happy / sad" },
+                { finnish: "puhelias / hiljainen / ujo", english: "talkative / quiet / shy" },
+                { finnish: "ystävällinen / epäystävällinen", english: "friendly / unfriendly" },
+                { finnish: "kohtelias / epäkohtelias", english: "polite / impolite" },
+                { finnish: "nuori / vanha", english: "young / old" },
+                { finnish: "hassu / kiva", english: "funny / nice" },
+              ],
+            },
+            {
+              category: "Ulkonäkö (Appearance)",
+              words: [
+                { finnish: "pitkä / lyhyt", english: "tall / short" },
+                { finnish: "hoikka / tukeva", english: "slim / stocky" },
+                { finnish: "vaalea / tumma", english: "blond/fair / dark" },
+                { finnish: "suora / kihara (tukka)", english: "straight / curly (hair)" },
+                { finnish: "silmät: siniset, ruskeat, vihreät", english: "eyes: blue, brown, green" },
+                { finnish: "silmälasit / parta / viikset / kalju", english: "glasses / beard / moustache / bald" },
+                { finnish: "kaunis / nätti / komea / hyvännäköinen", english: "beautiful / pretty / handsome / good‑looking" },
+                { finnish: "Hänellä on ...", english: "He/She has ..." },
+              ],
+            },
+            {
+              category: "Verbit + partitiivi (Verbs + partitive)",
+              words: [
+                { finnish: "rakastaa + P", english: "to love" },
+                { finnish: "etsiä + P", english: "to search for" },
+                { finnish: "ymmärtää + P", english: "to understand" },
+                { finnish: "soittaa + P (kitaraa)", english: "to play (guitar)" },
+                { finnish: "katsoa + P", english: "to watch" },
+                { finnish: "auttaa + P", english: "to help" },
+              ],
+            },
+          ],
+        },
+        conversation: {
+          title: "Puhutaan: Pedro ilmoittautuu kurssille",
+          dialogues: [
+            { speaker: "Kurssisihteeri", text: "Hei.", translation: "Hello." },
+            { speaker: "Pedro", text: "Hei. Haluaisin ilmoittautua suomen kielen kurssille, tasolle kaksi.", translation: "Hi. I would like to register for the Finnish course, level 2." },
+            { speaker: "Kurssisihteeri", text: "Selvä. Seuraava suomi 2 -kurssi alkaa jo huomenna.", translation: "Okay. The next Finnish 2 course starts already tomorrow." },
+            { speaker: "Pedro", text: "Ai huomenna? Ei, se ei ole hyvä!", translation: "Oh, tomorrow? No, that isn't good!" },
+            { speaker: "Kurssisihteeri", text: "No sitten on toinen kurssi syyskuussa.", translation: "Then there is another course in September." },
+            { speaker: "Pedro", text: "Joo, se on parempi. Onko kurssilla vielä tilaa?", translation: "Yes, that's better. Is there still space on the course?" },
+            { speaker: "Kurssisihteeri", text: "Hetkinen, minä tarkistan. Joo, siellä on vielä pari vapaata paikkaa.", translation: "One moment, I'll check. Yes, there are a couple of places left." },
+            { speaker: "Pedro", text: "Okei, kiva.", translation: "Okay, nice." },
+            { speaker: "Kurssisihteeri", text: "Sanotko, mikä sinun nimi on?", translation: "Could you tell me your name?" },
+            { speaker: "Pedro", text: "Pedro Ribeiro.", translation: "Pedro Ribeiro." },
+            { speaker: "Kurssisihteeri", text: "Selvä. Nyt sinun nimi on listassa. Tarvitsen vielä henkilötiedot. Tässä on lomake, ole hyvä.", translation: "Alright. Your name is now on the list. I still need your personal information. Here is the form, please." },
+            { speaker: "Pedro", text: "Kiitos.", translation: "Thank you." },
+          ],
+        },
+        grammar: {
+          title: "Kielioppi",
+          topics: [
+            {
+              title: "Partitiivin muodostus (Forming the partitive)",
+              content: "Common endings: -a/-ä, -ta/-tä, -tta/-ttä (depends on word shape, vowel harmony). No k‑p‑t gradation in partitive.",
+              examples: [
+                "talo → taloa",
+                "bussi → bussia",
+                "kylmä → kylmää",
+                "valoisa → valoisaa",
+                "kirje → kirjettä",
+                "vene → venettä",
+              ],
+            },
+            {
+              title: "Partitiivin käyttö (Using the partitive)",
+              content: "Use with: numbers (kaksi taloa), paljon/vähän, pari/puoli/nolla + P; many verbs (rakastaa, etsiä, ymmärtää, soittaa, katsoa, auttaa).",
+              examples: [
+                "Julia puhuu saksaa.",
+                "Minä rakastan Lauraa.",
+                "Olga etsii työpaikkaa.",
+                "Me katsomme televisiota.",
+              ],
+            },
+            {
+              title: "–lla/llä on (Possession) & kielto",
+              content: "Possession: –lla/llä + on. Negation: –lla/llä + ei ole + partitiivi.",
+              examples: [
+                "Minulla on auto. / Minulla ei ole autoa.",
+                "Hänellä on bussilippu. / Hänellä ei ole bussilippua.",
+                "Meillä on sauna. / Meillä ei ole saunaa.",
+              ],
+            },
+            {
+              title: "Genetiivi + kanssa (with)",
+              content: "Use genitive + kanssa to say 'with':",
+              examples: [
+                "Pedro asuu Hannan kanssa.",
+                "Olga on Pedron ja Alexin kanssa kurssilla.",
+                "Hän puhuu opettajan kanssa.",
+              ],
+            },
+            {
+              title: "Persoonapronominit: partitiivi",
+              content: "minua, sinua, häntä, meitä, teitä, heitä",
+              examples: [
+                "Laura rakastaa minua.",
+                "Autatko meitä?",
+              ],
+            },
+          ],
+        },
+        exercises: [
+          {
+            id: "ex4-1",
+            type: "fill-blank",
+            question: "Harjoitus 1: Minulla on vai Minulla ei ole?",
+            sentences: [
+              { text: "Minulla _____ auto.", answer: "on" },
+              { text: "Sinulla _____ koiraa.", answer: "ei ole" },
+              { text: "Hänellä _____ bussilippu.", answer: "on" },
+              { text: "Meillä _____ saunaa.", answer: "ei ole" },
+            ],
+          },
+          {
+            id: "ex4-2",
+            type: "fill-blank",
+            question: "Harjoitus 2: Verbi + partitiivi",
+            sentences: [
+              { text: "Pedro soittaa _____ (KITARA).", answer: "kitaraa" },
+              { text: "Olga etsii _____ (TYÖPAIKKA).", answer: "työpaikkaa" },
+              { text: "Ymmärrätkö _____ (ENGANTI)?", answer: "englantia" },
+              { text: "Me katsomme _____ (TELEVISIO).", answer: "televisiota" },
+            ],
+          },
+          {
+            id: "ex4-3",
+            type: "fill-blank",
+            question: "Harjoitus 3: Minkänäköinen hän on? (Have/Be)",
+            sentences: [
+              { text: "Hänellä on _____ (pitkä, vaalea, suora) tukka.", answer: "pitkä vaalea suora" },
+              { text: "Hänellä on _____ (sininen) silmät ja silmälasit.", answer: "siniset" },
+              { text: "Hän on _____ (pitkä, hoikka).", answer: "pitkä ja hoikka" },
+              { text: "Hänellä on _____ (parta ja viikset).", answer: "parta ja viikset" },
+            ],
+          },
+          {
+            id: "ex4-4",
+            type: "practice",
+            question: "Harjoitus 4: Kysy parilta – Onko sinulla...?",
+            description: "Kysy ja vastaa parin kanssa (puhelin, bussilippu, tietokone, opiskelijakortti, sateenvarjo, passI).",
+            questions: [
+              "Onko sinulla puhelin?",
+              "Onko sinulla bussilippu?",
+              "Onko sinulla tietokone?",
+              "Onko sinulla opiskelijakortti?",
+            ],
+          },
+        ],
+      },
+      {
+        number: 5,
+        title: "Meidän perhe",
+        subtitle: "Tavallinen päivä, verbit ja verbityypit, kello, tavaratalossa",
+        vocabulary: {
+          title: "Sanasto",
+          items: [
+            {
+              category: "Tavallinen päivä (Daily routine)",
+              words: [
+                { finnish: "yleensä", english: "usually" },
+                { finnish: "herätä", english: "to wake up" },
+                { finnish: "herätyskello", english: "alarm clock" },
+                { finnish: "soida", english: "to ring" },
+                { finnish: "mennä suihkuun", english: "to go to the shower" },
+                { finnish: "keittiö", english: "kitchen" },
+                { finnish: "tehdä aamupalaa", english: "to make breakfast" },
+                { finnish: "lukea lehteä", english: "to read a newspaper" },
+                { finnish: "muroja / voileipä", english: "cereal / sandwich" },
+                { finnish: "juoda kahvia", english: "to drink coffee" },
+                { finnish: "lähteä töihin", english: "to leave for work" },
+                { finnish: "olla töissä", english: "to be at work" },
+                { finnish: "piirtää tietokoneella", english: "to draw on the computer" },
+                { finnish: "puoli päivää", english: "half a day" },
+                { finnish: "päiväkoti", english: "daycare" },
+                { finnish: "koulu", english: "school" },
+                { finnish: "pelata jalkapalloa", english: "to play football" },
+                { finnish: "uida uimahallissa", english: "to swim at swimming hall" },
+                { finnish: "tavaratalo", english: "department store" },
+                { finnish: "valita", english: "to choose" },
+                { finnish: "sandaalit", english: "sandals" },
+                { finnish: "väsynyt", english: "tired" },
+                { finnish: "mennä nukkumaan", english: "to go to sleep" },
+              ],
+            },
+            {
+              category: "Pikkusanat (Particles)",
+              words: [
+                { finnish: "kun", english: "when" },
+                { finnish: "ensin / sitten", english: "first / then" },
+                { finnish: "tavallisesti", english: "normally" },
+                { finnish: "vain", english: "only" },
+                { finnish: "mutta", english: "but" },
+                { finnish: "heti / vielä", english: "immediately / yet, still" },
+              ],
+            },
+            {
+              category: "Kaupassa (Store)",
+              words: [
+                { finnish: "osasto / kenkäosasto", english: "department / shoe section" },
+                { finnish: "kerros / hissi", english: "floor / elevator" },
+                { finnish: "myyjä", english: "seller, clerk" },
+                { finnish: "sovittaa", english: "to try on" },
+                { finnish: "koko", english: "size" },
+                { finnish: "liian pieni / sopiva", english: "too small / suitable" },
+                { finnish: "varasto", english: "storage" },
+              ],
+            },
+          ],
+        },
+        conversation: {
+          title: "Puhutaan: Tavaratalossa",
+          dialogues: [
+            { speaker: "Äiti", text: "Anteeksi, missä on kenkäosasto?", translation: "Excuse me, where is the shoe department?" },
+            { speaker: "Myyjä", text: "Kengät ovat 2. kerroksessa.", translation: "Shoes are on the 2nd floor." },
+            { speaker: "Äiti", text: "Selvä, kiitos.", translation: "Okay, thanks." },
+            { speaker: "Emma", text: "Minä haluan liilat sandaalit!", translation: "I want purple sandals!" },
+            { speaker: "Äiti", text: "Onko teillä kokoa 29?", translation: "Do you have size 29?" },
+            { speaker: "Myyjä", text: "Hetkinen, tarkistan varastosta.", translation: "One moment, I will check the storage." },
+          ],
+        },
+        grammar: {
+          title: "Kielioppi",
+          topics: [
+            {
+              title: "Mitä kello on? / Mihin aikaan?",
+              content: "Quarter past/to (varttia yli/vaille), puoli (half), aamulla/iltapäivällä/illalla/yöllä; Mihin aikaan? = ablative (‑lta/‑ltä).",
+              examples: [
+                "Kello on varttia yli neljä.",
+                "Kello on puoli viisi.",
+                "Menen nukkumaan kymmeneltä.",
+                "Tunnit: yhdeltä, kahdelta, kolmelta ... kahdeltatoista.",
+              ],
+            },
+            {
+              title: "Verbityypit (1–5) – lyhyesti",
+              content: "1: a/ä (maksaa, nukkua) – mahdollinen k‑p‑t; 2: da/dä (juoda, tehdä, nähdä); 3: -la/-na/-ra/-ta + e (tulla, nousta, mennä); 4: vokaali + ta/tä (haluta); 5: i + ta/tä (häiritä).",
+              examples: [
+                "maksaa → maksan, maksaa", 
+                "nukkua → nukun, nukkuu",
+                "tehdä → teen, tekee",
+                "tulla → tulen, tulee",
+                "haluta → haluan, haluaa",
+                "häiritä → häiritsen, häiritsee",
+              ],
+            },
+            {
+              title: "Negatiivinen lause (review)",
+              content: "en/et/ei/emme/ette/eivät + main verb base (verbityypistä riippumatta).",
+              examples: [
+                "Minä en nuku.",
+                "Hän ei tee ruokaa.",
+                "Me emme opiskele tänään.",
+              ],
+            },
+          ],
+        },
+        exercises: [
+          {
+            id: "ex5-1",
+            type: "fill-blank",
+            question: "Harjoitus 1: Mitä kello on? (Write the time)",
+            sentences: [
+              { text: "Kello 4:15 → Kello on _____ yli neljä.", answer: "varttia" },
+              { text: "Kello 4:30 → Kello on _____ viisi.", answer: "puoli" },
+              { text: "Kello 4:45 → Kello on _____ vaille viisi.", answer: "varttia" },
+              { text: "I go to sleep at 22:00 → Menen nukkumaan _____.", answer: "kymmeneltä" },
+            ],
+          },
+          {
+            id: "ex5-2",
+            type: "fill-blank",
+            question: "Harjoitus 2: Tavallinen päivä",
+            sentences: [
+              { text: "Minä _____ kello 7, kun herätyskello soi.", answer: "herään" },
+              { text: "Menen ensin suihkuun ja _____ keittiöön.", answer: "sitten" },
+              { text: "Aamulla juon vain _____.", answer: "kahvia" },
+              { text: "Illalla me _____ uimahallissa.", answer: "uimme" },
+            ],
+          },
+          {
+            id: "ex5-3",
+            type: "matching",
+            question: "Harjoitus 3: Verbityypit – yhdistä verbi ja tyyppi",
+            description: "Match each verb to its type (1–5).",
+            pairs: [
+              { question: "maksaa", answer: "1", correctMatch: "a" },
+              { question: "juoda", answer: "2", correctMatch: "b" },
+              { question: "tulla", answer: "3", correctMatch: "c" },
+              { question: "haluta", answer: "4", correctMatch: "d" },
+              { question: "häiritä", answer: "5", correctMatch: "e" },
+            ],
+            options: [
+              { id: "a", text: "Tyyppi 1" },
+              { id: "b", text: "Tyyppi 2" },
+              { id: "c", text: "Tyyppi 3" },
+              { id: "d", text: "Tyyppi 4" },
+              { id: "e", text: "Tyyppi 5" },
+            ],
+          },
+          {
+            id: "ex5-4",
+            type: "practice",
+            question: "Harjoitus 4: Mihin aikaan...? (Ask a partner)",
+            description: "Kysy ja vastaa: Mihin aikaan sinä heräät? Menet nukkumaan? Kurssi alkaa? Syöt lounasta?",
+            questions: [
+              "Mihin aikaan sinä heräät yleensä?",
+              "Mihin aikaan sinä menet nukkumaan?",
+              "Mihin aikaan kurssi alkaa/loppuu?",
+              "Mihin aikaan syöt lounasta?",
+            ],
+          },
+        ],
+      },
+      {
+        number: 6,
+        title: "Kotona Puistotiellä",
+        subtitle: "Asuminen, paikallissijat, Huoneessa on..., tämä/tuo/se, monikko, imperatiivi (sinä)",
+        vocabulary: {
+          title: "Sanasto",
+          items: [
+            {
+              category: "Koti ja huoneet (Home & rooms)",
+              words: [
+                { finnish: "kerrostalo", english: "apartment building" },
+                { finnish: "asunto", english: "apartment" },
+                { finnish: "keittiö / olohuone / makuuhuone / lastenhuone", english: "kitchen / living room / bedroom / kids' room" },
+                { finnish: "parveke / sauna", english: "balcony / sauna" },
+                { finnish: "lattia / katto / seinä", english: "floor / ceiling / wall" },
+                { finnish: "matto / sohva / nojatuoli / pöytä / tuoli", english: "carpet / sofa / armchair / table / chair" },
+                { finnish: "kirjahylly / vaatekaappi / yöpöytä", english: "bookcase / wardrobe / bedside table" },
+              ],
+            },
+            {
+              category: "Muutto & auttaminen (Moving & helping)",
+              words: [
+                { finnish: "muuttaa", english: "to move (house)" },
+                { finnish: "pakettiauto", english: "van" },
+                { finnish: "laatikko", english: "box" },
+                { finnish: "kellari / ylös", english: "basement / up" },
+                { finnish: "tarvita apua", english: "to need help" },
+                { finnish: "viedä / kantaa / ottaa", english: "to take / to carry / to take" },
+              ],
+            },
+            {
+              category: "Huolto & korjaus (Maintenance)",
+              words: [
+                { finnish: "huoltomies", english: "maintenance man" },
+                { finnish: "huoltoyhtiö", english: "maintenance company" },
+                { finnish: "vesihana", english: "water tap" },
+                { finnish: "rikki / vika", english: "broken / fault" },
+                { finnish: "vuotaa / kiinni", english: "to leak / closed" },
+                { finnish: "korjata", english: "to repair" },
+                { finnish: "sopia", english: "to suit/agree" },
+              ],
+            },
+            {
+              category: "Paikat & deiktit (Places & deixis)",
+              words: [
+                { finnish: "tämä / tuo / se", english: "this / that (there) / it" },
+                { finnish: "nämä / nuo / ne", english: "these / those / they (those)" },
+                { finnish: "täällä / tuolla / siellä", english: "here / over there / there" },
+                { finnish: "sisään / ulos", english: "in / out" },
+                { finnish: "auki / kiinni", english: "open / closed" },
+              ],
+            },
+          ],
+        },
+        conversation: {
+          title: "Puhutaan: Pedro soittaa huoltomiehelle",
+          dialogues: [
+            { speaker: "Pedro", text: "Päivää. Täällä on Pedro Ribeiro. Olen uusi asukas Puistotie 4:ssä.", translation: "Good day. This is Pedro Ribeiro. I am a new resident at Puistotie 4." },
+            { speaker: "Huoltomies", text: "Päivää.", translation: "Good day." },
+            { speaker: "Pedro", text: "Meidän keittiön vesihana on rikki. Se vuotaa koko ajan.", translation: "Our kitchen tap is broken. It leaks all the time." },
+            { speaker: "Huoltomies", text: "Selvä juttu. Voin tulla huomenna aamulla kello 8. Sopiiko se?", translation: "Alright. I can come tomorrow morning at 8. Does that suit you?" },
+            { speaker: "Pedro", text: "Sopii. Asumme A-rapussa, asunnossa 5.", translation: "That suits. We live in stairwell A, apartment 5." },
+            { speaker: "Huoltomies", text: "Huomiseen!", translation: "Until tomorrow!" },
+          ],
+        },
+        grammar: {
+          title: "Kielioppi",
+          topics: [
+            {
+              title: "Paikallissijat (Local cases)",
+              content: "Mihin? (illatiivi: Vn/hVn/seen), Missä? (inessiivi: ssa/ssä), Mistä? (elatiivi: sta/stä). Ulkotilat: allatiivi l le, adessiivi lla/llä, ablatiivi lta/ltä.",
+              examples: [
+                "Menen keittiöön. Olen keittiössä. Tulen keittiöstä.",
+                "Menemme terassille. Olemme terassilla. Tulemme terassilta.",
+              ],
+            },
+            {
+              title: "Huoneessa on... / Huoneessa ei ole...",
+              content: "Käytä 'on' ja partitiivia kielteisessä: 'Huoneessa on sohva.' / 'Huoneessa ei ole sohvaa.'",
+              examples: [
+                "Keittiössä on iso pöytä.",
+                "Lattialla on matto.",
+                "Olohuoneessa ei ole televisiota.",
+              ],
+            },
+            {
+              title: "Demonstratiivipronominit (this/that)",
+              content: "tämä/tuo/se; monikossa: nämä/nuo/ne",
+              examples: [
+                "Tämä talo on uusi.",
+                "Tuo vanha talo on kaunis.",
+                "Ne sandaalit ovat kalliit.",
+              ],
+            },
+            {
+              title: "Monikko (Plural) – perus",
+              content: "Perusnominit: kirja→kirjat, kaupunki→kaupungit; adjektiivi kongruoi: valoisa asunto → valoisat asunnot.",
+              examples: [
+                "hyvä ystävä → hyvät ystävät",
+                "tämä liila sandaali → nämä liilat sandaalit",
+              ],
+            },
+            {
+              title: "Imperatiivi (sinä)",
+              content: "Positiivi: lue!, syö!, tule!, herää!, valitse! Negatiivi: älä + perusmuoto (Älä lue!).",
+              examples: [
+                "Soita huoltomiehelle! / Älä soita nyt!",
+                "Avaa ovi! / Älä avaa!",
+              ],
+            },
+          ],
+        },
+        exercises: [
+          {
+            id: "ex6-1",
+            type: "fill-blank",
+            question: "Harjoitus 1: Mihin? Missä? Mistä?",
+            sentences: [
+              { text: "Menen _____ (KEITTIÖ).", answer: "keittiöön" },
+              { text: "Olen _____ (PARVEKE).", answer: "parvekkeella" },
+              { text: "Tulen _____ (KELLARI).", answer: "kellarista" },
+              { text: "Menen _____ (TERASSI).", answer: "terassille" },
+            ],
+          },
+          {
+            id: "ex6-2",
+            type: "fill-blank",
+            question: "Harjoitus 2: Huoneessa on... / ei ole...",
+            sentences: [
+              { text: "Olohuoneessa _____ (olla) sohva ja matto.", answer: "on" },
+              { text: "Keittiössä _____ (ei olla) televisiota.", answer: "ei ole" },
+            ],
+          },
+          {
+            id: "ex6-3",
+            type: "fill-blank",
+            question: "Harjoitus 3: tämä/tuo/se – nämä/nuo/ne",
+            sentences: [
+              { text: "_____ talo on minun kotitalo.", answer: "Tämä" },
+              { text: "_____ liilat sandaalit maksavat 25 euroa.", answer: "Nämä" },
+              { text: "Mitä _____ vihreät sandaalit maksavat?", answer: "nuo" },
+              { text: "_____ on museo.", answer: "Se" },
+            ],
+          },
+          {
+            id: "ex6-4",
+            type: "matching",
+            question: "Harjoitus 4: Yhdistä paikallissija käyttötapaan",
+            description: "Valitse oikea pari (Mihin?/Missä?/Mistä?).",
+            pairs: [
+              { question: "ssa/ssä", answer: "Missä?", correctMatch: "b" },
+              { question: "sta/stä", answer: "Mistä?", correctMatch: "c" },
+              { question: "Vn/hVn/seen", answer: "Mihin?", correctMatch: "a" },
+            ],
+            options: [
+              { id: "a", text: "Mihin?" },
+              { id: "b", text: "Missä?" },
+              { id: "c", text: "Mistä?" },
+            ],
+          },
+          {
+            id: "ex6-5",
+            type: "practice",
+            question: "Harjoitus 5: Kuvaile kotiasi (Describe your home)",
+            description: "Käytä: Huoneessa on..., Lattialla on..., Seinällä on..., Parvekkeella on...",
+            questions: [
+              "Mitä olohuoneessa on?",
+              "Mitä keittiössä on?",
+              "Onko teillä parveke tai sauna?",
+            ],
+          },
+        ],
+      },
+      {
+        number: 7,
+        title: "Kesälomamatka",
+        subtitle: "Kulkuvälineet, sanatyypit (e/nen/i→i/ie/si), k‑p‑t (nominit), tämä/tuo/se/mikä, On hauskaa..., Hotellissa",
+        vocabulary: {
+          title: "Sanasto",
+          items: [
+            {
+              category: "Loma & matkustus (Holiday & travel)",
+              words: [
+                { finnish: "loma / matka", english: "holiday / trip" },
+                { finnish: "Ahvenanmaa / Maarianhamina", english: "Åland / Mariehamn" },
+                { finnish: "matkustaa / lähteä / tulla", english: "to travel / to leave / to come" },
+                { finnish: "juna / laiva / vene / lossi", english: "train / ship / boat / ferry" },
+                { finnish: "pyöräillä / ajaa pyörällä", english: "to cycle / to ride a bike" },
+                { finnish: "ravintola / baari / tanssilattia", english: "restaurant / bar / dancefloor" },
+                { finnish: "teltta / leiriytyä", english: "tent / to camp" },
+                { finnish: "saapua", english: "to arrive" },
+              ],
+            },
+            {
+              category: "Sää & tunteet (Weather & feelings)",
+              words: [
+                { finnish: "aurinkoinen", english: "sunny" },
+                { finnish: "kamala ilma", english: "awful weather" },
+                { finnish: "märkä", english: "wet" },
+                { finnish: "ihana / hassu / kiva", english: "lovely / funny / nice" },
+              ],
+            },
+            {
+              category: "Hotellissa (At the hotel)",
+              words: [
+                { finnish: "vastaanotto / hotellivirkailija", english: "reception / receptionist" },
+                { finnish: "vapaa huone / varaus", english: "available room / reservation" },
+                { finnish: "aamiainen kuuluu hintaan", english: "breakfast included" },
+                { finnish: "luovuttaa huone", english: "to check out" },
+                { finnish: "avain / kerros", english: "key / floor" },
+                { finnish: "sauna / uima‑allas", english: "sauna / swimming pool" },
+              ],
+            },
+            {
+              category: "Kulkuvälineet (By what?) lla/llä",
+              words: [
+                { finnish: "autolla / junalla / laivalla / veneellä", english: "by car/train/ship/boat" },
+                { finnish: "bussilla / metrolla / raitiovaunulla", english: "by bus/metro/tram" },
+                { finnish: "taksilla / polkupyörällä", english: "by taxi/bicycle" },
+                { finnish: "lentokoneella", english: "by airplane" },
+                { finnish: "Minä menen kävellen.", english: "I go on foot." },
+              ],
+            },
+          ],
+        },
+        conversation: {
+          title: "Puhutaan: Hotellissa",
+          dialogues: [
+            { speaker: "Hanna", text: "Päivää. Puhutteko suomea?", translation: "Good day. Do you speak Finnish?" },
+            { speaker: "Virkailija", text: "Päivää. Kyllä puhun. Miten voin auttaa?", translation: "Good day. Yes, I do. How can I help?" },
+            { speaker: "Hanna", text: "Onko teillä vapaata kahden hengen huonetta?", translation: "Do you have a vacant double room?" },
+            { speaker: "Virkailija", text: "Kuinka monta yötä viivytte?", translation: "How many nights will you stay?" },
+            { speaker: "Hanna", text: "Vain yhden yön.", translation: "Only one night." },
+            { speaker: "Virkailija", text: "Meillä on kesätarjous: huone + aamiainen 80 euroa.", translation: "We have a summer offer: room + breakfast 80 euros." },
+            { speaker: "Hanna", text: "Se on hyvä. Kiitos.", translation: "That’s good. Thanks." },
+          ],
+        },
+        grammar: {
+          title: "Kielioppi",
+          topics: [
+            {
+              title: "Sanatyypit (nouns) – e, nen, i→i, ie, si",
+              content: "e: vene→veneen/veneessä; nen: valkoinen→valkoisen/valkoisessa; i→i: pankki→pankin/pankissa; ie: meri→meren/meressä; si→si: uusi→uuden/uudessa.",
+              examples: [
+                "vene → veneeseen, veneessä, veneestä",
+                "valkoinen → valkoiseen, valkoisessa, valkoisesta",
+                "pankki → pankkiin, pankissa, pankista",
+                "meri → mereen, meressä, merestä",
+                "uusi → uuteen, uudessa, uudesta",
+              ],
+            },
+            {
+              title: "k‑p‑t‑vaihtelu (nominit) – vahva/heikko",
+              content: "kk→k, pp→p, tt→t; k→∅; p→v; t→d; nk→ng; mp→mm; nt→nn; lt→ll; rt→rr.",
+              examples: [
+                "kauppa → kauppaan / kaupassa / kaupasta",
+                "lehti → lehteen / lehdessä / lehdestä",
+                "nimi → nimeen / nimessä / nimestä",
+              ],
+            },
+            {
+              title: "Demonstratiivit & mikä",
+              content: "tämä/tuo/se; nämä/nuo/ne; mikä?",
+              examples: [
+                "Tämä hotelli on uusi.",
+                "Mikä sen hotellin nimi on?",
+              ],
+            },
+            {
+              title: "On hauskaa ... (‑minen / olla + paikka)",
+              content: "Impersonal with nominative predicate: On hauskaa olla lomalla. On ihanaa nukkua pehmeässä sängyssä.",
+              examples: [
+                "On hassua tanssia päivällä.",
+                "On ihanaa uida meressä.",
+              ],
+            },
+          ],
+        },
+        exercises: [
+          {
+            id: "ex7-1",
+            type: "fill-blank",
+            question: "Harjoitus 1: Millä sinä matkustat?",
+            sentences: [
+              { text: "Menemme Turusta Maarianhaminaan _____ (LAIVA).", answer: "laivalla" },
+              { text: "Pedro ajaa _____ (POLKUPYÖRÄ).", answer: "polkupyörällä" },
+              { text: "Tuletko lentoasemalle _____ (TAKSI)?", answer: "taksilla" },
+              { text: "Minä menen kurssille _____ (KÄVELLÄ).", answer: "kävellen" },
+            ],
+          },
+          {
+            id: "ex7-2",
+            type: "fill-blank",
+            question: "Harjoitus 2: On hauskaa ...",
+            sentences: [
+              { text: "On hauskaa _____ (TANSSIA) päivällä.", answer: "tanssia" },
+              { text: "On ihanaa _____ (NUKKUA) pehmeässä sängyssä.", answer: "nukkua" },
+            ],
+          },
+          {
+            id: "ex7-3",
+            type: "fill-blank",
+            question: "Harjoitus 3: Sanatyypit (täydennä muoto)",
+            sentences: [
+              { text: "Meri → uimme _____ (MISSÄ?).", answer: "meressä" },
+              { text: "Uusi hotelli → menemme _____ (MIHIN?).", answer: "uuteen hotelliin" },
+              { text: "Laiva → saavuimme _____ (MIHIN?).", answer: "laivaan / laivalla" },
+              { text: "Nimi → hotellin _____ on Fritidshotel.", answer: "nimi" },
+            ],
+          },
+          {
+            id: "ex7-4",
+            type: "practice",
+            question: "Harjoitus 4: Hotellissa – kysy ja vastaa",
+            description: "Harjoittele dialogia vastaanotossa (varaus, hinta, aamiainen, luovutus).",
+            questions: [
+              "Onko teillä vapaata kahden hengen huonetta?",
+              "Kuinka monta yötä viivytte?",
+              "Kuuluuko aamiainen hintaan?",
+              "Missä kerroksessa sauna on?",
+            ],
+          },
+        ],
+      },
+      {
+        number: 8,
+        title: "Onnea uuteen kotiin!",
+        subtitle: "Ruoka ja juoma, ainesanan partitiivi, partitiivin monikko, järjestysluvut, postpositiot, reitin neuvominen",
+        vocabulary: {
+          title: "Sanasto",
+          items: [
+            {
+              category: "Ruoka & juoma (Food & drink)",
+              words: [
+                { finnish: "pastasalaatti / lihapulla / sitruunakakku", english: "pasta salad / meatball / lemon cake" },
+                { finnish: "leipä / ruisleipä / suola / sokeri", english: "bread / rye bread / salt / sugar" },
+                { finnish: "oliivi / tomaatti / sipuli / peruna", english: "olive / tomato / onion / potato" },
+                { finnish: "olut / limu / mehu / kahvi / tee", english: "beer / soda / juice / coffee / tea" },
+                { finnish: "aamiainen / hinta / resepti", english: "breakfast / price / recipe" },
+              ],
+            },
+            {
+              category: "Juhlat & toivotukset",
+              words: [
+                { finnish: "tupaantulijaiset", english: "housewarming party" },
+                { finnish: "lahja / kukka / suklaa / kuohuviini", english: "gift / flower / chocolate / sparkling wine" },
+                { finnish: "Onnea uuteen kotiin!", english: "Congratulations on your new home!" },
+              ],
+            },
+            {
+              category: "Neuvominen & paikat (Giving directions)",
+              words: [
+                { finnish: "suoraan eteenpäin / kääntyä vasemmalle/oikealle", english: "straight ahead / turn left/right" },
+                { finnish: "risteys / kadunkulma", english: "intersection / street corner" },
+                { finnish: "lähellä / kaukana", english: "near / far" },
+              ],
+            },
+            {
+              category: "Postpositiot (Gen + postposition)",
+              words: [
+                { finnish: "edessä / takana / vieressä / välissä / keskellä", english: "in front of / behind / next to / between / in the middle of" },
+                { finnish: "päällä / alla / ympärillä / ääressä", english: "on top of / under / around / at (the table)" },
+              ],
+            },
+          ],
+        },
+        conversation: {
+          title: "Puhutaan: Voitko neuvoa minulle tien?",
+          dialogues: [
+            { speaker: "Alex", text: "Terve Pedro, Alex täällä. Minä olen eksynyt.", translation: "Hi Pedro, Alex here. I’m lost." },
+            { speaker: "Pedro", text: "Kävele suoraan eteenpäin ja käänny risteyksestä vasemmalle.", translation: "Walk straight ahead and turn left at the intersection." },
+            { speaker: "Pedro", text: "Jatka noin 100 metriä, talo on oikealla puolella.", translation: "Continue about 100 meters, the building is on the right." },
+          ],
+        },
+        grammar: {
+          title: "Kielioppi",
+          topics: [
+            {
+              title: "Ainesanat partitiivissa (Mass nouns in partitive)",
+              content: "Loppuosa lauseessa massana → partitiivi: 'Juon kahvia.' Alussa teemana → nominatiivi: 'Kahvi on kuumaa.'",
+              examples: [
+                "Tämä on kahvia.",
+                "Kupissa on teetä.",
+                "Kahvi on kuumaa. (adjektiivi myös partitiivissa)",
+              ],
+            },
+            {
+              title: "Partitiivin monikko (Plural partitive)",
+              content: "Perusmuodot: tyttö→tyttöjä, juusto→juustoja, tomaatti→tomaatteja, leipä→leipiä, herne→herneitä, jää→jäitä, sämpylä→sämpylöitä.",
+              examples: [
+                "Syömme nakkeja.",
+                "Torilla on mansikoita ja herneitä.",
+              ],
+            },
+            {
+              title: "Järjestysluvut (Ordinals) & päiväykset",
+              content: "1. ensimmäinen, 2. toinen, 3. kolmas ... 20. kahdeskymmenes; 21. kahdeskymmenesensimmäinen. Päiväys: 3. syyskuuta.",
+              examples: [
+                "Tänään on 3. syyskuuta.",
+                "Minun syntymäpäivä on 17. elokuuta.",
+              ],
+            },
+            {
+              title: "Postpositiot (Gen + postposition)",
+              content: "Genetiivi + postpositio: ikkunan edessä, oven takana, pöydän ääressä, kaapin päällä, pöydän alla.",
+              examples: [
+                "Kynttilät ovat pöydän keskellä.",
+                "Alex istuu Olgan ja Janitan välissä.",
+              ],
+            },
+          ],
+        },
+        exercises: [
+          {
+            id: "ex8-1",
+            type: "fill-blank",
+            question: "Harjoitus 1: Ainesana vai ei? (partitiivi)",
+            sentences: [
+              { text: "Juon _____ (KAHVI).", answer: "kahvia" },
+              { text: "_____ (MAITO) on jääkaapissa.", answer: "Maito" },
+              { text: "Lautasella on _____ (SPAGETTI).", answer: "spagettia" },
+              { text: "_____ (KAKKU) on hyvää.", answer: "Kakku" },
+            ],
+          },
+          {
+            id: "ex8-2",
+            type: "fill-blank",
+            question: "Harjoitus 2: Partitiivin monikko",
+            sentences: [
+              { text: "Ostan torilta _____ (OMENA, MON.).", answer: "omenoita" },
+              { text: "Kulhossa on _____ (MANSIKKA, MON.).", answer: "mansikoita" },
+              { text: "Tarvitsen salaattiin _____ (TOMAATTI, MON.).", answer: "tomaatteja" },
+              { text: "Leivän kanssa on _____ (JUUSTO, MON.).", answer: "juustoja" },
+            ],
+          },
+          {
+            id: "ex8-3",
+            type: "fill-blank",
+            question: "Harjoitus 3: Järjestysluvut & päiväys",
+            sentences: [
+              { text: "Tänään on _____ (3.) syyskuuta.", answer: "kolmas" },
+              { text: "Minun syntymäpäivä on _____ (17.) elokuuta.", answer: "seitsemästoista" },
+              { text: "Huone on _____ (3.) kerroksessa.", answer: "kolmannessa" },
+            ],
+          },
+          {
+            id: "ex8-4",
+            type: "fill-blank",
+            question: "Harjoitus 4: Postpositiot (Gen + postposition)",
+            sentences: [
+              { text: "Pedro istuu _____ (IKKUNA, GEN) edessä.", answer: "ikkunan" },
+              { text: "Kynttilät ovat _____ (PÖYTÄ, GEN) keskellä.", answer: "pöydän" },
+              { text: "Alex istuu Olgan ja Janitan _____ (VÄLI, INESSIIVI).", answer: "välissä" },
+              { text: "Lamppu on _____ (KAAPPI, GEN) päällä.", answer: "kaapin" },
+            ],
+          },
+          {
+            id: "ex8-5",
+            type: "practice",
+            question: "Harjoitus 5: Neuvo tie (Give directions)",
+            description: "Kysy ja neuvo reitti: 'Miten täältä pääsee asemalle?' Käytä: suoraan, käänny vasemmalle/oikealle, risteys, kadunkulma.",
+            questions: [
+              "Miten pääsen keskustaan?",
+              "Voitteko neuvoa minulle tien asemalle?",
+            ],
+          },
+        ],
+      },
+      {
+        number: 9,
+        title: "Alex on töissä",
+        subtitle: "Työ ja ammatit, objekti, kenelle/keneltä, persoonapronominit, k‑p‑t (vty 3–4), sivulauseet, sanatyypit",
+        vocabulary: {
+          title: "Sanasto",
+          items: [
+            {
+              category: "Työpaikalla",
+              words: [
+                { finnish: "firma / yritys / työpaikka", english: "company / workplace" },
+                { finnish: "toimisto / työhuone / neuvotteluhuone", english: "office / workroom / meeting room" },
+                { finnish: "kokous / palaveri / neuvotella", english: "meeting / to negotiate" },
+                { finnish: "tiimi / työkaveri / pomo / asiakas", english: "team / colleague / boss / client" },
+                { finnish: "aikataulu / projekti / kiire", english: "schedule / project / rush" },
+                { finnish: "kannettava tietokone / tulostaa", english: "laptop / to print" },
+              ],
+            },
+            {
+              category: "Ammatit",
+              words: [
+                { finnish: "insinööri / arkkitehti / opettaja / lääkäri", english: "engineer / architect / teacher / doctor" },
+                { finnish: "myyjä / kokki / tarjoilija / siivooja", english: "salesperson / cook / waiter / cleaner" },
+              ],
+            },
+          ],
+        },
+        conversation: {
+          title: "Puhutaan: Lounaalla",
+          dialogues: [
+            { speaker: "Tarjoilija", text: "Hei! Mitä saisi olla?", translation: "Hi! What would you like?" },
+            { speaker: "Jari", text: "Minä ottaisin katkarapupastaa.", translation: "I would take shrimp pasta." },
+            { speaker: "Alex", text: "Minulle kanarisottoa, kiitos.", translation: "For me chicken risotto, thanks." },
+            { speaker: "Tarjoilija", text: "Juotteko vettä vai kivennäisvettä?", translation: "Water or mineral water?" },
+            { speaker: "Alex", text: "Kivennäisvettä, kiitos.", translation: "Mineral water, thanks." },
+          ],
+        },
+        grammar: {
+          title: "Kielioppi",
+          topics: [
+            {
+              title: "Objekti – genetiivi, partitiivi, monikko",
+              content: "Täysi tapahtuma → genetiivi (Ostan auton). Kielto/aines/prosessissa → partitiivi (En osta autoa; Juon kahvia). Monikollinen objekti → monikon nominatiivi/partitiivi (Ostan kengät / Syön nakkeja).",
+              examples: [
+                "Avaamme ikkunan / Emme avaa ikkunaa.",
+                "Tunnetko hänet?",
+              ],
+            },
+            {
+              title: "Kenelle? (‑lle) / Keneltä? (‑lta/‑ltä)",
+              content: "Verbit + lle: antaa, sanoa, kertoa, kirjoittaa, soittaa, viedä, tuoda, maksaa. Verbit + lta/ltä: saada, lainata, kysyä, pyytää, ostaa (tuottajalta).",
+              examples: [
+                "Isä antaa Emmalle lahjan.",
+                "Emma saa isältä lahjan.",
+              ],
+            },
+            {
+              title: "Persoonapronominit – taivutus (perus taulukko)",
+              content: "minä/minut/minulle/minulta/minussa…; hän/hänet/hänelle/häneltä/hänessä…",
+              examples: [
+                "Minä tunnen hänet.",
+                "Hän kirjoittaa minulle.",
+              ],
+            },
+            {
+              title: "k‑p‑t‑vaihtelu (verbityypit 3–4)",
+              content: "Tyypit 3: ‑la/‑na/‑ra/‑ta + e (kuunnella, neuvotella, suunnitella); Tyyppi 4: vokaali + ta/tä (luvata, pakata, pelätä, tavata). Vahva/heikko aste sanavartalossa.",
+              examples: [
+                "minä kuuntelen – hän kuuntelee",
+                "minä tapaan – hän tapaa",
+                "minä lupaan – hän lupaa",
+              ],
+            },
+            {
+              title: "Sivulauseet",
+              content: "että, koska, kun, jos, mutta; kysyvä sivulause ko/kö (Jari kysyy, tuleeko Alex).",
+              examples: [
+                "Jari kertoo, että heillä on kiire.",
+                "Emme mene ulos, jos sataa.",
+              ],
+            },
+            {
+              title: "Sanatyypit (in, as/äs, is)",
+              content: "puhelin→puhelimeen/puhelimessa; lounas→lounaalle/lounaassa; kallis→kalliiseen/kalliissa.",
+              examples: [
+                "Minä kirjoitan puhelimeen muistiinpanot.",
+                "Menen lounaalle klo 12.",
+              ],
+            },
+          ],
+        },
+        exercises: [
+          {
+            id: "ex9-1",
+            type: "fill-blank",
+            question: "Harjoitus 1: Objekti",
+            sentences: [
+              { text: "Minä ostan _____ (UUSI TIETOKONE).", answer: "uuden tietokoneen" },
+              { text: "En kirjoita _____ (SÄHKÖPOSTI) nyt.", answer: "sähköpostia" },
+              { text: "Tunnetko _____ (HÄN)?", answer: "hänet" },
+            ],
+          },
+          {
+            id: "ex9-2",
+            type: "fill-blank",
+            question: "Harjoitus 2: Kenelle / Keneltä",
+            sentences: [
+              { text: "Vie nämä paperit _____ (POMO).", answer: "pomolle" },
+              { text: "Alex lainaa rahaa _____ (JARI).", answer: "Jarilta" },
+              { text: "Kirjoitan viestin _____ (TIIMI).", answer: "tiimille" },
+            ],
+          },
+          {
+            id: "ex9-3",
+            type: "fill-blank",
+            question: "Harjoitus 3: Sivulauseet",
+            sentences: [
+              { text: "Jari kertoo, _____ heillä on kiire.", answer: "että" },
+              { text: "Emme lähde ulos, _____ sataa.", answer: "jos" },
+              { text: "Menen tauolle, _____ kokous loppuu.", answer: "kun" },
+            ],
+          },
+          {
+            id: "ex9-4",
+            type: "matching",
+            question: "Harjoitus 4: Sanatyypit (in / as/äs / is)",
+            description: "Yhdistä sana oikeaan muotoon.",
+            pairs: [
+              { question: "puhelin → Missä?", answer: "puhelimessa", correctMatch: "a" },
+              { question: "lounas → Mihin?", answer: "lounaalle", correctMatch: "b" },
+              { question: "kallis → Mihin?", answer: "kalliiseen", correctMatch: "c" },
+            ],
+            options: [
+              { id: "a", text: "puhelimessa" },
+              { id: "b", text: "lounaalle" },
+              { id: "c", text: "kalliiseen" },
+            ],
+          },
+        ],
+      },
     ],
   };
 
