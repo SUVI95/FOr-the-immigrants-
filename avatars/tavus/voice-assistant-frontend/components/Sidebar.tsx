@@ -7,6 +7,7 @@ import GroupCard, { GroupData } from "./GroupCard";
 import ResourceModal from "./ResourceModal";
 import CreateEventForm from "./CreateEventForm";
 import CVTemplate from "./CVTemplate";
+import { useTranslation } from "./i18n/TranslationProvider";
 
 interface SidebarProps {
   activeTab: string;
@@ -15,6 +16,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }: SidebarProps) {
+  const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedResource, setSelectedResource] = useState<string | null>(null);
   const [events, setEvents] = useState<EventData[]>([]);
@@ -172,119 +174,118 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
       <aside className="sidebar">
         <div className="topbar">
           <div className="logo">
-            <i className="fa-solid fa-sparkles"></i>
+            <i className="fa-solid fa-earth-americas globe-icon" aria-hidden="true"></i>
           </div>
           <div>
             <div className="wordmark">Knuut AI</div>
-            <div className="tag">Smart Assistant for City Services</div>
+            <div className="tag">Connecting People, Services, and Opportunities.</div>
           </div>
         </div>
 
         <div className="nav">
-          <button
-            className={`nav-btn ${activeTab === "explore" ? "active" : ""}`}
-            onClick={() => onTabChange("explore")}
-          >
-            <i className="fa-solid fa-compass"></i>
-            <span>Explore</span>
-          </button>
-          <button
-            className={`nav-btn ${activeTab === "events" ? "active" : ""}`}
-            onClick={() => {
-              window.location.href = "/events";
-            }}
-          >
-            <i className="fa-solid fa-calendar"></i>
-            <span>Events</span>
-          </button>
-          <button
-            className={`nav-btn ${activeTab === "groups" ? "active" : ""}`}
-            onClick={() => {
-              window.location.href = "/groups";
-            }}
-          >
-            <i className="fa-solid fa-people-group"></i>
-            <span>Groups</span>
-          </button>
-          <button
-            className={`nav-btn ${activeTab === "resources" ? "active" : ""}`}
-            onClick={() => { window.location.href = "/resources"; }}
-          >
-            <i className="fa-solid fa-book"></i>
-            <span>Resources</span>
-          </button>
-          <button
-            className="nav-btn"
-            onClick={() => {
-              window.location.href = "/volunteer";
-            }}
-          >
-            <span>💡</span>
-            <span>Volunteer & Skills</span>
-          </button>
-          <button
-            className="nav-btn"
-            onClick={() => {
-              window.location.href = "/buddy-system";
-            }}
-          >
-            <span>🤝</span>
-            <span>Buddy System</span>
-          </button>
-          <button
-            className="nav-btn"
-            onClick={() => {
-              window.location.href = "/organizer-resources";
-            }}
-          >
-            <span>🧭</span>
-            <span>Organizer Resources</span>
-          </button>
-          <button
-            className="nav-btn"
-            onClick={() => { window.location.href = "/cv"; }}
-          >
-            <i className="fa-solid fa-file-lines"></i>
-            <span>Nordic CV Template</span>
-          </button>
-          <button
-            className="nav-btn"
-            onClick={() => {
-              window.location.href = "/knuut-voice";
-            }}
-          >
-            <i className="fa-solid fa-microphone"></i>
-            <span>Knuut AI Voice</span>
-          </button>
-          <button
-            className="nav-btn"
-            onClick={() => {
-              if (onLearnFinnishClick) {
-                onLearnFinnishClick();
-              } else {
-                window.location.href = "/learn-finnish";
-              }
-            }}
-          >
-            <span>🇫🇮</span>
-            <span>Learn Finnish</span>
-          </button>
-          <button
-            className={`nav-btn ${activeTab === "create" ? "active" : ""}`}
-            onClick={() => onTabChange("create")}
-          >
-            <i className="fa-solid fa-circle-plus"></i>
-            <span>Create</span>
-          </button>
+          <div className="nav-section">
+            <div className="nav-section-title">{t("actions")}</div>
+            <button
+              className={`nav-btn ${activeTab === "explore" ? "active" : ""}`}
+              onClick={() => onTabChange("explore")}
+            >
+              <i className="fa-solid fa-compass"></i>
+              <span>{t("explore")}</span>
+            </button>
+            <button
+              className={`nav-btn ${activeTab === "create" ? "active" : ""}`}
+              onClick={() => onTabChange("create")}
+            >
+              <i className="fa-solid fa-circle-plus"></i>
+              <span>{t("create")}</span>
+            </button>
+          </div>
+
+          <div className="nav-section">
+            <div className="nav-section-title">{t("programs")}</div>
+            <button
+              className={`nav-btn ${activeTab === "events" ? "active" : ""}`}
+              onClick={() => { window.location.href = "/events"; }}
+            >
+              <i className="fa-solid fa-calendar-days"></i>
+              <span>{t("events")}</span>
+            </button>
+            <button
+              className={`nav-btn ${activeTab === "groups" ? "active" : ""}`}
+              onClick={() => { window.location.href = "/groups"; }}
+            >
+              <i className="fa-solid fa-people-group"></i>
+              <span>{t("groups")}</span>
+            </button>
+            <button
+              className={`nav-btn ${activeTab === "resources" ? "active" : ""}`}
+              onClick={() => { window.location.href = "/resources"; }}
+            >
+              <i className="fa-solid fa-book"></i>
+              <span>{t("resources")}</span>
+            </button>
+            <button
+              className="nav-btn"
+              onClick={() => {
+                if (onLearnFinnishClick) {
+                  onLearnFinnishClick();
+                } else {
+                  window.location.href = "/learn-finnish";
+                }
+              }}
+            >
+              <i className="fa-solid fa-language"></i>
+              <span>{t("learn_finnish")}</span>
+            </button>
+            <button
+              className="nav-btn"
+              onClick={() => { window.location.href = "/knuut-voice"; }}
+            >
+              <i className="fa-solid fa-microphone-lines"></i>
+              <span>{t("voice")}</span>
+            </button>
+          </div>
+
+          <div className="nav-section">
+            <div className="nav-section-title">{t("tools")}</div>
+            <button
+              className="nav-btn"
+              onClick={() => { window.location.href = "/volunteer"; }}
+            >
+              <i className="fa-solid fa-handshake-angle"></i>
+              <span>{t("volunteer")}</span>
+            </button>
+            <button
+              className="nav-btn"
+              onClick={() => { window.location.href = "/buddy-system"; }}
+            >
+              <i className="fa-solid fa-user-group"></i>
+              <span>{t("buddy")}</span>
+            </button>
+            <button
+              className="nav-btn"
+              onClick={() => { window.location.href = "/organizer-resources"; }}
+            >
+              <i className="fa-solid fa-compass-drafting"></i>
+              <span>{t("organizer")}</span>
+            </button>
+            <button
+              className="nav-btn"
+              onClick={() => { window.location.href = "/cv"; }}
+            >
+              <i className="fa-solid fa-file-lines"></i>
+              <span>CV</span>
+            </button>
+          </div>
         </div>
 
         {/* Content based on active tab (resources moved to dedicated page) */}
-        <div style={{ marginTop: "18px", maxHeight: "calc(100vh - 300px)", overflowY: "auto" }}>
+        <div style={{ marginTop: "24px", maxHeight: "calc(100vh - 300px)", overflowY: "auto" }}>
           {activeTab === "events" && (
             <div>
               <div className="section-title">UPCOMING EVENTS</div>
               {events.length === 0 ? (
-                <p style={{ color: "var(--muted)", fontSize: "14px", marginTop: "8px" }}>
+                <p style={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "14px", marginTop: "12px", lineHeight: "1.6" }}>
                   No upcoming events found. Try creating one or asking Knuut AI!
                 </p>
               ) : (
@@ -306,7 +307,7 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
             <div>
               <div className="section-title">COMMUNITY GROUPS</div>
               {groups.length === 0 ? (
-                <p style={{ color: "var(--muted)", fontSize: "14px", marginTop: "8px" }}>
+                <p style={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "14px", marginTop: "12px", lineHeight: "1.6" }}>
                   No groups found. Be the first to create one!
                 </p>
               ) : (

@@ -22,8 +22,10 @@ import { NoAgentNotification } from "@/components/NoAgentNotification";
 import FlashcardPanel from "@/components/FlashcardPanel";
 import useReduceConsoleNoise from "@/hooks/useReduceConsoleNoise";
 import type { ConnectionDetails } from "./api/connection-details/route";
+import { useTranslation } from "@/components/i18n/TranslationProvider";
 
 export default function Page() {
+  const { t } = useTranslation();
   const [room] = useState(new Room());
   const [activeTab, setActiveTab] = useState("explore");
   const [voiceEnabled, setVoiceEnabled] = useState(false);
@@ -111,12 +113,12 @@ export default function Page() {
         <main>
           <div className="hero">
             <section className="welcome">
-              <h1>Welcome to Knuut AI</h1>
+              <h1>{t("explore")} • Knuut AI</h1>
               
               {/* Quick Links Section */}
               <div style={{ marginBottom: "24px", padding: "20px", background: "white", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "var(--shadow)" }}>
                 <h3 style={{ marginTop: 0, marginBottom: "16px", fontSize: "18px", fontWeight: 600, color: "var(--brand)" }}>
-                  Quick Links
+                  {t("actions")}
                 </h3>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
                   <a 
@@ -131,7 +133,7 @@ export default function Page() {
                       display: "block"
                     }}
                   >
-                    <strong style={{ color: "var(--brand)" }}>🎤 Knuut AI Voice</strong>
+                    <strong style={{ color: "var(--brand)" }}>🎤 {t("voice")}</strong>
                     <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>
                       Practice Finnish conversation and get help
                     </p>
@@ -148,7 +150,7 @@ export default function Page() {
                       display: "block"
                     }}
                   >
-                    <strong style={{ color: "#16a34a" }}>🇫🇮 Learn Finnish</strong>
+                    <strong style={{ color: "#16a34a" }}>🇫🇮 {t("learn_finnish")}</strong>
                     <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>
                       Structured Finnish learning from textbook
                     </p>
@@ -157,8 +159,7 @@ export default function Page() {
               </div>
 
               <p>
-                Hi! I can help you discover resources, register for services, and explore events in
-                your city. Try voice or choose a suggestion below.
+                {t("resources")} • {t("events")}
               </p>
 
               <div
@@ -176,9 +177,9 @@ export default function Page() {
                   <span>
                     {voiceEnabled
                       ? isListening
-                        ? "Listening… Speak now"
-                        : "Voice Assistant Active"
-                      : "Enable Voice Assistant"}
+                        ? "Listening…"
+                        : t("voice")
+                      : "Enable Voice"}
                   </span>
                   <i className="fa-solid fa-chevron-right"></i>
                 </div>
@@ -189,19 +190,19 @@ export default function Page() {
                   className="chip"
                   onClick={() => handleChipClick("Show events this week")}
                 >
-                  📅 Show events this week
+                  📅 {t("events")}
                 </div>
                 <div
                   className="chip"
                   onClick={() => handleChipClick("Find resources near me")}
                 >
-                  📍 Find resources near me
+                  📍 {t("resources")}
                 </div>
                 <div
                   className="chip"
                   onClick={() => handleChipClick("How do I register my address?")}
                 >
-                  🏠 How do I register my address?
+                  🏠 DVV / Kela
                 </div>
               </div>
 
@@ -218,22 +219,22 @@ export default function Page() {
             </section>
 
             <section className="panel">
-              <h3 style={{ marginTop: 0 }}>Quick Overview</h3>
+              <h3 style={{ marginTop: 0 }}>{t("programs")}</h3>
               <div className="grid">
                 <div className="tile">
                   <strong>12</strong>
                   <br />
-                  Upcoming Events
+                  {t("events")}
                 </div>
                 <div className="tile">
                   <strong>38</strong>
                   <br />
-                  Community Groups
+                  {t("groups")}
                 </div>
                 <div className="tile">
                   <strong>124</strong>
                   <br />
-                  Verified Resources
+                  {t("resources")}
                 </div>
                 <div className="tile">
                   <strong>5</strong>

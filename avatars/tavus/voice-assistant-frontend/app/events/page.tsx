@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Room } from "livekit-client";
+import { useTranslation } from "@/components/i18n/TranslationProvider";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import EventCard, { EventData } from "@/components/EventCard";
@@ -326,6 +327,7 @@ const eventCategories = [
 ];
 
 export default function EventsPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("explore");
   const [events] = useState<ExtendedEventData[]>(mockEvents);
   const [room] = useState(new Room());
@@ -496,62 +498,81 @@ END:VCALENDAR`;
                 </p>
               </div>
               <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                {/* Language Translation Button */}
-                <button
-                  onClick={() => setSelectedLanguage(selectedLanguage === "en" ? "fi" : "en")}
-                  style={{
-                    padding: "10px 16px",
-                    background: "white",
-                    border: "2px solid #e5e7eb",
-                    borderRadius: "8px",
-                    fontSize: "0.9rem",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                  }}
-                  title="Toggle Translation"
-                >
-                  🌐 {selectedLanguage === "en" ? "EN" : "FI"}
-                </button>
-                {/* Voice Assistant Button */}
+                {/* Language Selector (premium style) */}
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  background: "white",
+                  border: "2px solid #e5e7eb",
+                  borderRadius: "10px",
+                  padding: "8px 12px"
+                }}>
+                  <span style={{ fontSize: "1rem" }}>🌐</span>
+                  <select
+                    value={selectedLanguage}
+                    onChange={(e) => setSelectedLanguage(e.target.value)}
+                    style={{
+                      border: "none",
+                      outline: "none",
+                      background: "transparent",
+                      fontWeight: 700,
+                      fontSize: "0.95rem",
+                      color: "#111827",
+                      cursor: "pointer"
+                    }}
+                    aria-label="Language selector"
+                  >
+                    <option value="fi">🇫🇮 FI</option>
+                    <option value="en">🇬🇧 EN</option>
+                    <option value="es">🇪🇸 ES</option>
+                    <option value="pt">🇵🇹 PT</option>
+                    <option value="ar">🇸🇦 AR</option>
+                    <option value="ru">🇷🇺 RU</option>
+                  </select>
+                </div>
+
+                {/* Voice Assistant (premium) */}
                 <button
                   onClick={handleVoiceAssistant}
                   style={{
                     padding: "10px 16px",
                     background: "white",
-                    border: "2px solid #e5e7eb",
-                    borderRadius: "8px",
-                    fontSize: "0.9rem",
-                    fontWeight: "600",
+                    border: "2px solid #c7d2fe",
+                    borderRadius: "10px",
+                    fontSize: "0.95rem",
+                    fontWeight: 700,
+                    color: "#4338ca",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
-                    gap: "8px",
+                    gap: "10px",
+                    boxShadow: "0 4px 8px rgba(67,56,202,0.08)"
                   }}
                   title="Ask Knuut AI"
                 >
-                  🎤 Ask Knuut
+                  <span aria-hidden>🎤</span>
+                  <span>{t("ask_knuut")}</span>
                 </button>
+
+                {/* Create Event (primary, premium) */}
                 <button
                   onClick={() => window.location.href = "/knuut-voice"}
                   style={{
-                    padding: "12px 24px",
+                    padding: "12px 22px",
                     background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                     color: "white",
                     border: "none",
-                    borderRadius: "8px",
+                    borderRadius: "10px",
                     fontSize: "1rem",
-                    fontWeight: "600",
+                    fontWeight: 800,
+                    letterSpacing: "0.3px",
                     cursor: "pointer",
-                    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                    transition: "transform 0.2s",
+                    boxShadow: "0 8px 20px rgba(102,126,234,0.25)",
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-2px)"}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = "translateY(0)"}
                 >
-                  + Create Event
+                  <span style={{ marginRight: 8 }} aria-hidden>＋</span>
+                  {t("create_event")}
                 </button>
               </div>
             </div>

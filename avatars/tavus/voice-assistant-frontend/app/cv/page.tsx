@@ -5,8 +5,10 @@ import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import CVTemplate from "@/components/CVTemplate";
+import { useTranslation } from "@/components/i18n/TranslationProvider";
 
 export default function CVPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("explore");
   const [room] = useState(new Room());
   const [language, setLanguage] = useState<"en" | "fi">("en");
@@ -34,7 +36,7 @@ export default function CVPage() {
               WebkitTextFillColor: "transparent",
               margin: 0,
             }}>
-              Nordic CV Builder
+              CV
             </h1>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <label style={{ color: "#374151", fontSize: 14 }}>Language</label>

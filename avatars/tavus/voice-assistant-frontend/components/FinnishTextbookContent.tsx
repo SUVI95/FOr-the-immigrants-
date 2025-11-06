@@ -2381,7 +2381,7 @@ export default function FinnishTextbookContent() {
           color: "#1e40af",
           marginBottom: "12px"
         }}>
-          🇫🇮 SUOMEN mestari 1
+          My Finnish Journey
         </h1>
         <p style={{ fontSize: "16px", color: "#64748b", marginBottom: "20px" }}>
           Suomen kielen oppikirja aikuisille

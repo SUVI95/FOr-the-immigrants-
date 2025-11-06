@@ -6,6 +6,7 @@ import { RoomContext, useRoomContext, useVoiceAssistant } from "@livekit/compone
 import Sidebar from "@/components/Sidebar";
 import VolunteerApplicationModal, { VolunteerApplicationData } from "@/components/VolunteerApplicationModal";
 import SkillsExchangeContactModal, { SkillsExchangeContactData } from "@/components/SkillsExchangeContactModal";
+import { useTranslation } from "@/components/i18n/TranslationProvider";
 
 interface VolunteerOpportunity {
   id: string;
@@ -99,6 +100,7 @@ const skillsExchangeItems: SkillsExchangeItem[] = [
 
 // Inner component that can use hooks safely
 function VolunteerPageContent() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("explore");
   const [selectedOpportunity, setSelectedOpportunity] = useState<VolunteerOpportunity | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -229,7 +231,7 @@ function VolunteerPageContent() {
           }}
         >
           <div style={{ marginBottom: "40px" }}>
-            <h1 style={headerStyle}>Volunteer & Skills Exchange</h1>
+            <h1 style={headerStyle}>{t("volunteer")}</h1>
             <p style={{ fontSize: "1.1rem", color: "#666", marginBottom: "30px" }}>
               Contribute to Kajaani's community and build your roots. Volunteer for local projects or
               exchange your skills with others.
@@ -246,7 +248,7 @@ function VolunteerPageContent() {
                 marginBottom: "20px",
               }}
             >
-              Volunteer Opportunities
+              {t("volunteer")}
             </h2>
             <div
               style={{

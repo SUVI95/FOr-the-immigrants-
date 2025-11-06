@@ -4,8 +4,10 @@ import { useState } from "react";
 import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
+import { useTranslation } from "@/components/i18n/TranslationProvider";
 
 export default function BuddySystemPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("explore");
   const [room] = useState(new Room());
 
@@ -32,7 +34,7 @@ export default function BuddySystemPage() {
               WebkitTextFillColor: "transparent",
               marginBottom: 10,
             }}>
-              Buddy System
+              {t("buddy")}
             </h1>
             <p style={{ color: "#666", fontSize: "1.1rem", maxWidth: 700 }}>
               Get paired with a local mentor or advanced immigrant. Weekly check‑ins, language practice, and practical support.

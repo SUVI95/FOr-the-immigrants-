@@ -2,6 +2,8 @@ import "@livekit/components-styles";
 import { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
+import GlobalHeader from "@/components/GlobalHeader";
+import { TranslationProvider } from "@/components/i18n/TranslationProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,7 +38,12 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="h-full">{children}</body>
+      <body className="h-full">
+        <TranslationProvider>
+          <GlobalHeader />
+          <div style={{ paddingTop: 72 }}>{children}</div>
+        </TranslationProvider>
+      </body>
     </html>
   );
 }

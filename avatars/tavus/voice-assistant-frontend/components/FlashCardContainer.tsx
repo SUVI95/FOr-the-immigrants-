@@ -128,13 +128,13 @@ export default function FlashCardContainer() {
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 100 }}
-          className="fixed right-8 top-1/4 w-80 bg-gray-900 p-4 rounded-lg shadow-lg"
+          className="fixed right-8 top-24 w-96 bg-white text-slate-900 p-5 rounded-xl shadow-2xl z-50 border border-gray-200"
         >
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Flash Card</h2>
             <button 
               onClick={() => setIsVisible(false)}
-              className="text-gray-400 hover:text-white"
+              className="text-gray-500 hover:text-gray-700"
             >
               ×
             </button>
@@ -149,7 +149,7 @@ export default function FlashCardContainer() {
                   prev !== null ? Math.max(0, prev - 1) : 0
                 )}
                 disabled={currentCardIndex === 0}
-                className="px-3 py-1 bg-blue-600 rounded disabled:opacity-50"
+                className="px-3 py-1 bg-indigo-600 text-white rounded disabled:opacity-50"
               >
                 Previous
               </button>
@@ -159,7 +159,7 @@ export default function FlashCardContainer() {
                   prev !== null ? Math.min(flashCards.length - 1, prev + 1) : 0
                 )}
                 disabled={currentCardIndex === flashCards.length - 1}
-                className="px-3 py-1 bg-blue-600 rounded disabled:opacity-50"
+                className="px-3 py-1 bg-indigo-600 text-white rounded disabled:opacity-50"
               >
                 Next
               </button>

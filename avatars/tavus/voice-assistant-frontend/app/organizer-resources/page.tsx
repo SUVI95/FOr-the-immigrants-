@@ -4,8 +4,10 @@ import { useState } from "react";
 import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
+import { useTranslation } from "@/components/i18n/TranslationProvider";
 
 export default function OrganizerResourcesPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("explore");
   const [room] = useState(new Room());
 
@@ -41,7 +43,7 @@ export default function OrganizerResourcesPage() {
               WebkitTextFillColor: "transparent",
               marginBottom: 10,
             }}>
-              Organizer Resources
+              {t("organizer")}
             </h1>
             <p style={{ color: "#666", fontSize: "1.1rem", maxWidth: 700 }}>
               Run great community sessions with ready‑made templates, safety guidelines, and language support packs.

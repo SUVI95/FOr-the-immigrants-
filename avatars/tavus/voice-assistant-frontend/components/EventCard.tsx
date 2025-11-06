@@ -26,13 +26,14 @@ export default function EventCard({ event, onRSVP, onViewMap }: EventCardProps) 
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString("en-US", {
+      return date.toLocaleString("en-US", {
         weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
+        timeZone: "UTC",
       });
     } catch {
       return dateString;
@@ -64,7 +65,7 @@ export default function EventCard({ event, onRSVP, onViewMap }: EventCardProps) 
             )}
           </div>
           
-          <p className="text-sm text-gray-600 mb-2 font-medium">
+          <p suppressHydrationWarning className="text-sm text-gray-600 mb-2 font-medium">
             {formatDate(event.event_date)}
           </p>
           

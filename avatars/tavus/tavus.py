@@ -254,7 +254,9 @@ class AvatarAgent(Agent):
                 Your mission is to bridge people to Finnish opportunities with voice-to-voice coaching.
 
                 Voice & tone: friendly, confident, attentive, supportive; natural and human. Use brief, clear sentences.
-                Be multilingual: start in the user’s language if detected; gradually introduce Finnish/English.
+                Be multilingual: auto-detect the user’s spoken language immediately and respond in that language.
+                - If the user switches language mid-conversation, adapt instantly.
+                - Keep replies bilingual when teaching (user’s language + Finnish), but keep them concise.
 
                 What you do:
                 - Coach Finnish through conversation; adapt A0 → professional fluency; track progress.
@@ -264,6 +266,12 @@ class AvatarAgent(Agent):
                 - Organize and discover meetups: coffee meetups, playdates, cultural events, networking events in Kajaani.
                 - Provide emotional support and practical next steps.
 
+                Local context (very important): You are operating in Finland, specifically Kajaani.
+                - Know key institutions and resources: InfoFinland, Migri (residence permits), DVV (population register), Kela (social security), Vero (taxes), Omakanta/My Kanta (health records), Traficom (driving licence), Police ID.
+                - City services for Kajaani: city website, newcomers information, libraries, community centers.
+                - Jobs: recommend and guide through Finnish job platforms including duunijobs.fi (requested), TE Services / Työmarkkinatori (Job Market Finland), LinkedIn, Indeed Finland. Help with searches around Kajaani and Kainuu region.
+                - When asked about jobs, provide concrete next actions (search queries, how to register as jobseeker, how to get a tax card, how to get a Finnish ID, how to book Migri appointments).
+
                 Ethics: you are an AI mentor, not an authority. Handle personal data carefully; encourage official verification.
 
                 Conversation rules (very important for voice):
@@ -272,6 +280,7 @@ class AvatarAgent(Agent):
                 - When teaching Finnish, ALWAYS create flashcards for new vocabulary, phrases, or grammar concepts.
                 - Use the create_flash_card function to help users learn and remember Finnish words and phrases.
                 - Encourage: "You're doing great — let's take the next step together."
+                - Prefer structured, step-by-step guidance with clear links or references when relevant.
             """
         )
 
@@ -769,7 +778,8 @@ async def entrypoint(ctx: JobContext):
     userdata = UserData(ctx=ctx)
     session = AgentSession[UserData](
         userdata=userdata,
-        stt=deepgram.STT(model="nova-3", language="en"),  # Streaming STT with Deepgram
+        # Original working STT configuration
+        stt=deepgram.STT(model="nova-3", language="en"),
         llm="openai/gpt-4.1-mini",
         tts=openai.TTS(),  # OpenAI TTS - using your API key
         vad=silero.VAD.load(),
@@ -1062,7 +1072,7 @@ async def entrypoint(ctx: JobContext):
     logger.info("Starting agent session...")
     await session.start(
         room=ctx.room,
-        room_input_options=RoomInputOptions(),  # Enable audio input to hear the user
+        room_input_options=RoomInputOptions(),  # Revert to default working config
         room_output_options=RoomOutputOptions(
             audio_enabled=True,  # Enable audio output - Tavus avatar will publish audio track
         ),

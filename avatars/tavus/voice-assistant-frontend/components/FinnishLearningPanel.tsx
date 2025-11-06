@@ -23,7 +23,7 @@ interface Chapter {
   activities: LearningActivity[];
 }
 
-// Structure based on "SUOMEN mestari 1" textbook
+// Structure inspired by "My Finnish Journey" (formerly Suomen mestari 1)
 const chaptersByLevel: Record<FinnishLevel, Chapter[]> = {
   A1: [
     {
@@ -49,7 +49,7 @@ const chaptersByLevel: Record<FinnishLevel, Chapter[]> = {
           title: "Tervehdykset ja tutustuminen",
           description: "Learn greetings and introductions: Hei, Moi, Tervetuloa, Hauska tutustua!",
           type: "vocabulary",
-          prompt: "Teach me Finnish greetings and introductions from SUOMEN mestari 1, Kappale 1. Include: Hei, Moi, Tervetuloa, Hauska tutustua, Mikä sinun nimi on?",
+          prompt: "Teach me Finnish greetings and introductions (My Finnish Journey – Chapter 1). Include: Hei, Moi, Tervetuloa, Hauska tutustua, Mikä sinun nimi on?",
         },
         {
           id: "k1-vocab-2",
@@ -70,7 +70,7 @@ const chaptersByLevel: Record<FinnishLevel, Chapter[]> = {
           title: "Persoonapronominit ja olla-verbi",
           description: "Personal pronouns and the verb 'to be'",
           type: "grammar",
-          prompt: "Explain Finnish personal pronouns (minä, sinä, hän, me, te, he) and the verb 'olla' (to be): olen, olet, on, olemme, olette, ovat. Give examples from SUOMEN mestari 1.",
+          prompt: "Explain Finnish personal pronouns (minä, sinä, hän, me, te, he) and the verb 'olla' (to be): olen, olet, on, olemme, olette, ovat. Give examples from My Finnish Journey.",
         },
         {
           id: "k1-grammar-2",
@@ -91,7 +91,7 @@ const chaptersByLevel: Record<FinnishLevel, Chapter[]> = {
           title: "Keskustelu: Tervetuloa kurssille",
           description: "Practice: Welcome to the course conversation",
           type: "conversation",
-          prompt: "Let's practice a conversation from SUOMEN mestari 1, Kappale 1. I'm a new student and you're the teacher. Welcome me to the Finnish course and help me introduce myself.",
+          prompt: "Let's practice a conversation (My Finnish Journey – Chapter 1). I'm a new student and you're the teacher. Welcome me to the Finnish course and help me introduce myself.",
         },
       ],
     },
@@ -119,7 +119,7 @@ const chaptersByLevel: Record<FinnishLevel, Chapter[]> = {
           title: "Maat ja kansalaisuudet",
           description: "Learn countries and nationalities",
           type: "vocabulary",
-          prompt: "Teach me Finnish countries and nationalities from SUOMEN mestari 1, Kappale 2. Include: Suomi/suomalainen, Ranska/ranskalainen, Brasilia/brasilialainen, Venäjä/venäläinen.",
+          prompt: "Teach me Finnish countries and nationalities (My Finnish Journey – Chapter 2). Include: Suomi/suomalainen, Ranska/ranskalainen, Brasilia/brasilialainen, Venäjä/venäläinen.",
         },
         {
           id: "k2-vocab-2",
@@ -147,21 +147,21 @@ const chaptersByLevel: Record<FinnishLevel, Chapter[]> = {
           title: "Kysymykset ja kysymyssanat",
           description: "Questions: kuka, mikä, mitä, missä, mistä...",
           type: "grammar",
-          prompt: "Teach me Finnish question words from SUOMEN mestari 1: kuka, mikä, mitä, missä, mistä, miksi, minkämaalainen. Also teach ko/kö-questions like 'Oletko sinä suomalainen?'",
+          prompt: "Teach me Finnish question words (My Finnish Journey): kuka, mikä, mitä, missä, mistä, miksi, minkämaalainen. Also teach ko/kö-questions like 'Oletko sinä suomalainen?'",
         },
         {
           id: "k2-grammar-4",
           title: "k-p-t-vaihtelu",
           description: "k-p-t alternation: Afrikka → Afrikasta",
           type: "grammar",
-          prompt: "Explain Finnish k-p-t alternation (k-p-t-vaihtelu) with examples from SUOMEN mestari 1: Afrikka → Afrikasta, Eurooppa → Euroopassa, Turku → Turussa.",
+          prompt: "Explain Finnish k-p-t alternation (k-p-t-vaihtelu) with examples from My Finnish Journey: Afrikka → Afrikasta, Eurooppa → Euroopassa, Turku → Turussa.",
         },
         {
           id: "k2-conversation-1",
           title: "Puhutaan: Jäätelökioskilla",
           description: "Practice: At the ice cream kiosk",
           type: "conversation",
-          prompt: "Let's practice the conversation from SUOMEN mestari 1, Kappale 2: Jäätelökioskilla. I'll order ice cream and we'll practice asking about prices and nationalities.",
+          prompt: "Let's practice the conversation (My Finnish Journey – Chapter 2: Jäätelökioskilla). I'll order ice cream and we'll practice asking about prices and nationalities.",
         },
       ],
     },
@@ -188,42 +188,42 @@ const chaptersByLevel: Record<FinnishLevel, Chapter[]> = {
           title: "Sää ja ilma",
           description: "Learn weather vocabulary",
           type: "vocabulary",
-          prompt: "Teach me Finnish weather vocabulary from SUOMEN mestari 1, Kappale 3: kuuma, kylmä, lämmin, viileä, aurinkoista, sateista, tuulista, pilvistä. How to say 'How many degrees?' and temperatures.",
+          prompt: "Teach me Finnish weather vocabulary (My Finnish Journey – Chapter 3): kuuma, kylmä, lämmin, viileä, aurinkoista, sateista, tuulista, pilvistä. How to say 'How many degrees?' and temperatures.",
         },
         {
           id: "k3-vocab-2",
           title: "Vuodenajat ja kuukaudet",
           description: "Learn seasons and months",
           type: "vocabulary",
-          prompt: "Teach me Finnish seasons (talvi, kevät, kesä, syksy) and all 12 months (tammikuu, helmikuu... joulukuu) from SUOMEN mestari 1.",
+          prompt: "Teach me Finnish seasons (talvi, kevät, kesä, syksy) and all 12 months (tammikuu, helmikuu... joulukuu) from My Finnish Journey.",
         },
         {
           id: "k3-vocab-3",
           title: "Adjektiivit ja värit",
           description: "Learn adjectives and colors",
           type: "vocabulary",
-          prompt: "Teach me Finnish adjectives and colors from SUOMEN mestari 1: hyvä, huono, kaunis, pieni, iso, uusi, vanha, valkoinen, musta, punainen, sininen, vihreä, keltainen.",
+          prompt: "Teach me Finnish adjectives and colors (My Finnish Journey): hyvä, huono, kaunis, pieni, iso, uusi, vanha, valkoinen, musta, punainen, sininen, vihreä, keltainen.",
         },
         {
           id: "k3-grammar-1",
           title: "Genetiivi",
           description: "Genitive case: Pedron, Alexin, Helsingin...",
           type: "grammar",
-          prompt: "Explain Finnish genitive case (genetiivi) from SUOMEN mestari 1, Kappale 3. Show examples: Pedron tyttöystävä, Alexin kotimaa, Helsingin sää, kivan opettajan nimi.",
+          prompt: "Explain Finnish genitive case (genetiivi) from My Finnish Journey – Chapter 3. Show examples: Pedron tyttöystävä, Alexin kotimaa, Helsingin sää, kivan opettajan nimi.",
         },
         {
           id: "k3-grammar-2",
           title: "k-p-t-vaihtelu: verbityyppi 1",
           description: "k-p-t alternation in verb type 1: nukkua, kirjoittaa, lukea",
           type: "grammar",
-          prompt: "Explain k-p-t alternation in Finnish verb type 1 verbs from SUOMEN mestari 1: nukkua (nukun, nukut, nukkuu), kirjoittaa, lukea, ymmärtää, ottaa. Show all personal forms.",
+          prompt: "Explain k-p-t alternation in Finnish verb type 1 verbs from My Finnish Journey: nukkua (nukun, nukut, nukkuu), kirjoittaa, lukea, ymmärtää, ottaa. Show all personal forms.",
         },
         {
           id: "k3-conversation-1",
           title: "Puhutaan: Voitko auttaa minua?",
           description: "Practice: Can you help me?",
           type: "conversation",
-          prompt: "Let's practice the conversation from SUOMEN mestari 1, Kappale 3: 'Voitko auttaa minua?' Help me translate words and phrases from English to Finnish.",
+          prompt: "Let's practice the conversation (My Finnish Journey – Chapter 3: 'Voitko auttaa minua?'). Help me translate words and phrases from English to Finnish.",
         },
       ],
     },
@@ -368,7 +368,7 @@ export default function FinnishLearningPanel({ onActivityClick }: FinnishLearnin
           🇫🇮 Learn Finnish with Knuut
         </h3>
         <p style={{ fontSize: "14px", color: "var(--text)", marginBottom: "20px" }}>
-          Select your current Finnish language level to get started with structured activities based on "SUOMEN mestari 1" textbook.
+          Select your current Finnish language level to get started with structured activities (My Finnish Journey).
         </p>
         <div className="level-selection" style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "20px" }}>
           {(["A1", "A2", "B1", "B2", "C1"] as FinnishLevel[]).map((level) => (
@@ -411,7 +411,7 @@ export default function FinnishLearningPanel({ onActivityClick }: FinnishLearnin
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
         <div>
           <h3 style={{ marginTop: 0, marginBottom: "4px", fontSize: "18px", fontWeight: 600, color: "var(--brand)" }}>
-            🇫🇮 SUOMEN mestari 1 - Level {selectedLevel}
+            My Finnish Journey - Level {selectedLevel}
           </h3>
           <p style={{ fontSize: "12px", color: "var(--muted)", margin: 0 }}>
             Structured Finnish learning based on the official textbook

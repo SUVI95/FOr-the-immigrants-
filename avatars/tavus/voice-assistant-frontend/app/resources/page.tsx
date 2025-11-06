@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
+import { useTranslation } from "@/components/i18n/TranslationProvider";
 
 type Resource = {
   id: string;
@@ -43,6 +44,15 @@ const cityResources: Resource[] = [
     description: "City service point: addresses, contacts, and advice.",
     link: "https://www.kajaani.fi/en/city-and-administration/contact-information-and-services/kajaani-info/",
   },
+  {
+    id: "infofinland",
+    icon: "🌍",
+    title: "InfoFinland – Living in Finland",
+    category: "Guides",
+    iconClass: "fa-globe",
+    description: "Official information for immigrants: housing, work, healthcare, education.",
+    link: "https://www.infofinland.fi/en",
+  },
 ];
 
 const beforeArrival: Resource[] = [
@@ -63,6 +73,15 @@ const beforeArrival: Resource[] = [
     iconClass: "fa-globe",
     description: "Apply for residence permits and follow your application online.",
     link: "https://enterfinland.fi/eServices",
+  },
+  {
+    id: "migri-appointment",
+    icon: "📅",
+    title: "Migri – Book Appointment",
+    category: "Immigration",
+    iconClass: "fa-calendar",
+    description: "Book an appointment for residence permit identification.",
+    link: "https://migri.fi/en/our-services/book-an-appointment",
   },
 ];
 
@@ -121,9 +140,55 @@ const afterArrival: Resource[] = [
     description: "Example bank info in English; bring ID and address details.",
     link: "https://www.op.fi/en/",
   },
+  {
+    id: "te-services",
+    icon: "🧭",
+    title: "TE Services – Jobseeker Registration",
+    category: "Employment",
+    iconClass: "fa-briefcase",
+    description: "Register as a jobseeker and access employment services.",
+    link: "https://www.tyomarkkinatori.fi/en/jobseekers",
+  },
+  {
+    id: "omakanta",
+    icon: "🩺",
+    title: "My Kanta (Omakanta)",
+    category: "Healthcare",
+    iconClass: "fa-heart-pulse",
+    description: "View your prescriptions, lab results, and health data.",
+    link: "https://www.kanta.fi/en/omakanta",
+  },
+  {
+    id: "traficom-driving",
+    icon: "🚗",
+    title: "Traficom – Exchange Driving Licence",
+    category: "Transport",
+    iconClass: "fa-car",
+    description: "Information on exchanging a foreign driving licence.",
+    link: "https://www.traficom.fi/en/transport/driving-licences/exchanging-foreign-driving-licence",
+  },
+  {
+    id: "finnishcourses",
+    icon: "📚",
+    title: "Finnishcourses.fi",
+    category: "Language",
+    iconClass: "fa-language",
+    description: "Search for Finnish language courses across Finland.",
+    link: "https://www.finnishcourses.fi/en",
+  },
+  {
+    id: "yle-kieli",
+    icon: "🎧",
+    title: "Yle – Learn Finnish",
+    category: "Language",
+    iconClass: "fa-headphones",
+    description: "Free audio, video and articles to learn Finnish.",
+    link: "https://yle.fi/aihe/oppiminen/kielet/suomen-kieli",
+  },
 ];
 
 export default function ResourcesPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("explore");
   const [room] = useState(new Room());
 
@@ -156,7 +221,7 @@ export default function ResourcesPage() {
               WebkitTextFillColor: "transparent",
               marginBottom: 10,
             }}>
-              City & Integration Resources
+              {t("resources")}
             </h1>
             <div style={{
               background: "white",
@@ -167,61 +232,70 @@ export default function ResourcesPage() {
               maxWidth: 820
             }}>
               <p style={{ color: "#374151", fontSize: "1.05rem", lineHeight: 1.7, margin: 0 }}>
-                Your one‑stop hub for settling in Kajaani. Find official, up‑to‑date links for residence permits (Migri),
-                population registration (DVV), social security (Kela), taxes (Vero), employment (Job Market Finland),
-                banking and city services—curated in one place. Bookmark this page and share it with newcomers.
+                Essential links for settling in Kajaani and Finland — immigration, registration, healthcare,
+                employment and language. Curated and investor‑ready.
               </p>
             </div>
           </div>
 
-          {/* Unified Resource Grid (no section labels) */}
-          <section style={{ background: "white", borderRadius: 12, boxShadow: "0 2px 6px rgba(0,0,0,0.06)", padding: 20 }}>
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: 18
-            }}>
-              {[...cityResources, ...beforeArrival, ...afterArrival].map((r) => (
-                <a
-                  key={r.id}
-                  href={r.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    display: "block",
-                    background: "linear-gradient(180deg, #f9fafb 0%, #ffffff 100%)",
-                    border: "1px solid #e5e7eb",
-                    borderRadius: 14,
-                    padding: 18,
-                    color: "#111",
-                    textDecoration: "none",
-                    transition: "transform .15s ease, box-shadow .15s ease, border-color .15s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-3px)";
-                    (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 18px rgba(0,0,0,0.08)";
-                    (e.currentTarget as HTMLAnchorElement).style.borderColor = "#c7d2fe";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)";
-                    (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 2px 6px rgba(0,0,0,0.06)";
-                    (e.currentTarget as HTMLAnchorElement).style.borderColor = "#e5e7eb";
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                    <div style={{ fontSize: 28 }}>{r.icon}</div>
-                    <div style={{ fontWeight: 800, fontSize: "1.05rem" }}>{r.title}</div>
-                  </div>
-                  <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 10 }}>{r.category}</div>
-                  <div style={{ color: "#374151", lineHeight: 1.65 }}>{r.description}</div>
-                </a>
-              ))}
-            </div>
-          </section>
+          {/* Premium Resource Sections */}
+          <Section title="City & Guides" items={cityResources} />
+          <Section title="Immigration (Before Arrival)" items={beforeArrival} />
+          <Section title="After Arrival (Registration, ID, Banking, Health)" items={afterArrival} />
         </main>
       </div>
     </RoomContext.Provider>
   );
 }
 
-
+function Section({ title, items }: { title: string; items: Resource[] }) {
+  return (
+    <section style={{ background: "linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%)", borderRadius: 16, boxShadow: "0 6px 24px rgba(0,0,0,0.06)", padding: 24, border: "1px solid #e5e7eb", marginBottom: 24 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+        <h2 style={{ fontSize: "1.2rem", fontWeight: 800, margin: 0, color: "#0f172a" }}>{title}</h2>
+        <span style={{ fontSize: 12, color: "#64748b" }}>{items.length} links</span>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
+        {items.map((r) => (
+          <a
+            key={r.id}
+            href={r.link}
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: "block",
+              background: "#ffffff",
+              border: "1px solid #e6e8ee",
+              borderRadius: 16,
+              padding: 18,
+              color: "#0f172a",
+              textDecoration: "none",
+              transition: "transform .18s ease, box-shadow .18s ease, border-color .18s ease",
+              boxShadow: "0 4px 12px rgba(2,6,23,0.06)",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)";
+              (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 10px 24px rgba(2,6,23,0.10)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "#c7d2fe";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)";
+              (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 4px 12px rgba(2,6,23,0.06)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "#e6e8ee";
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+              <div style={{ fontSize: 24 }}>{r.icon}</div>
+              <div style={{ fontWeight: 800, fontSize: "1.02rem", letterSpacing: 0.1 }}>{r.title}</div>
+            </div>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, color: "#2563eb", background: "#eff6ff", border: "1px solid #bfdbfe", padding: "6px 8px", borderRadius: 999, marginBottom: 10 }}>
+              <span className={`fa ${r.iconClass}`} aria-hidden></span>
+              <span>{r.category}</span>
+            </div>
+            <div style={{ color: "#334155", lineHeight: 1.65 }}>{r.description}</div>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}

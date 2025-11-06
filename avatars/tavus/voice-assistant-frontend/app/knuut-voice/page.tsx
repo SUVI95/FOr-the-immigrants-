@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Room, RoomEvent } from "livekit-client";
 import {
   RoomContext,
@@ -22,15 +22,24 @@ import { NoAgentNotification } from "@/components/NoAgentNotification";
 import FlashcardPanel from "@/components/FlashcardPanel";
 import useReduceConsoleNoise from "@/hooks/useReduceConsoleNoise";
 import type { ConnectionDetails } from "../api/connection-details/route";
+import { useTranslation } from "@/components/i18n/TranslationProvider";
 
 export default function KnuutVoicePage() {
-  const [room] = useState(new Room());
+  const { t } = useTranslation();
+  const [room] = useState(() => new Room({
+    audioCaptureDefaults: {
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+    },
+  }));
   const [activeTab, setActiveTab] = useState("explore");
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [chatMessages, setChatMessages] = useState<
     Array<{ type: "user" | "bot"; text: string }>
   >([]);
+  // Text input removed per request; voice is the primary modality
 
   useReduceConsoleNoise();
 
@@ -46,6 +55,18 @@ export default function KnuutVoicePage() {
     await room.localParticipant.setMicrophoneEnabled(true);
 
     try {
+      const pubs = Array.from(room.localParticipant.tracks.values());
+      if (!pubs.find(p => p.source === 'microphone')) {
+        console.warn('Microphone track not published, retrying enable...');
+        await room.localParticipant.setMicrophoneEnabled(true);
+      }
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      console.log('Audio input devices:', devices.filter(d => d.kind === 'audioinput'));
+    } catch (e) {
+      console.warn('Device check failed:', e);
+    }
+
+    try {
       const dispatchResponse = await fetch("/api/dispatch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,6 +80,13 @@ export default function KnuutVoicePage() {
       console.error("Error dispatching agent:", error);
     }
   }, [room]);
+
+  // Ensure Connected (kept for voice flow)
+  const ensureConnected = useCallback(async () => {
+    if (room.state !== "connected") {
+      await onConnectButtonClicked();
+    }
+  }, [room.state, onConnectButtonClicked]);
 
   useEffect(() => {
     const onDeviceFailure = (error: Error) => {
@@ -108,6 +136,8 @@ export default function KnuutVoicePage() {
     }
   };
 
+  // Text submit removed
+
   const handleLearnFinnishClick = () => {
     window.location.href = "/learn-finnish";
   };
@@ -120,10 +150,28 @@ export default function KnuutVoicePage() {
         <main>
           <div className="hero">
             <section className="welcome">
-              <h1>🎤 Knuut AI Voice Assistant</h1>
-              <p style={{ fontSize: "16px", color: "var(--muted)", marginBottom: "24px" }}>
-                Talk to Knuut AI in real-time! Ask questions about city services, integration help, 
-                job opportunities, events, or practice Finnish conversation.
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                <span className="fa-solid fa-waveform-lines" style={{
+                  fontSize: 26,
+                  color: "#7c3aed",
+                  filter: "drop-shadow(0 2px 8px rgba(124,58,237,0.35))"
+                }} aria-hidden="true"></span>
+                <h1 style={{
+                  margin: 0,
+                  fontSize: "2.2rem",
+                  fontWeight: 800,
+                  background: "linear-gradient(135deg, #667eea 0%, #7c3aed 50%, #22d3ee 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  letterSpacing: 0.2
+                }}>{t("voice")}</h1>
+              </div>
+              <p style={{
+                fontSize: 14,
+                color: "#64748b",
+                marginBottom: 18,
+              }}>
+                Talk naturally. Knuut will listen, think, and respond in real-time.
               </p>
 
               <div
@@ -133,51 +181,98 @@ export default function KnuutVoicePage() {
                 tabIndex={0}
                 aria-pressed={isListening}
               >
-                <div className="mic">
-                  <div className="pulse"></div>
-                  <i className="fa-solid fa-microphone"></i>
+                <div className="mic" style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 999,
+                  display: "grid",
+                  placeItems: "center",
+                  background: "linear-gradient(135deg, rgba(102,126,234,.18), rgba(124,58,237,.14))",
+                  border: "1px solid rgba(124,58,237,.35)"
+                }}>
+                  <i className="fa-solid fa-microphone" style={{ color: "#4338ca" }}></i>
                 </div>
                 <div className="cta">
                   <span>
                     {voiceEnabled
                       ? isListening
-                        ? "Listening… Speak now"
-                        : "Voice Assistant Active"
-                      : "Enable Voice Assistant"}
+                        ? "Listening…"
+                        : "Voice Ready"
+                      : "Enable Voice"}
                   </span>
                   <i className="fa-solid fa-chevron-right"></i>
                 </div>
               </div>
 
-              <div className="chips">
-                <div
+              <div className="chips" style={{ gap: 12 }}>
+                <button
                   className="chip"
                   onClick={() => handleChipClick("Show events this week")}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    background: "rgba(124,58,237,0.06)",
+                    borderColor: "#c4b5fd",
+                    color: "#4c1d95",
+                    fontWeight: 600
+                  }}
                 >
-                  📅 Show events this week
-                </div>
-                <div
+                  <i className="fa-regular fa-calendar" aria-hidden></i>
+                  <span>Show events this week</span>
+                </button>
+                <button
                   className="chip"
                   onClick={() => handleChipClick("Find resources near me")}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    background: "rgba(14,165,233,0.06)",
+                    borderColor: "#93c5fd",
+                    color: "#1e3a8a",
+                    fontWeight: 600
+                  }}
                 >
-                  📍 Find resources near me
-                </div>
-                <div
+                  <i className="fa-solid fa-location-dot" aria-hidden></i>
+                  <span>Find resources near me</span>
+                </button>
+                <button
                   className="chip"
                   onClick={() => handleChipClick("How do I register my address?")}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    background: "rgba(34,197,94,0.06)",
+                    borderColor: "#86efac",
+                    color: "#166534",
+                    fontWeight: 600
+                  }}
                 >
-                  🏠 How do I register my address?
-                </div>
-                <div
+                  <i className="fa-regular fa-id-card" aria-hidden></i>
+                  <span>How do I register my address?</span>
+                </button>
+                <button
                   className="chip"
                   onClick={() => handleChipClick("Teach me Finnish greetings")}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    background: "rgba(99,102,241,0.06)",
+                    borderColor: "#a5b4fc",
+                    color: "#3730a3",
+                    fontWeight: 600
+                  }}
                 >
-                  🇫🇮 Teach me Finnish greetings
-                </div>
+                  <i className="fa-solid fa-language" aria-hidden></i>
+                  <span>Teach me Finnish greetings</span>
+                </button>
               </div>
 
               {voiceEnabled && (
-                <div className="chat visible">
+                <div className="chat visible" style={{ background: "#ffffff" }}>
                   {chatMessages.map((msg, idx) => (
                     <div key={idx} className={`bubble ${msg.type}`}>
                       {msg.text}
@@ -188,9 +283,14 @@ export default function KnuutVoicePage() {
               )}
             </section>
 
-            <section className="panel">
-              <h3 style={{ marginTop: 0 }}>Voice Assistant</h3>
-              <p style={{ fontSize: "14px", color: "var(--muted)", marginBottom: "16px" }}>
+            <section className="panel" style={{
+              background: "linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.6))",
+              border: "1px solid rgba(148,163,184,0.25)",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+              backdropFilter: "saturate(1.2) blur(8px)"
+            }}>
+              <h3 style={{ marginTop: 0, fontWeight: 800, letterSpacing: 0.3, color: "#0f172a" }}>Voice Assistant</h3>
+              <p style={{ fontSize: 13, color: "#475569", marginBottom: 14 }}>
                 Interactive flashcards and quizzes will appear here as you learn with Knuut.
               </p>
               

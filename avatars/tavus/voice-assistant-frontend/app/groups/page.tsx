@@ -5,6 +5,7 @@ import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import GroupCard, { GroupData } from "@/components/GroupCard";
+import { useTranslation } from "@/components/i18n/TranslationProvider";
 
 // Mockup group data for Kajaani - focused on retention and integration
 const mockGroups: (GroupData & { category?: string })[] = [
@@ -167,6 +168,7 @@ const mockGroups: (GroupData & { category?: string })[] = [
 ];
 
 export default function GroupsPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("explore");
   const [groups] = useState<(GroupData & { category?: string })[]>(mockGroups);
   // Filters & toggles
@@ -266,7 +268,7 @@ export default function GroupsPage() {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}>
-              Community Groups in Kajaani
+              {t("groups")}
             </h1>
             <p style={{ 
               fontSize: "1.2rem", 
@@ -294,7 +296,7 @@ export default function GroupsPage() {
               <div style={{ fontSize: "2rem", fontWeight: "bold", color: "#2563eb" }}>
                 {filteredGroups.length}
               </div>
-              <div style={{ color: "#666", marginTop: "5px" }}>Active Groups</div>
+              <div style={{ color: "#666", marginTop: "5px" }}>{t("groups")}</div>
             </div>
             <div style={{ 
               background: "white",
@@ -306,7 +308,7 @@ export default function GroupsPage() {
               <div style={{ fontSize: "2rem", fontWeight: "bold", color: "#2563eb" }}>
                 {filteredGroups.reduce((sum, g) => sum + g.member_count, 0)}
               </div>
-              <div style={{ color: "#666", marginTop: "5px" }}>Total Members</div>
+              <div style={{ color: "#666", marginTop: "5px" }}>Members</div>
             </div>
             <div style={{ 
               background: "white",
