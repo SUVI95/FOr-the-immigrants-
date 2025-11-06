@@ -1,0 +1,12 @@
+# LiveKit Agents SDK
+livekit-agents[openai,silero,turn-detector,deepgram,google,anthropic,cartesia,elevenlabs,rime,playai,groq,tavus,gladia,hedra,inworld,google,sarvam]>=0.11.0
+
+# Database
+asyncpg>=0.29.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Utilities
+python-dateutil>=2.8.2
+
