@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
@@ -157,6 +157,11 @@ const mockGroups: (GroupData & { category?: string })[] = [
 export default function GroupsPage() {
   const [activeTab, setActiveTab] = useState("explore");
   const [groups] = useState<(GroupData & { category?: string })[]>(mockGroups);
+  // Filters & toggles
+  const [showBeginnerFriendly, setShowBeginnerFriendly] = useState(false);
+  const [showChildcareFriendly, setShowChildcareFriendly] = useState(false);
+  const [showMentorAvailable, setShowMentorAvailable] = useState(false);
+  const [includeLocalsAndCompanies, setIncludeLocalsAndCompanies] = useState(true);
   const [room] = useState(new Room()); // Create a Room instance for context (not connected)
 
   const handleJoinGroup = async (groupId: string) => {
@@ -174,8 +179,45 @@ export default function GroupsPage() {
     window.location.href = "/learn-finnish";
   };
 
-  // Group by category for better organization
-  const groupsByCategory = groups.reduce((acc, group) => {
+  // Lightweight heuristics for badges
+  const getBadges = (g: GroupData & { category?: string }) => {
+    const badges: string[] = [];
+    if (g.category === "Language Learning" || g.group_type === "language_exchange") {
+      badges.push("Beginner Finnish OK");
+    }
+    if (g.category === "Family & Community" || g.group_type === "mothers_with_kids") {
+      badges.push("Childcare-friendly");
+    }
+    if (g.category === "Integration Support" || g.group_type === "integration_support") {
+      badges.push("Mentor available");
+    }
+    if (includeLocalsAndCompanies && (g.category === "Professional Development" || g.group_type === "professional_network")) {
+      badges.push("Company & Local partners");
+    }
+    return badges;
+  };
+
+  const aiReasonForYou = (g: (GroupData & { category?: string })) => {
+    const reasons: string[] = [];
+    if (g.category === "Language Learning") reasons.push("matches your Finnish practice goal");
+    if (g.category === "Integration Support") reasons.push("helps with settling in Kajaani");
+    if (g.category === "Professional Development") reasons.push("supports job and career growth");
+    return reasons.length ? `Recommended: ${reasons.join(" · ")}` : undefined;
+  };
+
+  // Apply filters
+  const filteredGroups = useMemo(() => {
+    return groups.filter((g) => {
+      const badges = getBadges(g);
+      if (showBeginnerFriendly && !badges.includes("Beginner Finnish OK")) return false;
+      if (showChildcareFriendly && !badges.includes("Childcare-friendly")) return false;
+      if (showMentorAvailable && !badges.includes("Mentor available")) return false;
+      return true;
+    });
+  }, [groups, showBeginnerFriendly, showChildcareFriendly, showMentorAvailable]);
+
+  // Group by category for better organization (post-filter)
+  const groupsByCategory = filteredGroups.reduce((acc, group) => {
     const category = group.category || "Other";
     if (!acc[category]) {
       acc[category] = [];
@@ -242,7 +284,7 @@ export default function GroupsPage() {
               textAlign: "center"
             }}>
               <div style={{ fontSize: "2rem", fontWeight: "bold", color: "#2563eb" }}>
-                {groups.length}
+                {filteredGroups.length}
               </div>
               <div style={{ color: "#666", marginTop: "5px" }}>Active Groups</div>
             </div>
@@ -254,7 +296,7 @@ export default function GroupsPage() {
               textAlign: "center"
             }}>
               <div style={{ fontSize: "2rem", fontWeight: "bold", color: "#2563eb" }}>
-                {groups.reduce((sum, g) => sum + g.member_count, 0)}
+                {filteredGroups.reduce((sum, g) => sum + g.member_count, 0)}
               </div>
               <div style={{ color: "#666", marginTop: "5px" }}>Total Members</div>
             </div>
@@ -272,6 +314,37 @@ export default function GroupsPage() {
             </div>
           </div>
 
+          {/* Filters & Toggles */}
+          <div style={{
+            background: "white",
+            padding: "16px",
+            borderRadius: "8px",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.06)",
+            marginBottom: "32px",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "10px",
+            alignItems: "center"
+          }}>
+            <span style={{ fontWeight: 600, color: "#111" }}>Filters:</span>
+            <button onClick={() => setShowBeginnerFriendly(v => !v)} style={{
+              padding: "8px 12px", borderRadius: 20, border: "1px solid #e5e7eb",
+              background: showBeginnerFriendly ? "#e0f2fe" : "#f9fafb", color: "#0c4a6e"
+            }}>Beginner Finnish OK</button>
+            <button onClick={() => setShowChildcareFriendly(v => !v)} style={{
+              padding: "8px 12px", borderRadius: 20, border: "1px solid #e5e7eb",
+              background: showChildcareFriendly ? "#ecfccb" : "#f9fafb", color: "#365314"
+            }}>Childcare-friendly</button>
+            <button onClick={() => setShowMentorAvailable(v => !v)} style={{
+              padding: "8px 12px", borderRadius: 20, border: "1px solid #e5e7eb",
+              background: showMentorAvailable ? "#fef9c3" : "#f9fafb", color: "#854d0e"
+            }}>Mentor available</button>
+            <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
+              <label style={{ color: "#555" }}>Include Locals & Companies</label>
+              <input type="checkbox" checked={includeLocalsAndCompanies} onChange={(e) => setIncludeLocalsAndCompanies(e.target.checked)} />
+            </div>
+          </div>
+
           {/* Groups by Category */}
           {categories.map((category) => (
             <div key={category} style={{ marginBottom: "50px" }}>
@@ -286,14 +359,33 @@ export default function GroupsPage() {
                 {category} ({groupsByCategory[category].length})
               </h2>
               <div>
-                {groupsByCategory[category].map((group) => (
-                  <GroupCard
-                    key={group.id}
-                    group={group}
-                    onJoin={handleJoinGroup}
-                    onViewMap={handleViewMap}
-                  />
-                ))}
+                {groupsByCategory[category].map((group) => {
+                  const badges = getBadges(group);
+                  const reason = aiReasonForYou(group);
+                  return (
+                    <div key={group.id} style={{ position: "relative", marginBottom: 16 }}>
+                      {/* Badges row */}
+                      {badges.length > 0 && (
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "0 4px 8px 4px" }}>
+                          {badges.map((b) => (
+                            <span key={b} style={{ fontSize: 12, background: "#eef2ff", color: "#3730a3", padding: "4px 8px", borderRadius: 999 }}>{b}</span>
+                          ))}
+                        </div>
+                      )}
+                      {/* AI reason */}
+                      {reason && (
+                        <div style={{ position: "absolute", top: 6, right: 6, background: "#f1f5f9", color: "#334155", padding: "6px 10px", borderRadius: 12, fontSize: 12, boxShadow: "0 1px 2px rgba(0,0,0,0.06)" }}>
+                          {reason}
+                        </div>
+                      )}
+                      <GroupCard
+                        group={group}
+                        onJoin={handleJoinGroup}
+                        onViewMap={handleViewMap}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -315,6 +407,21 @@ export default function GroupsPage() {
             </div>
           )}
         </main>
+        {/* Buddy System & Host Toolkit CTA strip */}
+        <div style={{ position: "fixed", bottom: 20, right: 20, display: "flex", gap: 12, flexDirection: "column" }}>
+          <button
+            onClick={() => alert("Buddy System: We’ll pair you with a local mentor and send weekly check-ins. (Coming soon)")}
+            style={{ background: "#22c55e", color: "white", padding: "12px 16px", borderRadius: 12, border: "none", boxShadow: "0 4px 10px rgba(0,0,0,0.12)", cursor: "pointer" }}
+          >
+            🤝 Join Buddy System
+          </button>
+          <button
+            onClick={() => window.open("/host-toolkit", "_blank")}
+            style={{ background: "#0ea5e9", color: "white", padding: "12px 16px", borderRadius: 12, border: "none", boxShadow: "0 4px 10px rgba(0,0,0,0.12)", cursor: "pointer" }}
+          >
+            🧰 Host Toolkit
+          </button>
+        </div>
       </div>
     </RoomContext.Provider>
   );
