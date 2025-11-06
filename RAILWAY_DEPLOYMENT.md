@@ -40,12 +40,16 @@ This guide covers **Option 1** (everything on Railway).
 ### 1.2 Configure the Service
 
 1. **Service Name**: `knuut-ai-agent` (or any name you prefer)
-2. **Root Directory**: Set to `avatars/tavus`
-3. **Start Command**: Railway will auto-detect, but verify it's:
+2. **Root Directory**: ⚠️ **CRITICAL** - Set to `avatars/tavus`
+   - Go to Service Settings → Source
+   - Set "Root Directory" to: `avatars/tavus`
+   - This tells Railway where your Python code is located
+3. **Start Command**: Railway will auto-detect `app.py`, but verify it's:
    ```
-   livekit-agents dev tavus.py
+   python app.py
    ```
-4. **Build Command**: 
+   - Or Railway will use the `Procfile` which contains: `web: python app.py`
+4. **Build Command**: Railway will auto-detect:
    ```
    pip install -r requirements.txt
    ```
