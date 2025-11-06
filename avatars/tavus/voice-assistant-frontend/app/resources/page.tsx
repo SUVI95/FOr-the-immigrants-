@@ -167,9 +167,9 @@ export default function ResourcesPage() {
               maxWidth: 820
             }}>
               <p style={{ color: "#374151", fontSize: "1.05rem", lineHeight: 1.7, margin: 0 }}>
-                This page collects trusted, official links you’ll need when moving to and living in Kajaani.
-                You can handle residence permits, population registration (DVV), social security (Kela), taxes (Vero),
-                employment and job search, and city services in one place. Save this page and share it with newcomers.
+                Your one‑stop hub for settling in Kajaani. Find official, up‑to‑date links for residence permits (Migri),
+                population registration (DVV), social security (Kela), taxes (Vero), employment (Job Market Finland),
+                banking and city services—curated in one place. Bookmark this page and share it with newcomers.
               </p>
             </div>
           </div>
