@@ -6,12 +6,62 @@ import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import CVTemplate from "@/components/CVTemplate";
 import { useTranslation } from "@/components/i18n/TranslationProvider";
+import { useUserProfile } from "@/context/UserProfileContext";
 
 export default function CVPage() {
   const { t } = useTranslation();
+  const { state: userState } = useUserProfile();
   const [activeTab, setActiveTab] = useState("explore");
   const [room] = useState(new Room());
   const [language, setLanguage] = useState<"en" | "fi">("en");
+
+  const communityExperience = userState.impactWallet.transactions
+    .filter((txn) => txn.category === "volunteer" || txn.type === "task")
+    .slice(0, 3)
+    .map((txn) => ({
+      role: txn.description,
+      organization: "Knuut AI Community",
+      period: new Date(txn.createdAt).getFullYear().toString(),
+      impact: `Contributed via ${txn.category ?? "community"} · ${txn.pointsChange ?? 0} impact points earned.`,
+      hours: txn.hoursChange ?? 0,
+      badges: txn.type === "badge" ? ["Connector Badge"] : undefined,
+    }));
+
+  const skillList =
+    userState.skillPassport.entries.length > 0
+      ? Array.from(new Set(userState.skillPassport.entries.map((entry) => entry.title))).slice(0, 10)
+      : ["Cross-cultural facilitation", "Finnish A1 phrases", "Peer mentoring"];
+
+  const languageEntries =
+    userState.skillPassport.entries
+      .filter((entry) => entry.category.toLowerCase().includes("language"))
+      .map((entry) => ({
+        language: entry.title.replace(/Finnish|Language|Level/gi, "").trim() || "Finnish",
+        level: entry.details?.match(/A1|A2|B1|B2|C1|C2/)?.[0] ?? "B1",
+      })) || [];
+
+  const initialCvData = {
+    summary: `Community Connector (${userState.level}) with ${userState.impactWallet.volunteeringHours.toFixed(
+      1,
+    )} volunteering hours and ${userState.impactWallet.points} impact points on Knuut AI. Builds welcoming spaces, translates bureaucracy, and mentors newcomers.`,
+    experience: [
+      {
+        title: "Community Connector (Volunteer)",
+        company: "Knuut AI Civic Platform",
+        period: "2024 - Present",
+        description: `Supports ${userState.peopleHelpedThisWeek + userState.contributionsThisMonth} newcomers each month through events, buddy sessions, and integration coaching.`,
+      },
+    ],
+    skills: skillList,
+    languages:
+      languageEntries.length > 0
+        ? languageEntries
+        : [
+            { language: "Finnish", level: "A2" },
+            { language: "English", level: "C1" },
+          ],
+    community: communityExperience.length > 0 ? communityExperience : [],
+  };
 
   const handleLearnFinnishClick = () => {
     window.location.href = "/learn-finnish";
@@ -57,7 +107,7 @@ export default function CVPage() {
             </div>
           </div>
 
-          <CVTemplate language={language} />
+          <CVTemplate language={language} initialData={initialCvData} />
         </main>
       </div>
     </RoomContext.Provider>

@@ -4,6 +4,7 @@ import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import GlobalHeader from "@/components/GlobalHeader";
 import { TranslationProvider } from "@/components/i18n/TranslationProvider";
+import { UserProfileProvider } from "@/context/UserProfileContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -39,10 +40,12 @@ export default function RootLayout({
         />
       </head>
       <body className="h-full">
-        <TranslationProvider>
-          <GlobalHeader />
-          <div style={{ paddingTop: 72 }}>{children}</div>
-        </TranslationProvider>
+        <UserProfileProvider>
+          <TranslationProvider>
+            <GlobalHeader />
+            <div style={{ paddingTop: 72 }}>{children}</div>
+          </TranslationProvider>
+        </UserProfileProvider>
       </body>
     </html>
   );

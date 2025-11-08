@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import VolunteerApplicationModal, { VolunteerApplicationData } from "@/components/VolunteerApplicationModal";
 import SkillsExchangeContactModal, { SkillsExchangeContactData } from "@/components/SkillsExchangeContactModal";
 import { useTranslation } from "@/components/i18n/TranslationProvider";
+import { useUserProfile } from "@/context/UserProfileContext";
 
 interface VolunteerOpportunity {
   id: string;
@@ -101,11 +102,13 @@ const skillsExchangeItems: SkillsExchangeItem[] = [
 // Inner component that can use hooks safely
 function VolunteerPageContent() {
   const { t } = useTranslation();
+  const { state: userState, recordAction } = useUserProfile();
   const [activeTab, setActiveTab] = useState("explore");
   const [selectedOpportunity, setSelectedOpportunity] = useState<VolunteerOpportunity | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedExchange, setSelectedExchange] = useState<SkillsExchangeItem | null>(null);
   const [isExchangeModalOpen, setIsExchangeModalOpen] = useState(false);
+  const tasks = userState.impactWallet.tasks;
   
   // Get room context for RPC calls (if available) - hooks must be called unconditionally
   // These will be null/undefined if not in RoomContext provider
@@ -120,6 +123,13 @@ function VolunteerPageContent() {
   const handleVolunteerClick = (opportunity: VolunteerOpportunity) => {
     setSelectedOpportunity(opportunity);
     setIsModalOpen(true);
+    recordAction({
+      id: `volunteer-open-${opportunity.id}-${Date.now()}`,
+      label: `Opened volunteer opportunity: ${opportunity.title}`,
+      category: "volunteer",
+      xp: 12,
+      impactPoints: 10,
+    });
   };
 
   const handleSubmitApplication = async (data: VolunteerApplicationData) => {
@@ -156,6 +166,23 @@ function VolunteerPageContent() {
         `The organizer (${selectedOpportunity?.organization}) will be notified and will contact you soon.\n\n` +
         `You'll receive a confirmation email at ${data.email}`
       );
+      if (selectedOpportunity) {
+        recordAction({
+          id: `volunteer-application-${selectedOpportunity.id}-${Date.now()}`,
+          label: `Applied to volunteer: ${selectedOpportunity.title}`,
+          category: "volunteer",
+          xp: 32,
+          impactPoints: 28,
+          impactHours: 1.5,
+          skill: {
+            id: `skill-volunteer-${selectedOpportunity.id}`,
+            title: selectedOpportunity.title,
+            category: "Volunteering",
+            details: `Application sent to ${selectedOpportunity.organization}`,
+            source: "volunteer",
+          },
+        });
+      }
     } catch (error) {
       console.error("Error submitting volunteer application:", error);
       throw error;
@@ -165,6 +192,26 @@ function VolunteerPageContent() {
   const handleExchangeContact = (exchange: SkillsExchangeItem) => {
     setSelectedExchange(exchange);
     setIsExchangeModalOpen(true);
+  };
+
+  const handleCompleteTask = (task: { id: string; title: string; points: number; hours?: number; completed: boolean }) => {
+    if (task.completed) return;
+    recordAction({
+      id: `micro-task-${task.id}-${Date.now()}`,
+      label: `Completed micro-volunteering task: ${task.title}`,
+      category: "volunteer",
+      xp: task.points,
+      impactPoints: task.points,
+      impactHours: task.hours ?? 0.25,
+      taskId: task.id,
+      skill: {
+        id: `skill-micro-${task.id}`,
+        title: task.title,
+        category: "Volunteering",
+        details: "Logged through Micro-Volunteering Board",
+        source: "volunteer",
+      },
+    });
   };
 
   const handleSubmitExchangeContact = async (data: SkillsExchangeContactData) => {
@@ -201,6 +248,20 @@ function VolunteerPageContent() {
         `Your message has been sent to the exchange poster. They will receive a notification and can choose to accept or decline the exchange.\n\n` +
         `If they accept, your contact information will be shared with them. You'll receive an email notification when they respond.`
       );
+      if (selectedExchange) {
+        recordAction({
+          id: `skills-exchange-${selectedExchange.id}-${Date.now()}`,
+          label: `Contacted skills exchange: ${selectedExchange.title}`,
+          category: "volunteer",
+          xp: 18,
+          impactPoints: 16,
+          reminder: {
+            title: "Follow up on skills exchange",
+            dueAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+            channel: "in-app",
+          },
+        });
+      }
     } catch (error) {
       console.error("Error sending skills exchange contact:", error);
       throw error;
@@ -219,7 +280,13 @@ function VolunteerPageContent() {
 
   return (
     <div className="app">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onLearnFinnishClick={handleLearnFinnishClick} />
+        <Sidebar activeTab={activeTab} onTabChange={(tab) => {
+          if (tab === "explore") {
+            window.location.href = "/";
+            return;
+          }
+          setActiveTab(tab);
+        }} onLearnFinnishClick={handleLearnFinnishClick} />
 
         <main
           style={{
@@ -237,6 +304,69 @@ function VolunteerPageContent() {
               exchange your skills with others.
             </p>
           </div>
+
+          <section style={{ marginBottom: "50px" }}>
+            <h2
+              style={{
+                fontSize: "1.8rem",
+                fontWeight: 600,
+                color: "#1a1a1a",
+                marginBottom: "20px",
+              }}
+            >
+              Micro-Volunteering Board
+            </h2>
+            <p style={{ color: "#475569", marginBottom: "16px" }}>
+              Quick acts of support that take less than 30 minutes. Tap 'I did this!' to log to your Impact Wallet and Skill Passport.
+            </p>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                gap: "16px",
+              }}
+            >
+              {tasks.map((task) => (
+                <div
+                  key={task.id}
+                  style={{
+                    background: task.completed ? "#ecfdf5" : "#ffffff",
+                    padding: "18px",
+                    borderRadius: "14px",
+                    border: task.completed ? "1px solid #bbf7d0" : "1px solid #e2e8f0",
+                    boxShadow: "0 6px 16px rgba(15, 23, 42, 0.08)",
+                    display: "grid",
+                    gap: "12px",
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+                    <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700, color: "#0f172a" }}>{task.title}</h3>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#22c55e" }}>+{task.points} pts</span>
+                  </div>
+                  <p style={{ margin: 0, color: "#475569", fontSize: "0.95rem" }}>{task.description}</p>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: 12, color: "#64748b" }}>Cadence: {task.cadence}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCompleteTask(task)}
+                      disabled={task.completed}
+                      style={{
+                        padding: "8px 14px",
+                        borderRadius: 12,
+                        border: "none",
+                        background: task.completed ? "#bbf7d0" : "linear-gradient(135deg, #22c55e, #16a34a)",
+                        color: task.completed ? "#166534" : "#fff",
+                        fontWeight: 700,
+                        cursor: task.completed ? "default" : "pointer",
+                      }}
+                    >
+                      {task.completed ? "Logged" : "I did this!"}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
 
           {/* Volunteer Opportunities */}
           <section style={{ marginBottom: "50px" }}>

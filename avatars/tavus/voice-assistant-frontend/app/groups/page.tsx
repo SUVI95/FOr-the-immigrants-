@@ -6,6 +6,7 @@ import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import GroupCard, { GroupData } from "@/components/GroupCard";
 import { useTranslation } from "@/components/i18n/TranslationProvider";
+import { useUserProfile } from "@/context/UserProfileContext";
 
 // Mockup group data for Kajaani - focused on retention and integration
 const mockGroups: (GroupData & { category?: string })[] = [
@@ -169,6 +170,7 @@ const mockGroups: (GroupData & { category?: string })[] = [
 
 export default function GroupsPage() {
   const { t } = useTranslation();
+  const { state: userState, recordAction } = useUserProfile();
   const [activeTab, setActiveTab] = useState("explore");
   const [groups] = useState<(GroupData & { category?: string })[]>(mockGroups);
   // Filters & toggles
@@ -177,11 +179,65 @@ export default function GroupsPage() {
   const [showMentorAvailable, setShowMentorAvailable] = useState(false);
   const [includeLocalsAndCompanies, setIncludeLocalsAndCompanies] = useState(true);
   const [room] = useState(new Room()); // Create a Room instance for context (not connected)
+  const [joinedGroupsIds, setJoinedGroupsIds] = useState<Set<string>>(new Set());
+  const peerCircles = [
+    {
+      id: "peer-women",
+      title: "Women in Work",
+      description: "Career mentoring, childcare-friendly meetups, and confidence-building workshops.",
+      schedule: "Tuesdays 18:00 · Kajaani Innovation Hub",
+      hosts: "Facilitated by City of Kajaani + volunteer mentors",
+      icon: "🌸",
+    },
+    {
+      id: "peer-tech",
+      title: "Tech Newcomers",
+      description: "Weekly coding sessions, Finnish tech vocabulary, and employer AMAs.",
+      schedule: "Thursdays 19:00 · Hybrid (City Hub + Zoom)",
+      hosts: "Hosted by Kajaani Tech Collective",
+      icon: "💻",
+    },
+    {
+      id: "peer-youth",
+      title: "Youth Jobs",
+      description: "Career nights, CV clinics, and language tandems for ages 16-24.",
+      schedule: "Saturdays 14:00 · Youth House",
+      hosts: "Co-led by peer mentors and youth workers",
+      icon: "🎧",
+    },
+  ];
 
   const handleJoinGroup = async (groupId: string) => {
+    const group = groups.find((item) => item.id === groupId);
+    if (group && !joinedGroupsIds.has(groupId)) {
+      setJoinedGroupsIds((prev) => new Set(prev).add(groupId));
+      recordAction({
+        id: `group-join-${groupId}-${Date.now()}`,
+        label: `Joined group: ${group.name}`,
+        category: "groups",
+        xp: 18,
+        impactPoints: 16,
+        reminder: {
+          title: `Attend next meetup for ${group.name}`,
+          dueAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          channel: "in-app",
+        },
+      });
+    }
     // In the future, this will call the API
     console.log("Join group:", groupId);
     alert("Join functionality will be connected to the backend soon!");
+  };
+
+  const handleOpenPeerChat = (circleId: string, title: string) => {
+    recordAction({
+      id: `peer-circle-${circleId}-${Date.now()}`,
+      label: `Opened peer circle chat: ${title}`,
+      category: "groups",
+      xp: 10,
+      impactPoints: 8,
+    });
+    alert("Peer circle chat launching soon. Stay tuned!");
   };
 
   const handleViewMap = (lat: number, lng: number) => {
@@ -241,6 +297,7 @@ export default function GroupsPage() {
   }, {} as Record<string, (GroupData & { category?: string })[]>);
 
   const categories = Object.keys(groupsByCategory).sort();
+  const showConnectorBanner = joinedGroupsIds.size >= 2 && userState.level === "Explorer";
 
   return (
     <RoomContext.Provider value={room}>
@@ -278,6 +335,113 @@ export default function GroupsPage() {
               Connect with others, get support, and build your community in Kajaani. These groups help with integration, retention, and building lasting connections.
             </p>
           </div>
+
+          <section
+            style={{
+              background: "#fff",
+              borderRadius: 20,
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 16px 32px rgba(15, 23, 42, 0.08)",
+              padding: 24,
+              marginBottom: 32,
+              display: "grid",
+              gap: 18,
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
+              <div>
+                <p style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#475569" }}>
+                  Peer Circles
+                </p>
+                <h2 style={{ margin: "6px 0 0 0", fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Curated circles with mentors & chat</h2>
+              </div>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "#2563eb" }}>Unlock Connector XP each time you host</span>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+              {peerCircles.map((circle) => (
+                <div
+                  key={circle.id}
+                  style={{
+                    borderRadius: 16,
+                    border: "1px solid #cbd5f5",
+                    background: "#eef2ff",
+                    padding: 18,
+                    display: "grid",
+                    gap: 10,
+                  }}
+                >
+                  <div style={{ fontSize: 28 }}>{circle.icon}</div>
+                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#1e3a8a" }}>{circle.title}</h3>
+                  <p style={{ margin: 0, color: "#1f2937", fontSize: 14 }}>{circle.description}</p>
+                  <div style={{ fontSize: 13, color: "#4338ca" }}>{circle.schedule}</div>
+                  <div style={{ fontSize: 12, color: "#334155" }}>{circle.hosts}</div>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenPeerChat(circle.id, circle.title)}
+                    style={{
+                      justifySelf: "flex-start",
+                      padding: "8px 12px",
+                      borderRadius: 10,
+                      border: "none",
+                      background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                      color: "#fff",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Open chat & calendar
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {showConnectorBanner && (
+            <div
+              style={{
+                marginBottom: 32,
+                borderRadius: 16,
+                border: "1px solid #bbf7d0",
+                background: "#ecfdf5",
+                padding: 18,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 12,
+              }}
+            >
+              <div>
+                <strong style={{ color: "#166534" }}>Connector upgrade unlocked!</strong>
+                <p style={{ margin: 0, color: "#166534" }}>
+                  You are active in multiple circles — claim your Community Connector level to mentor others.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  recordAction({
+                    id: `connector-upgrade-${Date.now()}`,
+                    label: "Requested Connector level upgrade",
+                    category: "groups",
+                    xp: 30,
+                    impactPoints: 26,
+                  })
+                }
+                style={{
+                  padding: "8px 14px",
+                  borderRadius: 10,
+                  border: "none",
+                  background: "linear-gradient(135deg, #22c55e, #16a34a)",
+                  color: "#fff",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Claim Connector status
+              </button>
+            </div>
+          )}
 
           {/* Statistics */}
           <div style={{ 

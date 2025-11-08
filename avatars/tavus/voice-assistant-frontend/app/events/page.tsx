@@ -6,6 +6,7 @@ import { useTranslation } from "@/components/i18n/TranslationProvider";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import EventCard, { EventData } from "@/components/EventCard";
+import { useUserProfile } from "@/context/UserProfileContext";
 
 // Extended EventData with categories
 interface ExtendedEventData extends EventData {
@@ -326,8 +327,131 @@ const eventCategories = [
   "Family",
 ];
 
+function EventsOverviewMap({
+  events,
+  selectedEventId,
+  onSelect,
+}: {
+  events: ExtendedEventData[];
+  selectedEventId: string | null;
+  onSelect: (event: ExtendedEventData) => void;
+}) {
+  const mappedEvents = events.filter((event) => event.location_lat && event.location_lng);
+  if (mappedEvents.length === 0) return null;
+
+  const latitudes = mappedEvents.map((event) => event.location_lat ?? 0);
+  const longitudes = mappedEvents.map((event) => event.location_lng ?? 0);
+  const minLat = Math.min(...latitudes);
+  const maxLat = Math.max(...latitudes);
+  const minLng = Math.min(...longitudes);
+  const maxLng = Math.max(...longitudes);
+  const latRange = Math.max(maxLat - minLat, 0.01);
+  const lngRange = Math.max(maxLng - minLng, 0.01);
+
+  const getPosition = (event: ExtendedEventData) => {
+    const lat = event.location_lat ?? minLat;
+    const lng = event.location_lng ?? minLng;
+    const x = ((lng - minLng) / lngRange) * 80 + 10;
+    const y = (1 - (lat - minLat) / latRange) * 70 + 15;
+    return { xPercent: x, yPercent: y };
+  };
+
+  return (
+    <section
+      aria-labelledby="events-map"
+      style={{
+        borderRadius: 20,
+        padding: 24,
+        background: "#fff",
+        border: "1px solid #e2e8f0",
+        boxShadow: "0 16px 32px rgba(15, 23, 42, 0.08)",
+        display: "grid",
+        gridTemplateColumns: "minmax(220px, 1fr) minmax(280px, 1.2fr)",
+        gap: 24,
+        alignItems: "start",
+      }}
+    >
+      <div>
+        <p style={{ margin: 0, fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.3, color: "#475569" }}>
+          Map view
+        </p>
+        <h2 id="events-map" style={{ margin: "6px 0 10px 0", fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+          Find local events fast
+        </h2>
+        <p style={{ margin: 0, color: "#475569", lineHeight: 1.6 }}>
+          Tap a pin to add the event to your watch list. Each interaction boosts your Community Connector progress automatically.
+        </p>
+      </div>
+      <div
+        style={{
+          position: "relative",
+          minHeight: 280,
+          borderRadius: 20,
+          overflow: "hidden",
+          background: "linear-gradient(160deg, #bae6fd 0%, #dbeafe 40%, #e0f2fe 100%)",
+          border: "1px solid #cbd5f5",
+        }}
+      >
+        {mappedEvents.map((event) => {
+          const position = getPosition(event);
+          const isSelected = selectedEventId === event.id;
+          return (
+            <button
+              key={event.id}
+              type="button"
+              onClick={() => onSelect(event)}
+              style={{
+                position: "absolute",
+                left: `${position.xPercent}%`,
+                top: `${position.yPercent}%`,
+                transform: "translate(-50%, -50%)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 8,
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+              }}
+            >
+              <span
+                style={{
+                  width: 18,
+                  height: 18,
+                  borderRadius: "50%",
+                  background: isSelected ? "#22c55e" : "#2563eb",
+                  border: isSelected ? "3px solid rgba(34, 197, 94, 0.35)" : "3px solid rgba(59, 130, 246, 0.3)",
+                  boxShadow: isSelected ? "0 0 0 10px rgba(34, 197, 94, 0.18)" : "0 0 0 10px rgba(59, 130, 246, 0.18)",
+                }}
+              />
+              <div
+                style={{
+                  minWidth: 180,
+                  maxWidth: 220,
+                  background: "rgba(255,255,255,0.95)",
+                  borderRadius: 16,
+                  padding: "10px 14px",
+                  border: "1px solid rgba(15, 23, 42, 0.12)",
+                  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.1)",
+                  textAlign: "left",
+                }}
+              >
+                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#0f172a" }}>{event.title}</h3>
+                <p style={{ margin: "6px 0 4px 0", fontSize: 12, color: "#475569" }}>{event.location_name}</p>
+                <p style={{ margin: 0, fontSize: 11, color: "#2563eb", fontWeight: 600 }}>
+                  +{event.rsvp_count} attending
+                </p>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
 export default function EventsPage() {
   const { t } = useTranslation();
+  const { state: userState, recordAction } = useUserProfile();
   const [activeTab, setActiveTab] = useState("explore");
   const [events] = useState<ExtendedEventData[]>(mockEvents);
   const [room] = useState(new Room());
@@ -336,6 +460,8 @@ export default function EventsPage() {
   const [savedEvents, setSavedEvents] = useState<Set<string>>(new Set());
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [showCityDashboard, setShowCityDashboard] = useState(false);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [autoReminders, setAutoReminders] = useState(true);
 
   // Filter and search logic
   const filteredEvents = useMemo(() => {
@@ -362,6 +488,13 @@ export default function EventsPage() {
     });
   }, [events, searchQuery, selectedCategory]);
 
+  const upcomingReminders = useMemo(() => {
+    return userState.reminders
+      .filter((reminder) => new Date(reminder.dueAt) > new Date())
+      .sort((a, b) => new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime())
+      .slice(0, 4);
+  }, [userState.reminders]);
+
   const featuredEvents = filteredEvents.filter((e) => e.featured);
   const regularEvents = filteredEvents.filter((e) => !e.featured);
   const recommendedEvents = aiRecommendations
@@ -369,8 +502,27 @@ export default function EventsPage() {
     .filter((e): e is ExtendedEventData => e !== undefined && filteredEvents.includes(e));
 
   const handleRSVP = async (eventId: string) => {
-    console.log("RSVP to event:", eventId);
-    alert("RSVP functionality will be connected to the backend soon!");
+    const event = events.find((item) => item.id === eventId);
+    if (event) {
+      const reminderDate = new Date(new Date(event.event_date).getTime() - 24 * 60 * 60 * 1000);
+      recordAction({
+        id: `event-rsvp-${eventId}-${Date.now()}`,
+        label: `RSVPed to ${event.title}`,
+        category: "events",
+        xp: 24,
+        impactPoints: 20,
+        impactHours: 0.5,
+        reminder:
+          reminderDate > new Date()
+            ? {
+                title: `Reminder: ${event.title}`,
+                dueAt: reminderDate.toISOString(),
+                channel: "in-app",
+              }
+            : undefined,
+      });
+    }
+    alert("RSVP noted — we will sync this with organizers as the backend comes online.");
   };
 
   const handleViewMap = (lat: number, lng: number) => {
@@ -379,6 +531,7 @@ export default function EventsPage() {
   };
 
   const handleSaveEvent = (eventId: string) => {
+    const alreadySaved = savedEvents.has(eventId);
     setSavedEvents((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(eventId)) {
@@ -388,6 +541,23 @@ export default function EventsPage() {
       }
       return newSet;
     });
+    if (!alreadySaved) {
+      const event = events.find((item) => item.id === eventId);
+      if (event) {
+        recordAction({
+          id: `event-save-${eventId}-${Date.now()}`,
+          label: `Saved event ${event.title}`,
+          category: "events",
+          xp: 12,
+          impactPoints: 10,
+          reminder: {
+            title: `Check saved event: ${event.title}`,
+            dueAt: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
+            channel: "in-app",
+          },
+        });
+      }
+    }
   };
 
   const handleShareEvent = (event: ExtendedEventData) => {
@@ -404,6 +574,13 @@ export default function EventsPage() {
       navigator.clipboard.writeText(url);
       alert("Event link copied to clipboard!");
     }
+    recordAction({
+      id: `event-share-${event.id}-${Date.now()}`,
+      label: `Shared event ${event.title}`,
+      category: "events",
+      xp: 10,
+      impactPoints: 8,
+    });
   };
 
   const handleExportToCalendar = (event: ExtendedEventData) => {
@@ -438,6 +615,87 @@ END:VCALENDAR`;
     
     // Set reminder notification
     alert(`Event added to calendar! Knuut will remind you 1 day before the event.`);
+    recordAction({
+      id: `event-calendar-${event.id}-${Date.now()}`,
+      label: `Exported ${event.title} to calendar`,
+      category: "events",
+      xp: 15,
+      impactPoints: 12,
+      reminder: {
+        title: `Calendar reminder: ${event.title}`,
+        dueAt: new Date(startDate.getTime() - 24 * 60 * 60 * 1000).toISOString(),
+        channel: "email",
+      },
+    });
+  };
+
+  const handleMapSelect = (event: ExtendedEventData) => {
+    setSelectedEventId(event.id);
+    recordAction({
+      id: `event-map-${event.id}-${Date.now()}`,
+      label: `Viewed ${event.title} on map`,
+      category: "events",
+      xp: 8,
+      impactPoints: 6,
+    });
+  };
+
+  const handleAddToPathway = (event: ExtendedEventData) => {
+    setSelectedEventId(event.id);
+    recordAction({
+      id: `event-pathway-${event.id}-${Date.now()}`,
+      label: `Added event to pathway: ${event.title}`,
+      category: "events",
+      xp: 28,
+      impactPoints: 24,
+      impactHours: 0.25,
+      reminder: {
+        title: `Prepare for ${event.title}`,
+        dueAt: new Date(new Date(event.event_date).getTime() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        channel: "in-app",
+      },
+    });
+    alert(`${event.title} is now in your My Pathway plan!`);
+  };
+
+  const handleRequestReminder = (event: ExtendedEventData) => {
+    setSelectedEventId(event.id);
+    recordAction({
+      id: `event-ai-reminder-${event.id}-${Date.now()}`,
+      label: `Requested AI reminder for ${event.title}`,
+      category: "events",
+      xp: 10,
+      impactPoints: 9,
+      reminder: {
+        title: `Reminder AI: ${event.title}`,
+        dueAt: new Date(new Date(event.event_date).getTime() - 12 * 60 * 60 * 1000).toISOString(),
+        channel: "sms",
+      },
+    });
+    alert("We will nudge you 12 hours before the event.");
+  };
+
+  const handleReportEvent = (event: ExtendedEventData) => {
+    recordAction({
+      id: `event-report-${event.id}-${Date.now()}`,
+      label: `Reported event ${event.title}`,
+      category: "safety",
+      xp: 0,
+      impactPoints: 5,
+      metadata: { reason: "user_flagged_event" },
+    });
+    alert("Thanks for flagging this. Moderators will review the event.");
+  };
+
+  const toggleAutoReminders = () => {
+    setAutoReminders((prev) => !prev);
+    recordAction({
+      id: `event-auto-reminders-${Date.now()}`,
+      label: autoReminders ? "Disabled AI event reminders" : "Enabled AI event reminders",
+      category: "events",
+      xp: 5,
+      impactPoints: 4,
+    });
   };
 
   const handleVoiceAssistant = () => {
@@ -446,6 +704,13 @@ END:VCALENDAR`;
 
   const handleLearnFinnishClick = () => {
     window.location.href = "/learn-finnish";
+  };
+  const handleTabChange = (tab: string) => {
+    if (tab === "explore") {
+      window.location.href = "/";
+      return;
+    }
+    setActiveTab(tab);
   };
 
   // Statistics
@@ -463,7 +728,7 @@ END:VCALENDAR`;
       <div className="app">
         <Sidebar 
           activeTab={activeTab} 
-          onTabChange={setActiveTab} 
+          onTabChange={handleTabChange} 
           onLearnFinnishClick={handleLearnFinnishClick} 
         />
 
@@ -640,6 +905,89 @@ END:VCALENDAR`;
               </div>
             </div>
 
+            <EventsOverviewMap
+              events={filteredEvents}
+              selectedEventId={selectedEventId}
+              onSelect={handleMapSelect}
+            />
+
+            <section
+              style={{
+                borderRadius: 20,
+                padding: 24,
+                background: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)",
+                border: "1px solid #facc15",
+                boxShadow: "0 16px 32px rgba(250, 204, 21, 0.25)",
+                marginBottom: 30,
+                display: "grid",
+                gridTemplateColumns: "minmax(220px, 1fr) minmax(240px, 1fr)",
+                gap: 24,
+                alignItems: "start",
+              }}
+            >
+              <div>
+                <p style={{ margin: 0, fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.2, color: "#92400e" }}>
+                  AI reminders
+                </p>
+                <h2 style={{ margin: "6px 0 10px 0", fontSize: 22, fontWeight: 800, color: "#78350f" }}>
+                  Let Knuut nudge you before events
+                </h2>
+                <p style={{ margin: "0 0 16px 0", color: "#9a3412", lineHeight: 1.6 }}>
+                  Toggle automatic reminders to receive SMS or in-app nudges 12–24 hours before events you follow.
+                  Every reminder also updates your Impact Wallet.
+                </p>
+                <button
+                  type="button"
+                  onClick={toggleAutoReminders}
+                  style={{
+                    padding: "10px 16px",
+                    borderRadius: 12,
+                    border: "none",
+                    background: autoReminders ? "#facc15" : "#fef9c3",
+                    color: "#78350f",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  {autoReminders ? "Disable AI reminders" : "Enable AI reminders"}
+                </button>
+              </div>
+              <div
+                style={{
+                  borderRadius: 18,
+                  background: "#fff",
+                  padding: 16,
+                  border: "1px solid #fee2a0",
+                  display: "grid",
+                  gap: 12,
+                }}
+              >
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#b45309" }}>Upcoming reminders</p>
+                {upcomingReminders.length === 0 ? (
+                  <p style={{ margin: 0, fontSize: 12, color: "#a16207" }}>
+                    No reminders yet. Add an event to your pathway or tap AI reminder in an event card.
+                  </p>
+                ) : (
+                  upcomingReminders.map((reminder) => (
+                    <div
+                      key={reminder.id}
+                      style={{
+                        borderRadius: 12,
+                        padding: 10,
+                        background: "#fef3c7",
+                        border: "1px solid #fde68a",
+                      }}
+                    >
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>{reminder.title}</div>
+                      <div style={{ fontSize: 12, color: "#b45309" }}>
+                        {new Date(reminder.dueAt).toLocaleString()} · via {reminder.channel}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </section>
+
             {/* City Dashboard */}
             {showCityDashboard && (
               <div style={{
@@ -789,7 +1137,15 @@ END:VCALENDAR`;
                 {recommendedEvents.map((event, idx) => {
                   const recommendation = aiRecommendations.find(r => r.eventId === event.id);
                   return (
-                    <div key={event.id} style={{ marginBottom: "15px", position: "relative" }}>
+                    <div
+                      key={event.id}
+                      style={{
+                        marginBottom: "15px",
+                        position: "relative",
+                        border: event.id === selectedEventId ? "2px solid #2563eb" : "1px solid rgba(37, 99, 235, 0.15)",
+                        borderRadius: 18,
+                      }}
+                    >
                       <div style={{
                         position: "absolute",
                         top: "10px",
@@ -811,6 +1167,9 @@ END:VCALENDAR`;
                         event={event}
                         onRSVP={handleRSVP}
                         onViewMap={handleViewMap}
+                        onAddToPathway={handleAddToPathway}
+                        onRequestReminder={handleRequestReminder}
+                        onReport={handleReportEvent}
                       />
                     </div>
                   );
@@ -913,7 +1272,15 @@ END:VCALENDAR`;
               </div>
               <div>
                 {featuredEvents.map((event) => (
-                  <div key={event.id} style={{ position: "relative", marginBottom: "15px" }}>
+                  <div
+                    key={event.id}
+                    style={{
+                      position: "relative",
+                      marginBottom: "15px",
+                      border: event.id === selectedEventId ? "2px solid #2563eb" : "1px solid rgba(37, 99, 235, 0.15)",
+                      borderRadius: 18,
+                    }}
+                  >
                     <div style={{
                       position: "absolute",
                       top: "10px",
@@ -987,6 +1354,9 @@ END:VCALENDAR`;
                         event={event}
                         onRSVP={handleRSVP}
                         onViewMap={handleViewMap}
+                        onAddToPathway={handleAddToPathway}
+                        onRequestReminder={handleRequestReminder}
+                        onReport={handleReportEvent}
                       />
                     </div>
                   </div>
@@ -1010,7 +1380,15 @@ END:VCALENDAR`;
               </h2>
               <div>
                 {regularEvents.map((event) => (
-                  <div key={event.id} style={{ position: "relative", marginBottom: "15px" }}>
+                  <div
+                    key={event.id}
+                    style={{
+                      position: "relative",
+                      marginBottom: "15px",
+                      border: event.id === selectedEventId ? "2px solid #2563eb" : "1px solid rgba(203, 213, 225, 0.8)",
+                      borderRadius: 16,
+                    }}
+                  >
                     <div style={{
                       position: "absolute",
                       top: "10px",
@@ -1043,6 +1421,9 @@ END:VCALENDAR`;
                       event={event}
                       onRSVP={handleRSVP}
                       onViewMap={handleViewMap}
+                      onAddToPathway={handleAddToPathway}
+                      onRequestReminder={handleRequestReminder}
+                      onReport={handleReportEvent}
                     />
                   </div>
                 ))}

@@ -23,9 +23,11 @@ import FlashcardPanel from "@/components/FlashcardPanel";
 import useReduceConsoleNoise from "@/hooks/useReduceConsoleNoise";
 import type { ConnectionDetails } from "../api/connection-details/route";
 import { useTranslation } from "@/components/i18n/TranslationProvider";
+import { useUserProfile } from "@/context/UserProfileContext";
 
 export default function KnuutVoicePage() {
   const { t } = useTranslation();
+  const { recordAction } = useUserProfile();
   const [room] = useState(() => new Room({
     audioCaptureDefaults: {
       echoCancellation: true,
@@ -39,6 +41,11 @@ export default function KnuutVoicePage() {
   const [chatMessages, setChatMessages] = useState<
     Array<{ type: "user" | "bot"; text: string }>
   >([]);
+  const quickButtons = [
+    { id: "qa-events", icon: "📅", label: "Show events this week" },
+    { id: "qa-resources", icon: "🏠", label: "Find resources near me" },
+    { id: "qa-groups", icon: "🤝", label: "Join Peer Group" },
+  ];
   // Text input removed per request; voice is the primary modality
 
   useReduceConsoleNoise();
@@ -111,8 +118,22 @@ export default function KnuutVoicePage() {
           text: "👋 Hello! I'm Knuut AI. I can help you with city services, integration, finding jobs, discovering events, and teaching Finnish. What would you like to do?",
         },
       ]);
+      recordAction({
+        id: `voice-enable-${Date.now()}`,
+        label: "Enabled Knuut AI Voice session",
+        category: "voice",
+        xp: 18,
+        impactPoints: 15,
+      });
     } else {
       setIsListening(!isListening);
+      recordAction({
+        id: `voice-toggle-${Date.now()}`,
+        label: isListening ? "Paused listening mode" : "Resumed listening mode",
+        category: "voice",
+        xp: 4,
+        impactPoints: 3,
+      });
     }
   };
 
@@ -121,6 +142,13 @@ export default function KnuutVoicePage() {
       ...prev,
       { type: "user", text: prompt },
     ]);
+    recordAction({
+      id: `voice-prompt-${Date.now()}`,
+      label: `Voice quick intent: ${prompt}`,
+      category: "voice",
+      xp: 9,
+      impactPoints: 7,
+    });
 
     // If voice is enabled, send to agent
     if (voiceEnabled && room.state === "connected") {
@@ -141,11 +169,18 @@ export default function KnuutVoicePage() {
   const handleLearnFinnishClick = () => {
     window.location.href = "/learn-finnish";
   };
+  const handleTabChange = (tab: string) => {
+    if (tab === "explore") {
+      window.location.href = "/";
+      return;
+    }
+    setActiveTab(tab as typeof activeTab);
+  };
 
   return (
     <RoomContext.Provider value={room}>
       <div className="app">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onLearnFinnishClick={handleLearnFinnishClick} />
+        <Sidebar activeTab={activeTab} onTabChange={handleTabChange} onLearnFinnishClick={handleLearnFinnishClick} />
 
         <main>
           <div className="hero">
@@ -207,7 +242,7 @@ export default function KnuutVoicePage() {
               <div className="chips" style={{ gap: 12 }}>
                 <button
                   className="chip"
-                  onClick={() => handleChipClick("Show events this week")}
+                  onClick={() => handleChipClick("Show events near me")}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -219,11 +254,11 @@ export default function KnuutVoicePage() {
                   }}
                 >
                   <i className="fa-regular fa-calendar" aria-hidden></i>
-                  <span>Show events this week</span>
+                  <span>Show events near me</span>
                 </button>
                 <button
                   className="chip"
-                  onClick={() => handleChipClick("Find resources near me")}
+                  onClick={() => handleChipClick("Where can I find Finnish lessons?")}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -235,7 +270,7 @@ export default function KnuutVoicePage() {
                   }}
                 >
                   <i className="fa-solid fa-location-dot" aria-hidden></i>
-                  <span>Find resources near me</span>
+                  <span>Where can I find Finnish lessons?</span>
                 </button>
                 <button
                   className="chip"
@@ -281,6 +316,31 @@ export default function KnuutVoicePage() {
                   <VoiceAssistantContent />
                 </div>
               )}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: voiceEnabled ? 12 : 24 }}>
+                {quickButtons.map((button) => (
+                  <button
+                    key={button.id}
+                    type="button"
+                    onClick={() => handleChipClick(button.label)}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "10px 16px",
+                      borderRadius: 12,
+                      border: "1px solid #cbd5f5",
+                      background: "#ffffff",
+                      fontWeight: 600,
+                      color: "#1e293b",
+                      cursor: "pointer",
+                      boxShadow: "0 6px 16px rgba(15,23,42,0.08)",
+                    }}
+                  >
+                    <span aria-hidden>{button.icon}</span>
+                    <span>{button.label}</span>
+                  </button>
+                ))}
+              </div>
             </section>
 
             <section className="panel" style={{

@@ -5,6 +5,7 @@ import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import FinnishTextbookContent from "@/components/FinnishTextbookContent";
+import FinnishLanguageBuddy from "@/components/FinnishLanguageBuddy";
 
 export default function LearnFinnishPage() {
   const [activeTab, setActiveTab] = useState("explore");
@@ -13,11 +14,18 @@ export default function LearnFinnishPage() {
   const handleLearnFinnishClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  const handleTabChange = (tab: string) => {
+    if (tab === "explore") {
+      window.location.href = "/";
+      return;
+    }
+    setActiveTab(tab);
+  };
 
   return (
     <RoomContext.Provider value={room}>
       <div className="app">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onLearnFinnishClick={handleLearnFinnishClick} />
+        <Sidebar activeTab={activeTab} onTabChange={handleTabChange} onLearnFinnishClick={handleLearnFinnishClick} />
 
         <main style={{ 
           maxWidth: "900px", 
@@ -26,6 +34,7 @@ export default function LearnFinnishPage() {
           background: "#fafafa",
           minHeight: "100vh"
         }}>
+          <FinnishLanguageBuddy />
           <FinnishTextbookContent />
         </main>
       </div>

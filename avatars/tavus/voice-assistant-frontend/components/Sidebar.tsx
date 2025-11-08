@@ -204,6 +204,13 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
           <div className="nav-section">
             <div className="nav-section-title">{t("programs")}</div>
             <button
+              className={`nav-btn ${activeTab === "programs" ? "active" : ""}`}
+              onClick={() => { window.location.href = "/programs"; }}
+            >
+              <i className="fa-solid fa-flag-checkered"></i>
+              <span>Fast Tracks</span>
+            </button>
+            <button
               className={`nav-btn ${activeTab === "events" ? "active" : ""}`}
               onClick={() => { window.location.href = "/events"; }}
             >
@@ -248,6 +255,13 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
 
           <div className="nav-section">
             <div className="nav-section-title">{t("tools")}</div>
+            <button
+              className={`nav-btn ${activeTab === "tools" ? "active" : ""}`}
+              onClick={() => { window.location.href = "/tools"; }}
+            >
+              <i className="fa-solid fa-wallet"></i>
+              <span>Impact Wallet</span>
+            </button>
             <button
               className="nav-btn"
               onClick={() => { window.location.href = "/volunteer"; }}

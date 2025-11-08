@@ -18,9 +18,12 @@ interface EventCardProps {
   event: EventData;
   onRSVP?: (eventId: string) => void;
   onViewMap?: (lat: number, lng: number) => void;
+  onAddToPathway?: (event: EventData) => void;
+  onRequestReminder?: (event: EventData) => void;
+  onReport?: (event: EventData) => void;
 }
 
-export default function EventCard({ event, onRSVP, onViewMap }: EventCardProps) {
+export default function EventCard({ event, onRSVP, onViewMap, onAddToPathway, onRequestReminder, onReport }: EventCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const formatDate = (dateString: string) => {
@@ -91,14 +94,14 @@ export default function EventCard({ event, onRSVP, onViewMap }: EventCardProps) 
             exit={{ height: 0, opacity: 0 }}
             className="mt-4 pt-4 border-t border-gray-200"
           >
-            <div className="flex gap-2">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {onRSVP && isUpcoming(event.event_date) && (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onRSVP(event.id);
                   }}
-                  className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
                 >
                   RSVP
                 </button>
@@ -109,9 +112,42 @@ export default function EventCard({ event, onRSVP, onViewMap }: EventCardProps) 
                     e.stopPropagation();
                     onViewMap(event.location_lat!, event.location_lng!);
                   }}
-                  className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
+                  className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
                 >
                   View on Map
+                </button>
+              )}
+              {onAddToPathway && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onAddToPathway(event);
+                  }}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                >
+                  Add to My Pathway
+                </button>
+              )}
+              {onRequestReminder && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onRequestReminder(event);
+                  }}
+                  className="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-colors"
+                >
+                  AI Reminder
+                </button>
+              )}
+              {onReport && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onReport(event);
+                  }}
+                  className="bg-red-100 text-red-700 px-4 py-2 rounded-md border border-red-200 hover:bg-red-200 transition-colors"
+                >
+                  Report / Block
                 </button>
               )}
             </div>

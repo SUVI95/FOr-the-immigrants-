@@ -1,8 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-export default function CVTemplate({ language = "en" }: { language?: "en" | "fi" }) {
+type CommunityEntry = {
+  role: string;
+  organization: string;
+  period: string;
+  impact: string;
+  hours?: number;
+  badges?: string[];
+};
+
+type CVData = {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  summary: string;
+  experience: Array<{ title: string; company: string; period: string; description: string }>;
+  education: Array<{ degree: string; institution: string; period: string }>;
+  skills: string[];
+  languages: Array<{ language: string; level: string }>;
+  community: CommunityEntry[];
+};
+
+export default function CVTemplate({
+  language = "en",
+  initialData,
+}: {
+  language?: "en" | "fi";
+  initialData?: Partial<CVData>;
+}) {
   const t = (key: string) => {
     const fi: Record<string, string> = {
       title: "Nordic-tyylinen ansioluettelo",
@@ -54,7 +82,7 @@ export default function CVTemplate({ language = "en" }: { language?: "en" | "fi"
     };
     return (language === "fi" ? fi : en)[key] || key;
   };
-  const [cvData, setCvData] = useState({
+  const defaultData: CVData = {
     name: "Your Name",
     email: "your.email@example.com",
     phone: "+358 50 123 4567",
@@ -80,7 +108,35 @@ export default function CVTemplate({ language = "en" }: { language?: "en" | "fi"
       { language: "Finnish", level: "B2" },
       { language: "English", level: "C1" },
     ],
-  });
+    community: [
+      {
+        role: "Community Volunteer",
+        organization: "Local NGO",
+        period: "2023 - Present",
+        impact: "Supported newcomers during weekly meetups.",
+        hours: 10,
+      },
+    ],
+  };
+
+  const mergedData = useMemo<CVData>(() => {
+    if (!initialData) return defaultData;
+    return {
+      ...defaultData,
+      ...initialData,
+      experience: initialData.experience ?? defaultData.experience,
+      education: initialData.education ?? defaultData.education,
+      skills: initialData.skills ?? defaultData.skills,
+      languages: initialData.languages ?? defaultData.languages,
+      community: initialData.community ?? defaultData.community,
+    };
+  }, [initialData]);
+
+  const [cvData, setCvData] = useState<CVData>(mergedData);
+
+  useEffect(() => {
+    setCvData(mergedData);
+  }, [mergedData]);
 
   const [editingField, setEditingField] = useState<string | null>(null);
 
@@ -241,6 +297,56 @@ export default function CVTemplate({ language = "en" }: { language?: "en" | "fi"
           {t("addExperience")}
         </button>
       </section>
+
+      {/* Community Experience */}
+      {cvData.community.length > 0 && (
+        <section style={{ marginBottom: "32px" }}>
+          <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "16px", color: "var(--brand)" }}>
+            Community Experience
+          </h3>
+          {cvData.community.map((entry, idx) => (
+            <div
+              key={idx}
+              style={{
+                marginBottom: "16px",
+                padding: "18px",
+                borderRadius: 12,
+                background: "#f1f5f9",
+                border: "1px solid #dbeafe",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <strong style={{ fontSize: 15 }}>{entry.role}</strong>
+                <span style={{ fontSize: 12, color: "#475569" }}>{entry.period}</span>
+              </div>
+              <div style={{ fontSize: 13, color: "#1f2937", marginBottom: 6 }}>{entry.organization}</div>
+              <p style={{ fontSize: 13, color: "#334155", margin: 0 }}>{entry.impact}</p>
+              {entry.hours !== undefined && (
+                <div style={{ fontSize: 12, color: "#0f172a", marginTop: 6 }}>Hours logged: {entry.hours.toFixed(1)} h</div>
+              )}
+              {entry.badges && entry.badges.length > 0 && (
+                <div style={{ marginTop: 6, display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {entry.badges.map((badge) => (
+                    <span
+                      key={badge}
+                      style={{
+                        fontSize: 11,
+                        padding: "4px 8px",
+                        borderRadius: 999,
+                        background: "#ede9fe",
+                        color: "#5b21b6",
+                        border: "1px solid #c4b5fd",
+                      }}
+                    >
+                      {badge}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
 
       {/* Education */}
       <section style={{ marginBottom: "32px" }}>

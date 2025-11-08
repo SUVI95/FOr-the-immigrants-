@@ -5,6 +5,7 @@ import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import { useTranslation } from "@/components/i18n/TranslationProvider";
+import { useUserProfile } from "@/context/UserProfileContext";
 
 type Resource = {
   id: string;
@@ -189,11 +190,50 @@ const afterArrival: Resource[] = [
 
 export default function ResourcesPage() {
   const { t } = useTranslation();
+  const { state: userState, recordAction, togglePlainLanguage } = useUserProfile();
   const [activeTab, setActiveTab] = useState("explore");
   const [room] = useState(new Room());
+  const plainLanguage = userState.settings.plainLanguage;
+  const overviewNarration =
+    "Essential links for settling in Kajaani and Finland. Immigration, registration, healthcare, employment, and language learning resources in one place.";
 
   const handleLearnFinnishClick = () => {
     window.location.href = "/learn-finnish";
+  };
+  const handleTabChange = (tab: string) => {
+    if (tab === "explore") {
+      window.location.href = "/";
+      return;
+    }
+    setActiveTab(tab);
+  };
+
+  const handlePlainLanguageToggle = () => {
+    togglePlainLanguage();
+    recordAction({
+      id: `resources-plain-language-${Date.now()}`,
+      label: plainLanguage ? "Disabled plain language mode" : "Enabled plain language mode",
+      category: "resources",
+      xp: 6,
+      impactPoints: 5,
+    });
+  };
+
+  const handleListen = (text: string, label: string) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      alert("Listening is not supported in this browser.");
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+    recordAction({
+      id: `resources-listen-${Date.now()}`,
+      label: `Played listen mode: ${label}`,
+      category: "resources",
+      xp: 5,
+      impactPoints: 4,
+    });
   };
 
   return (
@@ -201,7 +241,7 @@ export default function ResourcesPage() {
       <div className="app">
         <Sidebar 
           activeTab={activeTab} 
-          onTabChange={setActiveTab} 
+          onTabChange={handleTabChange} 
           onLearnFinnishClick={handleLearnFinnishClick} 
         />
 
@@ -236,19 +276,115 @@ export default function ResourcesPage() {
                 employment and language. Curated and investor‑ready.
               </p>
             </div>
+            <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 12 }}>
+              <button
+                type="button"
+                onClick={handlePlainLanguageToggle}
+                style={{
+                  padding: "10px 16px",
+                  borderRadius: 12,
+                  border: "1px solid #cbd5f5",
+                  background: plainLanguage ? "#1d4ed8" : "#fff",
+                  color: plainLanguage ? "#fff" : "#1e293b",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {plainLanguage ? "Plain Language (ON)" : "Plain Language (OFF)"}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleListen(overviewNarration, "Resources overview")}
+                style={{
+                  padding: "10px 16px",
+                  borderRadius: 12,
+                  border: "1px solid #f97316",
+                  background: "#fff7ed",
+                  color: "#c2410c",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Listen
+              </button>
+            </div>
           </div>
 
           {/* Premium Resource Sections */}
-          <Section title="City & Guides" items={cityResources} />
-          <Section title="Immigration (Before Arrival)" items={beforeArrival} />
-          <Section title="After Arrival (Registration, ID, Banking, Health)" items={afterArrival} />
+          <Section
+            title="City & Guides"
+            items={cityResources}
+            plainLanguage={plainLanguage}
+            onResourceOpen={(resource) =>
+              recordAction({
+                id: `resource-open-${resource.id}-${Date.now()}`,
+                label: `Opened resource ${resource.title}`,
+                category: "resources",
+                xp: 7,
+                impactPoints: 6,
+              })
+            }
+            onListen={handleListen}
+          />
+          <Section
+            title="Immigration (Before Arrival)"
+            items={beforeArrival}
+            plainLanguage={plainLanguage}
+            onResourceOpen={(resource) =>
+              recordAction({
+                id: `resource-open-${resource.id}-${Date.now()}`,
+                label: `Opened resource ${resource.title}`,
+                category: "resources",
+                xp: 7,
+                impactPoints: 6,
+              })
+            }
+            onListen={handleListen}
+          />
+          <Section
+            title="After Arrival (Registration, ID, Banking, Health)"
+            items={afterArrival}
+            plainLanguage={plainLanguage}
+            onResourceOpen={(resource) =>
+              recordAction({
+                id: `resource-open-${resource.id}-${Date.now()}`,
+                label: `Opened resource ${resource.title}`,
+                category: "resources",
+                xp: 7,
+                impactPoints: 6,
+              })
+            }
+            onListen={handleListen}
+          />
         </main>
       </div>
     </RoomContext.Provider>
   );
 }
 
-function Section({ title, items }: { title: string; items: Resource[] }) {
+function simplifyDescription(text: string) {
+  return text
+    .replace(/official/gi, "official")
+    .replace(/guidance/gi, "guidance")
+    .replace(/assistance/gi, "help")
+    .replace(/reimbursements/gi, "refunds")
+    .replace(/obligations/gi, "rules")
+    .replace(/information/gi, "info");
+}
+
+function Section({
+  title,
+  items,
+  plainLanguage,
+  onResourceOpen,
+  onListen,
+}: {
+  title: string;
+  items: Resource[];
+  plainLanguage: boolean;
+  onResourceOpen: (resource: Resource) => void;
+  onListen: (text: string, label: string) => void;
+}) {
   return (
     <section style={{ background: "linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%)", borderRadius: 16, boxShadow: "0 6px 24px rgba(0,0,0,0.06)", padding: 24, border: "1px solid #e5e7eb", marginBottom: 24 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
@@ -273,6 +409,7 @@ function Section({ title, items }: { title: string; items: Resource[] }) {
               transition: "transform .18s ease, box-shadow .18s ease, border-color .18s ease",
               boxShadow: "0 4px 12px rgba(2,6,23,0.06)",
             }}
+            onClick={() => onResourceOpen(r)}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)";
               (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 10px 24px rgba(2,6,23,0.10)";
@@ -292,7 +429,31 @@ function Section({ title, items }: { title: string; items: Resource[] }) {
               <span className={`fa ${r.iconClass}`} aria-hidden></span>
               <span>{r.category}</span>
             </div>
-            <div style={{ color: "#334155", lineHeight: 1.65 }}>{r.description}</div>
+            <div style={{ color: "#334155", lineHeight: 1.65 }}>
+              {plainLanguage ? simplifyDescription(r.description) : r.description}
+            </div>
+            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  onListen(plainLanguage ? simplifyDescription(r.description) : r.description, r.title);
+                }}
+                style={{
+                  padding: "6px 10px",
+                  borderRadius: 10,
+                  border: "1px solid #cbd5f5",
+                  background: "#fff",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#1e3a8a",
+                  cursor: "pointer",
+                }}
+              >
+                Listen
+              </button>
+            </div>
           </a>
         ))}
       </div>
