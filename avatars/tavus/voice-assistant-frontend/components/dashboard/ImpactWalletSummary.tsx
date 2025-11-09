@@ -15,14 +15,15 @@ export function ImpactWalletSummary() {
 
   return (
     <section
+      id="my-journey-anchor"
       aria-labelledby="impact-wallet"
       style={{
         borderRadius: 20,
         padding: 24,
-        background: "#0f172a",
-        color: "#f8fafc",
-        border: "1px solid rgba(148,163,184,0.3)",
-        boxShadow: "0 24px 48px rgba(15,23,42,0.35)",
+        background: "linear-gradient(135deg, #eef2ff 0%, #e0f2fe 60%, #fdf2f8 100%)",
+        color: "#0f172a",
+        border: "1px solid rgba(148,163,184,0.25)",
+        boxShadow: "0 20px 44px rgba(99,102,241,0.18)",
         display: "grid",
         gridTemplateColumns: "minmax(220px, 1fr) minmax(280px, 1.1fr)",
         gap: 28,
@@ -30,10 +31,15 @@ export function ImpactWalletSummary() {
       }}
     >
       <div>
-        <p style={{ margin: 0, fontSize: 12, letterSpacing: 1.4, textTransform: "uppercase", opacity: 0.6 }}>Impact Wallet</p>
-        <h2 id="impact-wallet" style={{ margin: "6px 0 8px 0", fontSize: 24, fontWeight: 800 }}>Your social capital</h2>
+        <p style={{ margin: 0, fontSize: 12, letterSpacing: 1.4, textTransform: "uppercase", opacity: 0.6 }}>Your Story in Action</p>
+        <h2 id="impact-wallet" style={{ margin: "6px 0 8px 0", fontSize: 24, fontWeight: 800 }}>XP, badges, and hours that show your impact.</h2>
         <p style={{ lineHeight: 1.6, opacity: 0.75 }}>
-          Track every contribution. XP, badges, micro-volunteering tasks and hours sync here in real-time. Export anonymized data to your integration coach or municipality partners when needed.
+          Help someone, learn a skill, or join an event — every action updates this board instantly so mentors and employers can see
+          your momentum.
+        </p>
+        <p style={{ lineHeight: 1.6, opacity: 0.75 }}>
+          You’re {points >= 300 ? "already a Connector" : `${Math.max(0, 300 - points)} XP away from Connector level`}. Keep the
+          streak going!
         </p>
 
         <div style={{ display: "grid", gap: 14, marginTop: 16 }}>
@@ -41,19 +47,19 @@ export function ImpactWalletSummary() {
             style={{
               borderRadius: 16,
               padding: 16,
-              background: "linear-gradient(135deg, rgba(59,130,246,0.25) 0%, rgba(129,140,248,0.18) 100%)",
-              border: "1px solid rgba(59,130,246,0.45)",
+              background: "linear-gradient(135deg, rgba(59,130,246,0.22) 0%, rgba(129,140,248,0.14) 100%)",
+              border: "1px solid rgba(59,130,246,0.25)",
             }}
           >
-            <div style={{ fontSize: 12, letterSpacing: 0.4, textTransform: "uppercase", opacity: 0.7 }}>Impact Points</div>
+            <div style={{ fontSize: 12, letterSpacing: 0.4, textTransform: "uppercase", opacity: 0.7 }}>Total XP & Impact</div>
             <div style={{ fontSize: 30, fontWeight: 800, marginTop: 4 }}>{points}</div>
           </div>
           <div
             style={{
               borderRadius: 16,
               padding: 16,
-              background: "linear-gradient(135deg, rgba(34,197,94,0.22) 0%, rgba(134,239,172,0.16) 100%)",
-              border: "1px solid rgba(34,197,94,0.4)",
+              background: "linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(134,239,172,0.14) 100%)",
+              border: "1px solid rgba(34,197,94,0.28)",
             }}
           >
             <div style={{ fontSize: 12, letterSpacing: 0.4, textTransform: "uppercase", opacity: 0.7 }}>Volunteering Hours</div>
@@ -63,11 +69,11 @@ export function ImpactWalletSummary() {
             style={{
               borderRadius: 16,
               padding: 16,
-              background: "linear-gradient(135deg, rgba(236,72,153,0.22) 0%, rgba(244,114,182,0.16) 100%)",
-              border: "1px solid rgba(236,72,153,0.4)",
+              background: "linear-gradient(135deg, rgba(236,72,153,0.18) 0%, rgba(244,114,182,0.12) 100%)",
+              border: "1px solid rgba(236,72,153,0.28)",
             }}
           >
-            <div style={{ fontSize: 12, letterSpacing: 0.4, textTransform: "uppercase", opacity: 0.7 }}>Badges</div>
+            <div style={{ fontSize: 12, letterSpacing: 0.4, textTransform: "uppercase", opacity: 0.7 }}>Unlocked Badges</div>
             <div style={{ fontSize: 16, fontWeight: 700, marginTop: 6, display: "flex", gap: 8, flexWrap: "wrap" }}>
               {badges.length === 0 ? "No badges yet — keep going!" : badges.map((badge) => <span key={badge}>🏅 {badge}</span>)}
             </div>
@@ -90,9 +96,9 @@ export function ImpactWalletSummary() {
             marginTop: 18,
             padding: "12px 18px",
             borderRadius: 999,
-            border: "1px solid rgba(148,163,184,0.35)",
-            background: "rgba(15,23,42,0.65)",
-            color: "#f8fafc",
+            border: "1px solid rgba(59,130,246,0.35)",
+            background: "rgba(255,255,255,0.85)",
+            color: "#1e3a8a",
             fontWeight: 700,
             cursor: "pointer",
           }}
@@ -106,11 +112,11 @@ export function ImpactWalletSummary() {
           style={{
             borderRadius: 18,
             padding: 20,
-            background: "rgba(15,23,42,0.55)",
-            border: "1px solid rgba(148,163,184,0.25)",
+            background: "rgba(15,23,42,0.06)",
+            border: "1px solid rgba(148,163,184,0.2)",
           }}
         >
-          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, opacity: 0.8 }}>Micro-volunteering board</h3>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, opacity: 0.8 }}>Quick wins to boost your level</h3>
           <p style={{ margin: "6px 0 14px 0", fontSize: 13, opacity: 0.7 }}>
             Quick wins you can complete in under 30 minutes. Each task syncs to Skill Passport and adds Impact Points.
           </p>
@@ -121,8 +127,8 @@ export function ImpactWalletSummary() {
                 style={{
                   borderRadius: 14,
                   padding: 14,
-                  background: task.completed ? "rgba(34,197,94,0.12)" : "rgba(15,23,42,0.55)",
-                  border: task.completed ? "1px solid rgba(34,197,94,0.45)" : "1px solid rgba(148,163,184,0.2)",
+                  background: task.completed ? "rgba(34,197,94,0.12)" : "rgba(255,255,255,0.9)",
+                  border: task.completed ? "1px solid rgba(34,197,94,0.35)" : "1px solid rgba(148,163,184,0.18)",
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
@@ -170,8 +176,8 @@ export function ImpactWalletSummary() {
                       padding: "8px 14px",
                       borderRadius: 12,
                       border: "none",
-                      background: task.completed ? "rgba(148,163,184,0.45)" : "linear-gradient(135deg, #22c55e 0%, #10b981 100%)",
-                      color: "#0f172a",
+                      background: task.completed ? "rgba(148,163,184,0.3)" : "linear-gradient(135deg, #22c55e 0%, #10b981 100%)",
+                      color: task.completed ? "#475569" : "#0f172a",
                       fontWeight: 700,
                       cursor: task.completed ? "default" : "pointer",
                     }}
@@ -188,11 +194,11 @@ export function ImpactWalletSummary() {
           style={{
             borderRadius: 18,
             padding: 20,
-            background: "rgba(15,23,42,0.55)",
-            border: "1px solid rgba(148,163,184,0.25)",
+            background: "rgba(255,255,255,0.9)",
+            border: "1px solid rgba(148,163,184,0.22)",
           }}
         >
-          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, opacity: 0.8 }}>Latest wallet updates</h3>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, opacity: 0.8 }}>Latest Journey updates</h3>
           <ul style={{ listStyle: "none", padding: 0, margin: "14px 0 0 0", display: "grid", gap: 10 }}>
             {recentTransactions.length === 0 ? (
               <li style={{ fontSize: 13, opacity: 0.7 }}>No activity yet. Complete a pathway step or volunteer task.</li>
@@ -210,7 +216,11 @@ export function ImpactWalletSummary() {
                     padding: "10px 14px",
                   }}
                 >
-                  <span>{txn.description}</span>
+                  <span>
+                    {txn.description === "Joined Kajaani Integration Circle"
+                      ? "You joined the Kajaani Integration Circle — welcome to the movement! Every step builds your story."
+                      : txn.description}
+                  </span>
                   <span style={{ fontWeight: 700, color: txn.pointsChange && txn.pointsChange > 0 ? "#4ade80" : "#e2e8f0" }}>
                     {txn.pointsChange ? `+${txn.pointsChange} pts` : "Logged"}
                   </span>

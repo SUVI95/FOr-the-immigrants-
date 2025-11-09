@@ -7,13 +7,13 @@ import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import { useTranslation } from "@/components/i18n/TranslationProvider";
 import { CommunityConnectorCard } from "@/components/dashboard/CommunityConnectorCard";
-import { MyPathwayMap } from "@/components/dashboard/MyPathwayMap";
 import { IntegrationHubMap } from "@/components/dashboard/IntegrationHubMap";
 import { StoryCreator } from "@/components/dashboard/StoryCreator";
 import { ImpactWalletSummary } from "@/components/dashboard/ImpactWalletSummary";
 import { SkillPassportSummary } from "@/components/dashboard/SkillPassportSummary";
 import DataProtectionPanel from "@/components/DataProtectionPanel";
 import { useUserProfile } from "@/context/UserProfileContext";
+import { AISuggestionFeed } from "@/components/dashboard/AISuggestionFeed";
 
 type TabKey = "explore" | "create";
 
@@ -55,48 +55,77 @@ export default function Page() {
         <Sidebar activeTab={activeTab} onTabChange={handleTabChange} onLearnFinnishClick={handleLearnFinnishClick} />
 
         <main
-          style={{
+                    style={{ 
             flex: 1,
             padding: "32px 28px",
             background: "#f8fafc",
             minHeight: "100vh",
             overflowY: "auto",
-          }}
-        >
+                    }}
+                  >
           <div style={{ display: "grid", gap: 24 }}>
             {/* Top banner */}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "minmax(320px, 1.2fr) minmax(220px, 0.8fr)",
+                gridTemplateColumns: "minmax(340px, 1.3fr) minmax(220px, 0.7fr)",
                 gap: 24,
                 alignItems: "stretch",
-                flexWrap: "wrap",
               }}
             >
               <CommunityConnectorCard />
               <aside
-                style={{
-                  borderRadius: 20,
-                  padding: 24,
-                  background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
-                  border: "1px solid #cbd5f5",
-                  boxShadow: "0 18px 28px rgba(59,130,246,0.18)",
-                  display: "grid",
-                  gap: 16,
-                }}
-              >
-                <div>
-                  <p style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: 1.3, textTransform: "uppercase", color: "#4338ca" }}>
-                    Knuut AI Voice
-                  </p>
-                  <h2 style={{ margin: "6px 0 8px 0", fontSize: 22, fontWeight: 800, color: "#1e293b" }}>24/7 Life Admin helper</h2>
-                  <p style={{ margin: 0, color: "#475569" }}>
-                    Ask anything about registration, jobs, events or Finnish phrases. Your prompts feed the Connector Progress bar.
-                  </p>
-                </div>
-                <div style={{ display: "grid", gap: 8 }}>
-                  {quickPrompts.map((prompt) => (
+                 style={{
+                   borderRadius: 28,
+                   padding: 26,
+                   background: "radial-gradient(circle at top left, rgba(124,58,237,0.18), rgba(59,130,246,0.12) 45%, rgba(14,165,233,0.1) 100%)",
+                   border: "1px solid rgba(148,163,184,0.25)",
+                   boxShadow: "0 28px 48px rgba(59,130,246,0.24)",
+                   display: "grid",
+                   gap: 18,
+                 }}
+               >
+                <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+                  <div style={{ display: "grid", gap: 10 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <div
+                        aria-hidden
+                        style={{
+                          width: 46,
+                          height: 46,
+                          borderRadius: "50%",
+                          background: "linear-gradient(135deg, #4f46e5, #ec4899)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#fff",
+                          fontSize: 18,
+                          fontWeight: 700,
+                          boxShadow: "0 12px 24px rgba(79,70,229,0.28)",
+                        }}
+                      >
+                        AI
+                      </div>
+                      <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.4, textTransform: "uppercase", color: "#4c1d95" }}>
+                        Ask Knuut Anything
+                      </span>
+                    </div>
+                    <h2 style={{ margin: 0, fontSize: 21, fontWeight: 800, color: "#0f172a" }}>Your personal coach for life admin & ideas</h2>
+                    <p style={{ margin: 0, color: "#334155", fontSize: 13.5, lineHeight: 1.55 }}>
+                       Knuut reads your goals, skills, and city data. Ask for jobs, events, or help with documents and we update your Journey,
+                       XP, and matches automatically.
+                     </p>
+                   </div>
+                 </div>
+                 <div
+                   style={{
+                     display: "grid",
+                     marginTop: 4,
+                     gap: 10,
+                     gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+                   }}
+                 >
+                   {quickPrompts.map((prompt) => (
                     <button
                       key={prompt.id}
                       type="button"
@@ -105,17 +134,19 @@ export default function Page() {
                         display: "flex",
                         alignItems: "center",
                         gap: 10,
-                        padding: "10px 14px",
-                        borderRadius: 12,
-                        border: "1px solid #cbd5f5",
-                        background: "#fff",
+                        padding: "12px 16px",
+                        borderRadius: 16,
+                        border: "1px solid rgba(79,70,229,0.2)",
+                        background: "rgba(255,255,255,0.92)",
                         fontWeight: 600,
                         color: "#1e293b",
                         cursor: "pointer",
+                        boxShadow: "0 10px 20px rgba(124,58,237,0.12)",
+                        minHeight: 72,
                       }}
                     >
-                      <span>{prompt.icon}</span>
-                      <span>{prompt.label}</span>
+                      <span style={{ fontSize: 20 }}>{prompt.icon}</span>
+                      <span style={{ textAlign: "left", lineHeight: 1.4 }}>{prompt.label}</span>
                     </button>
                   ))}
                 </div>
@@ -123,19 +154,24 @@ export default function Page() {
                   href="/knuut-voice"
                   style={{
                     textDecoration: "none",
-                    padding: "10px 14px",
-                    borderRadius: 12,
-                    background: "linear-gradient(135deg, #4338ca, #7c3aed)",
+                    padding: "14px 18px",
+                    borderRadius: 16,
+                    background: "linear-gradient(135deg, #4338ca 0%, #7c3aed 45%, #ec4899 100%)",
                     color: "#fff",
                     fontWeight: 700,
                     textAlign: "center",
-                    boxShadow: "0 14px 24px rgba(124,58,237,0.28)",
+                    boxShadow: "0 22px 36px rgba(124,58,237,0.32)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 10,
                   }}
                 >
-                  Open live assistant →
+                  <span aria-hidden>⚡</span>
+                  Open live assistant
                 </a>
               </aside>
-            </div>
+                </div>
 
             {/* Tabs */}
             <nav
@@ -171,7 +207,7 @@ export default function Page() {
             {/* Tab content */}
             {activeTab === "explore" ? (
               <div style={{ display: "grid", gap: 24 }}>
-                <MyPathwayMap />
+                <AISuggestionFeed />
                 <IntegrationHubMap />
                 <ImpactWalletSummary />
                 <SkillPassportSummary />
@@ -185,9 +221,9 @@ export default function Page() {
                 <DataProtectionPanel />
               </div>
             )}
-          </div>
+            </div>
         </main>
-      </div>
+            </div>
     </RoomContext.Provider>
   );
 }

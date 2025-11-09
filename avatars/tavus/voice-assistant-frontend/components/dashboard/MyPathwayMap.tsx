@@ -26,9 +26,12 @@ export function MyPathwayMap() {
     return Math.round((completed / pathway.nodes.length) * 100);
   }, [pathway.nodes]);
 
+  const nextFocus = useMemo(() => pathway.nodes.find((node) => node.status === "in-progress" || node.status === "up-next"), [pathway.nodes]);
+  const lastWin = useMemo(() => pathway.nodes.find((node) => node.status === "done"), [pathway.nodes]);
+
   return (
     <section
-      id="my-pathway"
+      id="journey-map"
       aria-labelledby="my-pathway-title"
       style={{
         borderRadius: 20,
@@ -44,14 +47,24 @@ export function MyPathwayMap() {
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
         <div>
           <p style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: 1.2, color: "#475569", textTransform: "uppercase" }}>
-            AI Pathway
+            My Journey Map
           </p>
           <h2 id="my-pathway-title" style={{ margin: "6px 0 0 0", fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
-            My Pathway map · {level}
+            Every small step moves you forward · {level} level
           </h2>
           <p style={{ margin: "8px 0 0 0", color: "#475569", maxWidth: 520 }}>
-            Your next best steps, updated every time you take action. Each milestone gives XP, grows your Skill Passport, and feeds the Impact Wallet automatically.
+            Today’s goal: attend one event or help one person. Knuut updates this map every time you log an action.
           </p>
+          {lastWin && (
+            <p style={{ margin: "6px 0 0 0", color: "#334155", maxWidth: 520 }}>
+              ✅ Last win: {lastWin.title} — amazing progress!
+            </p>
+          )}
+          {nextFocus && (
+            <p style={{ margin: "4px 0 0 0", color: "#334155", maxWidth: 520 }}>
+              🔸 Up next: {nextFocus.title} (+{nextFocus.xpReward} XP)
+            </p>
+          )}
         </div>
         <div
           style={{
@@ -70,6 +83,30 @@ export function MyPathwayMap() {
         </div>
       </header>
 
+      <button
+        type="button"
+        onClick={() => {
+          const target = document.getElementById("my-journey-anchor");
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          } else {
+            window.location.href = "/my-journey";
+          }
+        }}
+        style={{
+          alignSelf: "flex-start",
+          padding: "10px 16px",
+          borderRadius: 12,
+          border: "1px solid #cbd5f5",
+          background: "#eff6ff",
+          color: "#1d4ed8",
+          fontWeight: 700,
+          cursor: "pointer",
+        }}
+      >
+        Open my full journey
+      </button>
+
       <div
         style={{
           position: "relative",
@@ -82,7 +119,6 @@ export function MyPathwayMap() {
         {pathway.nodes.map((node, index) => {
           const isComplete = node.status === "done";
           const isActive = node.status === "in-progress";
-          const isNext = node.status === "up-next";
           const palette = isComplete
             ? { background: "#ecfdf5", border: "#bbf7d0", accent: "#16a34a", text: "#14532d" }
             : isActive

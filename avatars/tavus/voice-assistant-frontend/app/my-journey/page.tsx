@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import ImpactWalletSummary from "@/components/dashboard/ImpactWalletSummary";
 import DataProtectionPanel from "@/components/DataProtectionPanel";
 import { useUserProfile } from "@/context/UserProfileContext";
+import { MyPathwayMap } from "@/components/dashboard/MyPathwayMap";
 
 type CoachSuggestion = {
   id: string;
@@ -44,10 +45,10 @@ const SUGGESTIONS: CoachSuggestion[] = [
   },
 ];
 
-export default function ToolsPage() {
+export default function MyJourneyPage() {
   const [room] = useState(new Room());
   const { state: userState, recordAction } = useUserProfile();
-  const [activeTab, setActiveTab] = useState("tools");
+  const [activeTab, setActiveTab] = useState("my-journey");
   const [acknowledged, setAcknowledged] = useState<Set<string>>(new Set());
 
   const pendingSuggestions = useMemo(
@@ -63,8 +64,8 @@ export default function ToolsPage() {
     setAcknowledged((prev) => new Set(prev).add(suggestion.id));
     recordAction({
       id: `coach-${suggestion.id}-${Date.now()}`,
-      label: `Completed AI inclusion coach suggestion: ${suggestion.title}`,
-      category: "tools",
+      label: `Completed Journey coaching suggestion: ${suggestion.title}`,
+      category: "journey",
       xp: suggestion.xp,
       impactPoints: suggestion.points,
       impactHours: 0.5,
@@ -78,9 +79,9 @@ export default function ToolsPage() {
 
   const handleAdminExport = () => {
     recordAction({
-      id: `tools-admin-export-${Date.now()}`,
-      label: "Generated anonymized analytics export",
-      category: "tools",
+      id: `journey-admin-export-${Date.now()}`,
+      label: "Generated anonymized journey analytics export",
+      category: "journey",
       xp: 12,
       impactPoints: 0,
     });
@@ -116,12 +117,12 @@ export default function ToolsPage() {
             }}
           >
             <p style={{ margin: 0, fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.3, color: "#475569" }}>
-              Tools
+              Profile & Progress
             </p>
-            <h1 style={{ margin: 0, fontSize: "2.5rem", fontWeight: 800, color: "#0f172a" }}>Impact Wallet & Inclusion Coach</h1>
+            <h1 style={{ margin: 0, fontSize: "2.5rem", fontWeight: 800, color: "#0f172a" }}>My Journey dashboard</h1>
             <p style={{ margin: 0, fontSize: 15, color: "#475569", lineHeight: 1.6 }}>
-              See your contribution balance, AI nudges, and export anonymized stats for partners. All updates flow into the Skill
-              Passport and Community Connector card automatically.
+              Track every action you’ve taken. XP, badges, volunteering hours, and AI nudges update here instantly — feeding your Skill
+              Passport and Community Connector progress.
             </p>
             <div
               style={{
@@ -157,6 +158,8 @@ export default function ToolsPage() {
             </div>
           </header>
 
+          <MyPathwayMap />
+
           <ImpactWalletSummary />
 
           <section
@@ -173,7 +176,7 @@ export default function ToolsPage() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
               <div>
                 <p style={{ margin: 0, fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.3, color: "#475569" }}>
-                  AI Inclusion Coach
+                  AI Journey Coach
                 </p>
                 <h2 style={{ margin: "6px 0 0 0", fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
                   Personalized nudges to grow your impact
@@ -258,7 +261,7 @@ export default function ToolsPage() {
                     fontWeight: 600,
                   }}
                 >
-                  You're up to date! New inclusion nudges will appear after your next activity.
+                  You&apos;re up to date! New journey nudges will appear after your next activity.
                 </div>
               )}
             </div>
@@ -273,7 +276,7 @@ export default function ToolsPage() {
               boxShadow: "0 12px 24px rgba(15,23,42,0.08)",
             }}
           >
-            <h2 style={{ margin: "0 0 12px 0", fontSize: 20, fontWeight: 800, color: "#0f172a" }}>Admin analytics export</h2>
+            <h2 style={{ margin: "0 0 12px 0", fontSize: 20, fontWeight: 800, color: "#0f172a" }}>Partner reporting</h2>
             <p style={{ margin: "0 0 16px 0", color: "#475569", lineHeight: 1.6 }}>
               Need to report anonymized metrics to a municipality or NGO partner? Generate a secure export with volunteer hours,
               participation rate, and badge distribution. Personally identifiable information is stripped out automatically.
@@ -301,5 +304,3 @@ export default function ToolsPage() {
     </RoomContext.Provider>
   );
 }
-
-

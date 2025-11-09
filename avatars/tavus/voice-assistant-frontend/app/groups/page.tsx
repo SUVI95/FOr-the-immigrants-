@@ -1,12 +1,22 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import GroupCard, { GroupData } from "@/components/GroupCard";
 import { useTranslation } from "@/components/i18n/TranslationProvider";
 import { useUserProfile } from "@/context/UserProfileContext";
+
+interface IntegrationPathway {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  action: string;
+  link: string;
+  color: string;
+}
 
 // Mockup group data for Kajaani - focused on retention and integration
 const mockGroups: (GroupData & { category?: string })[] = [
@@ -183,27 +193,66 @@ export default function GroupsPage() {
   const peerCircles = [
     {
       id: "peer-women",
-      title: "Women in Work",
-      description: "Career mentoring, childcare-friendly meetups, and confidence-building workshops.",
-      schedule: "Tuesdays 18:00 · Kajaani Innovation Hub",
-      hosts: "Facilitated by City of Kajaani + volunteer mentors",
+      title: "Women’s Network",
+      description: "Connect. Learn. Grow together. Join mentoring circles, career workshops, and childcare-friendly meetups designed to support women in work and life.",
+      schedule: "📅 Tuesdays 18:00 · Kajaani Innovation Hub",
+      hosts: "🤝 Hosted by City of Kajaani & volunteer mentors",
       icon: "🌸",
     },
     {
       id: "peer-tech",
-      title: "Tech Newcomers",
-      description: "Weekly coding sessions, Finnish tech vocabulary, and employer AMAs.",
-      schedule: "Thursdays 19:00 · Hybrid (City Hub + Zoom)",
-      hosts: "Hosted by Kajaani Tech Collective",
+      title: "Tech Launchpad",
+      description: "Learn, build, and get noticed. Hands-on coding, Finnish tech slang, and chill AMAs with real employers.",
+      schedule: "📅 Thursdays 19:00 · Hybrid (City Hub + Zoom)",
+      hosts: "🤝 Hosted by Kajaani Tech Collective",
       icon: "💻",
     },
     {
       id: "peer-youth",
-      title: "Youth Jobs",
-      description: "Career nights, CV clinics, and language tandems for ages 16-24.",
-      schedule: "Saturdays 14:00 · Youth House",
-      hosts: "Co-led by peer mentors and youth workers",
+      title: "Step Up! – Youth Jobs Network",
+      description: "Find your path, fix your CV, or just talk about work and life. Career nights, language tandems, and chill workshops — all for ages 16–24.",
+      schedule: "📅 Saturdays 14:00 · Youth House",
+      hosts: "🤝 Led by peer mentors & youth workers",
       icon: "🎧",
+    },
+  ];
+
+  const integrationPathways: IntegrationPathway[] = [
+    {
+      id: "pathway-1",
+      title: "Explorer → Connector",
+      description: "Pick one peer group, attend two events, and share one newcomer tip.",
+      icon: "🧭",
+      action: "Start Explorer Sprint",
+      link: "/groups",
+      color: "#6366f1",
+    },
+    {
+      id: "pathway-2",
+      title: "Connector → Mentor",
+      description: "Host a coffee chat, log a volunteering hour, and invite a new buddy.",
+      icon: "🤝",
+      action: "Build Mentor Toolkit",
+      link: "/buddy-system",
+      color: "#14b8a6",
+    },
+    {
+      id: "pathway-3",
+      title: "Career Boost Track",
+      description: "Join the professional network, attend a workshop, and update your CV using Smart CV Builder.",
+      icon: "💼",
+      action: "Open Career Toolkit",
+      link: "/smart-cv-builder",
+      color: "#f97316",
+    },
+    {
+      id: "pathway-4",
+      title: "Family & Community",
+      description: "Join the family network, book a peer support slot, and share one resource in Impact Wallet.",
+      icon: "👨‍👩‍👧",
+      action: "Explore Community Path",
+      link: "/groups",
+      color: "#f59e0b",
     },
   ];
 
@@ -249,8 +298,19 @@ export default function GroupsPage() {
     window.location.href = "/learn-finnish";
   };
 
+  const handlePathwayAction = (pathway: IntegrationPathway) => {
+    recordAction({
+      id: `integration-pathway-${pathway.id}-${Date.now()}`,
+      label: `Opened integration pathway: ${pathway.title}`,
+      category: "groups",
+      xp: 20,
+      impactPoints: 18,
+    });
+    window.location.href = pathway.link;
+  };
+
   // Lightweight heuristics for badges
-  const getBadges = (g: GroupData & { category?: string }) => {
+  const getBadges = useCallback((g: GroupData & { category?: string }) => {
     const badges: string[] = [];
     if (g.category === "Language Learning" || g.group_type === "language_exchange") {
       badges.push("Beginner‑friendly Finnish");
@@ -265,7 +325,7 @@ export default function GroupsPage() {
       badges.push("Company & Local partners");
     }
     return badges;
-  };
+  }, [includeLocalsAndCompanies]);
 
   const aiReasonForYou = (g: (GroupData & { category?: string })) => {
     const reasons: string[] = [];
@@ -284,7 +344,7 @@ export default function GroupsPage() {
       if (showMentorAvailable && !badges.includes("Mentor available")) return false;
       return true;
     });
-  }, [groups, showBeginnerFriendly, showChildcareFriendly, showMentorAvailable]);
+  }, [getBadges, groups, showBeginnerFriendly, showChildcareFriendly, showMentorAvailable]);
 
   // Group by category for better organization (post-filter)
   const groupsByCategory = filteredGroups.reduce((acc, group) => {
@@ -387,9 +447,85 @@ export default function GroupsPage() {
                       color: "#fff",
                       fontWeight: 700,
                       cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      fontSize: 13,
                     }}
                   >
-                    Open chat & calendar
+                    💬 Chat live · Add to calendar
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section
+            style={{
+              background: "#fff",
+              borderRadius: 20,
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 16px 32px rgba(15, 23, 42, 0.08)",
+              padding: 24,
+              marginBottom: 32,
+              display: "grid",
+              gap: 18,
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
+              <div>
+                <p style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#475569" }}>
+                  Integration Pathways
+                </p>
+                <h2 style={{ margin: "6px 0 0 0", fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
+                  Build momentum with guided steps
+                </h2>
+              </div>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "#2563eb" }}>Your progress and community impact update automatically.</span>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 18 }}>
+              {integrationPathways.map((pathway) => (
+                <div
+                  key={pathway.id}
+                  onClick={() => handlePathwayAction(pathway)}
+                  style={{
+                    cursor: "pointer",
+                    background: "#ffffff",
+                    border: `2px solid ${pathway.color}`,
+                    borderRadius: 16,
+                    padding: 20,
+                    boxShadow: "0 6px 14px rgba(15,23,42,0.08)",
+                    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                    display: "grid",
+                    gap: 12,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                    e.currentTarget.style.boxShadow = "0 10px 20px rgba(15,23,42,0.12)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 6px 14px rgba(15,23,42,0.08)";
+                  }}
+                >
+                  <div style={{ fontSize: 32 }}>{pathway.icon}</div>
+                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#1f2937" }}>{pathway.title}</h3>
+                  <p style={{ margin: 0, fontSize: 14, color: "#475569", lineHeight: 1.6 }}>{pathway.description}</p>
+                  <button
+                    type="button"
+                    style={{
+                      justifySelf: "flex-start",
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      border: "none",
+                      background: pathway.color,
+                      color: "#fff",
+                      fontWeight: 700,
+                      fontSize: 13,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {pathway.action} →
                   </button>
                 </div>
               ))}

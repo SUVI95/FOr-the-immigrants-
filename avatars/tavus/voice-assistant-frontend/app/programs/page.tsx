@@ -264,7 +264,7 @@ export default function ProgramsPage() {
             </p>
             <h1 style={{ margin: 0, fontSize: "2.5rem", fontWeight: 800, color: "#0f172a" }}>Fast Integration Tracks</h1>
             <p style={{ margin: 0, color: "#475569" }}>
-              Four-week challenges to move from Explorer → Connector → Mentor. Earn Skill Badges and unlock extra Impact Wallet XP.
+              Four-week challenges to move from Explorer → Connector → Mentor. Earn Skill Badges and boost your level as you progress.
             </p>
           </header>
 

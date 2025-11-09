@@ -118,6 +118,7 @@ type UserProfileState = {
   contributionsThisMonth: number;
   mentorsUnlocked: number;
   motivationalMessage: string;
+  goals: string[];
   impactWallet: ImpactWalletState;
   skillPassport: {
     entries: SkillPassportEntry[];
@@ -153,6 +154,7 @@ type UserProfileAction =
   | { type: "TOGGLE_PLAIN_LANGUAGE" }
   | { type: "TOGGLE_AUDIO_ASSIST" }
   | { type: "MARK_VERIFIED"; payload: Partial<SafetyState> }
+  | { type: "UPDATE_GOALS"; payload: string[] }
   | { type: "RESET_WEEKLY_METRICS" };
 
 type UserProfileContextValue = {
@@ -161,6 +163,7 @@ type UserProfileContextValue = {
   togglePlainLanguage: () => void;
   toggleAudioAssist: () => void;
   markVerified: (payload: Partial<SafetyState>) => void;
+  updateGoals: (goals: string[]) => void;
 };
 
 const LEVEL_THRESHOLDS: Array<{
@@ -186,6 +189,7 @@ const INITIAL_STATE: UserProfileState = {
   contributionsThisMonth: 5,
   mentorsUnlocked: 1,
   motivationalMessage: defaultMotivation,
+  goals: ["Find a hospitality job", "Reach Finnish level A2", "Meet local mentors"],
   impactWallet: {
     points: 320,
     volunteeringHours: 12,
@@ -527,6 +531,15 @@ function userProfileReducer(state: UserProfileState, action: UserProfileAction):
           lastReviewAt: new Date().toISOString(),
         },
       };
+    case "UPDATE_GOALS":
+      return {
+        ...state,
+        goals: action.payload,
+        motivationalMessage:
+          action.payload.length > 0
+            ? `🎯 Next focus: ${action.payload[0]}. Keep taking small steps!`
+            : state.motivationalMessage,
+      };
     case "RESET_WEEKLY_METRICS":
       return {
         ...state,
@@ -548,13 +561,20 @@ function userProfileReducer(state: UserProfileState, action: UserProfileAction):
 export function UserProfileProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(userProfileReducer, INITIAL_STATE);
 
-  const value = useMemo<UserProfileContextValue>(
+  const recordAction = (payload: ContributionPayload) => dispatch({ type: "RECORD_ACTION", payload });
+  const togglePlainLanguage = () => dispatch({ type: "TOGGLE_PLAIN_LANGUAGE" });
+  const toggleAudioAssist = () => dispatch({ type: "TOGGLE_AUDIO_ASSIST" });
+  const markVerified = (payload: Partial<SafetyState>) => dispatch({ type: "MARK_VERIFIED", payload });
+  const updateGoals = (goals: string[]) => dispatch({ type: "UPDATE_GOALS", payload: goals.filter(Boolean) });
+
+  const value = useMemo(
     () => ({
       state,
-      recordAction: (payload) => dispatch({ type: "RECORD_ACTION", payload }),
-      togglePlainLanguage: () => dispatch({ type: "TOGGLE_PLAIN_LANGUAGE" }),
-      toggleAudioAssist: () => dispatch({ type: "TOGGLE_AUDIO_ASSIST" }),
-      markVerified: (payload) => dispatch({ type: "MARK_VERIFIED", payload }),
+      recordAction,
+      togglePlainLanguage,
+      toggleAudioAssist,
+      markVerified,
+      updateGoals,
     }),
     [state],
   );

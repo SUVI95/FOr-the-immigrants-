@@ -95,7 +95,7 @@ export function SkillPassportSummary() {
       </div>
 
       <a
-        href="/cv"
+        href="/smart-cv-builder"
         style={{
           fontSize: 13,
           fontWeight: 700,

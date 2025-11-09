@@ -1,12 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRoomContext, useVoiceAssistant } from "@livekit/components-react";
 import EventCard, { EventData } from "./EventCard";
 import GroupCard, { GroupData } from "./GroupCard";
-import ResourceModal from "./ResourceModal";
 import CreateEventForm from "./CreateEventForm";
-import CVTemplate from "./CVTemplate";
 import { useTranslation } from "./i18n/TranslationProvider";
 
 interface SidebarProps {
@@ -15,81 +13,37 @@ interface SidebarProps {
   onLearnFinnishClick?: () => void;
 }
 
+function useSafeRoomContext() {
+  try {
+    return useRoomContext();
+  } catch {
+    return null;
+  }
+}
+
+function useSafeVoiceAssistant() {
+  try {
+    return useVoiceAssistant();
+  } catch {
+    return null;
+  }
+}
+
 export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }: SidebarProps) {
   const { t } = useTranslation();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedResource, setSelectedResource] = useState<string | null>(null);
   const [events, setEvents] = useState<EventData[]>([]);
   const [groups, setGroups] = useState<GroupData[]>([]);
-  const [showCVTemplate, setShowCVTemplate] = useState(false);
+  const [currentPath, setCurrentPath] = useState<string>("");
+  const navRef = useRef<HTMLDivElement | null>(null);
 
   // Get room context and agent - hooks must be called unconditionally
   // These will be null/undefined if not in RoomContext provider
-  const room = useRoomContext();
-  const voiceAssistant = useVoiceAssistant();
+  const room = useSafeRoomContext();
+  const voiceAssistant = useSafeVoiceAssistant();
   const agent = voiceAssistant?.agent || null;
-
-  // Kajaani Resources
-  const resources = [
-    {
-      id: "kela",
-      icon: "🇫🇮",
-      title: "Kela (Social Security)",
-      category: "Government",
-      iconClass: "fa-landmark",
-      description:
-        "Kela provides social security benefits in Finland. You can apply for allowances, health reimbursements, and student benefits.",
-      link: "https://www.kela.fi/web/en",
-    },
-    {
-      id: "bank",
-      icon: "🏦",
-      title: "Bank Registration",
-      category: "Banking",
-      iconClass: "fa-piggy-bank",
-      description:
-        "Steps and required documents to open a bank account in Finland, including proof of identity and address.",
-      link: "https://www.op.fi/en/",
-    },
-    {
-      id: "dvv",
-      icon: "🪪",
-      title: "DVV Registration",
-      category: "Government",
-      iconClass: "fa-id-card",
-      description:
-        "Register your address and personal data with the Digital and Population Data Services Agency (DVV).",
-      link: "https://dvv.fi/en/registration-of-foreign-residents",
-    },
-    {
-      id: "te",
-      icon: "💼",
-      title: "TE Services (Employment)",
-      category: "Employment",
-      iconClass: "fa-briefcase",
-      description:
-        "Job search assistance, employment services, and support for job seekers and employers.",
-      link: "https://www.te-palvelut.fi/te/en/",
-    },
-    {
-      id: "tax",
-      icon: "🧾",
-      title: "Finnish Tax Office",
-      category: "Government",
-      iconClass: "fa-file-invoice",
-      description:
-        "Register for taxation, request tax cards, and manage your tax matters online.",
-      link: "https://www.vero.fi/en/",
-    },
-  ];
 
   // Note: RPC methods for events and groups are registered in EventContainer and GroupContainer
   // to avoid duplicate registrations. Sidebar will display events/groups via those components.
-
-  const handleResourceClick = (id: string) => {
-    setSelectedResource(id);
-    setModalOpen(true);
-  };
 
   const handleRSVP = async (eventId: string) => {
     if (!room || !agent) {
@@ -169,6 +123,30 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
     }
   };
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCurrentPath(window.location.pathname);
+    }
+  }, []);
+
+  useEffect(() => {
+    const container = navRef.current;
+    if (!container) return;
+    const activeButton = container.querySelector<HTMLButtonElement>(".nav-btn.active");
+    if (!activeButton) return;
+    const containerRect = container.getBoundingClientRect();
+    const activeRect = activeButton.getBoundingClientRect();
+    const isAbove = activeRect.top < containerRect.top;
+    const isBelow = activeRect.bottom > containerRect.bottom;
+    if (isAbove || isBelow) {
+      activeButton.scrollIntoView({
+        block: "center",
+        inline: "nearest",
+        behavior: "smooth",
+      });
+    }
+  }, [activeTab]);
+
   return (
     <>
       <aside className="sidebar">
@@ -182,57 +160,46 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
           </div>
         </div>
 
-        <div className="nav">
+        <div className="nav" ref={navRef}>
           <div className="nav-section">
             <div className="nav-section-title">{t("actions")}</div>
             <button
-              className={`nav-btn ${activeTab === "explore" ? "active" : ""}`}
+              className={`nav-btn ${activeTab === "explore" || currentPath === "/" ? "active" : ""}`}
               onClick={() => onTabChange("explore")}
             >
               <i className="fa-solid fa-compass"></i>
               <span>{t("explore")}</span>
             </button>
             <button
-              className={`nav-btn ${activeTab === "create" ? "active" : ""}`}
-              onClick={() => onTabChange("create")}
-            >
-              <i className="fa-solid fa-circle-plus"></i>
-              <span>{t("create")}</span>
-            </button>
-          </div>
-
-          <div className="nav-section">
-            <div className="nav-section-title">{t("programs")}</div>
-            <button
-              className={`nav-btn ${activeTab === "programs" ? "active" : ""}`}
+              className={`nav-btn ${currentPath.startsWith("/programs") ? "active" : ""}`}
               onClick={() => { window.location.href = "/programs"; }}
             >
-              <i className="fa-solid fa-flag-checkered"></i>
-              <span>Fast Tracks</span>
+              <i className="fa-solid fa-diagram-project"></i>
+              <span>{t("programs")}</span>
             </button>
             <button
-              className={`nav-btn ${activeTab === "events" ? "active" : ""}`}
+              className={`nav-btn ${currentPath.startsWith("/events") ? "active" : ""}`}
               onClick={() => { window.location.href = "/events"; }}
             >
               <i className="fa-solid fa-calendar-days"></i>
               <span>{t("events")}</span>
             </button>
             <button
-              className={`nav-btn ${activeTab === "groups" ? "active" : ""}`}
+              className={`nav-btn ${currentPath.startsWith("/groups") ? "active" : ""}`}
               onClick={() => { window.location.href = "/groups"; }}
             >
               <i className="fa-solid fa-people-group"></i>
               <span>{t("groups")}</span>
             </button>
             <button
-              className={`nav-btn ${activeTab === "resources" ? "active" : ""}`}
+              className={`nav-btn ${currentPath.startsWith("/resources") ? "active" : ""}`}
               onClick={() => { window.location.href = "/resources"; }}
             >
               <i className="fa-solid fa-book"></i>
               <span>{t("resources")}</span>
             </button>
             <button
-              className="nav-btn"
+              className={`nav-btn ${currentPath.startsWith("/learn-finnish") ? "active" : ""}`}
               onClick={() => {
                 if (onLearnFinnishClick) {
                   onLearnFinnishClick();
@@ -245,7 +212,7 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
               <span>{t("learn_finnish")}</span>
             </button>
             <button
-              className="nav-btn"
+              className={`nav-btn ${currentPath.startsWith("/knuut-voice") ? "active" : ""}`}
               onClick={() => { window.location.href = "/knuut-voice"; }}
             >
               <i className="fa-solid fa-microphone-lines"></i>
@@ -254,41 +221,45 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
           </div>
 
           <div className="nav-section">
-            <div className="nav-section-title">{t("tools")}</div>
+            <div className="nav-section-title">{t("connections")}</div>
             <button
-              className={`nav-btn ${activeTab === "tools" ? "active" : ""}`}
-              onClick={() => { window.location.href = "/tools"; }}
+              className={`nav-btn ${currentPath.startsWith("/connect-by-skills") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/connect-by-skills"; }}
+            >
+              <i className="fa-solid fa-people-arrows"></i>
+              <span>{t("connect_by_skills")}</span>
+            </button>
+            <button
+              className={`nav-btn ${currentPath.startsWith("/companies") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/companies"; }}
+            >
+              <i className="fa-solid fa-city"></i>
+              <span>{t("companies_training")}</span>
+            </button>
+            <button
+              className={`nav-btn ${currentPath.startsWith("/work-opportunities") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/work-opportunities"; }}
+            >
+              <i className="fa-solid fa-briefcase"></i>
+              <span>{t("work_opportunities")}</span>
+            </button>
+          </div>
+
+          <div className="nav-section">
+            <div className="nav-section-title">{t("profile_progress")}</div>
+            <button
+              className={`nav-btn ${currentPath.startsWith("/my-journey") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/my-journey"; }}
             >
               <i className="fa-solid fa-wallet"></i>
-              <span>Impact Wallet</span>
+              <span>{t("my_journey")}</span>
             </button>
             <button
-              className="nav-btn"
-              onClick={() => { window.location.href = "/volunteer"; }}
-            >
-              <i className="fa-solid fa-handshake-angle"></i>
-              <span>{t("volunteer")}</span>
-            </button>
-            <button
-              className="nav-btn"
-              onClick={() => { window.location.href = "/buddy-system"; }}
-            >
-              <i className="fa-solid fa-user-group"></i>
-              <span>{t("buddy")}</span>
-            </button>
-            <button
-              className="nav-btn"
-              onClick={() => { window.location.href = "/organizer-resources"; }}
-            >
-              <i className="fa-solid fa-compass-drafting"></i>
-              <span>{t("organizer")}</span>
-            </button>
-            <button
-              className="nav-btn"
-              onClick={() => { window.location.href = "/cv"; }}
+              className={`nav-btn ${currentPath.startsWith("/smart-cv-builder") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/smart-cv-builder"; }}
             >
               <i className="fa-solid fa-file-lines"></i>
-              <span>CV</span>
+              <span>{t("smart_cv_builder")}</span>
             </button>
           </div>
         </div>
@@ -349,12 +320,6 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
           )}
         </div>
       </aside>
-
-      <ResourceModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        resource={resources.find((r) => r.id === selectedResource) || null}
-      />
 
       {/* CV moved to dedicated page */}
     </>

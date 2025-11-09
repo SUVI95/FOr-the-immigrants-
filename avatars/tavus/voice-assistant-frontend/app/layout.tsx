@@ -41,10 +41,10 @@ export default function RootLayout({
       </head>
       <body className="h-full">
         <UserProfileProvider>
-          <TranslationProvider>
-            <GlobalHeader />
-            <div style={{ paddingTop: 72 }}>{children}</div>
-          </TranslationProvider>
+        <TranslationProvider>
+          <GlobalHeader />
+          <div style={{ paddingTop: 72 }}>{children}</div>
+        </TranslationProvider>
         </UserProfileProvider>
       </body>
     </html>

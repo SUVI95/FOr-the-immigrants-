@@ -11,55 +11,39 @@ type ChatMessage = {
   text: string;
 };
 
-const TOPICS: Array<{ id: TopicKey; label: string; systemPrompt: string }> = [
-  {
-    id: "job_interview",
-    label: "Job interview",
-    systemPrompt:
-      "Let's practice a job interview in Finnish. I will answer as a hiring manager using Finnish sentences and provide short English hints.",
-  },
-  {
-    id: "doctor_visit",
-    label: "Doctor visit",
-    systemPrompt:
-      "You are at a doctor's appointment in Kajaani. I will respond as a nurse/doctor in simple Finnish with key vocabulary.",
-  },
-  {
-    id: "everyday",
-    label: "Everyday conversation",
-    systemPrompt:
-      "Casual small talk for the supermarket, bus stop or school pick-up. I will keep sentences short and friendly with Finnish + hint.",
-  },
-  {
-    id: "housing",
-    label: "Housing & bureaucracy",
-    systemPrompt:
-      "Practice a conversation with a landlord or DVV official. I will give Finnish phrases and simple explanations.",
-  },
-];
+type TopicDetail = {
+  label: string;
+  tagline: string;
+  tips: string[];
+  starterPhrases: string[];
+};
 
-function generateBuddyResponse(topic: TopicKey, userText: string) {
-  const lower = userText.toLowerCase();
-  switch (topic) {
-    case "job_interview":
-      if (lower.includes("experience")) {
-        return "Suosittelen korostamaan käytännön kokemusta. Voit sanoa: 'Minulla on kolme vuotta kokemusta asiakaspalvelusta.' (I have three years of experience in customer service.)";
-      }
-      return "Kiitos vastauksestasi! Kysyisin vielä: 'Miksi haluat työskennellä juuri täällä?' (Why do you want to work here?)";
-    case "doctor_visit":
-      if (lower.includes("appointment")) {
-        return "Voit sanoa: 'Tarvitsen lääkäriajan ensi viikolle.' (I need a doctor's appointment for next week.)";
-      }
-      return "Muista käyttää sanaa 'ajanvaraus' kun soitat. 'Hei, haluaisin varata ajan lääkärille.' (Hi, I would like to book a doctor's appointment.)";
-    case "housing":
-      if (lower.includes("rent") || lower.includes("vuokra")) {
-        return "Kysy vuokrasta näin: 'Paljonko vuokra on kuukaudessa ja sisältyykö vesi?' (How much is the monthly rent and is water included?)";
-      }
-      return "Hyvä kysymys! Voit myös kysyä: 'Voinko nähdä asunnon paikan päällä?' (Can I see the apartment in person?)";
-    default:
-      return "Hyvin menee! Kokeile sanoa: 'Voinko auttaa jotenkin?' (Can I help somehow?) • 'Kiitos, oikein hyvää.' (Thank you, very well.)";
-  }
-}
+const TOPIC_DETAILS: Record<TopicKey, TopicDetail> = {
+  job_interview: {
+    label: "Job interview",
+    tagline: "Build confidence for Finnish interviews and career chats.",
+    tips: ["Pitch your experience", "Ask follow-up questions", "Stay polite but direct"],
+    starterPhrases: ["Kerro vahvuuksistasi", "Miksi haluat työskennellä täällä?", "Milloin voisit aloittaa?"],
+  },
+  doctor_visit: {
+    label: "Doctor visit",
+    tagline: "Explain symptoms, book appointments, and understand instructions.",
+    tips: ["Describe pain clearly", "Confirm medicine dosage", "Ask about next steps"],
+    starterPhrases: ["Minulla on ollut flunssa", "Tarvitsen lääkäriajan", "Voinko saada reseptin?"],
+  },
+  everyday: {
+    label: "Everyday conversation",
+    tagline: "Supermarket, bus stop, school gates — keep it friendly and light.",
+    tips: ["Manage small talk", "Ask for help politely", "Share quick updates"],
+    starterPhrases: ["Hei, miten päiväsi on sujunut?", "Tarvitsen apua", "Onko tämä oikea reitti?"],
+  },
+  housing: {
+    label: "Housing & bureaucracy",
+    tagline: "Talk to landlords, DVV, and city services like a pro.",
+    tips: ["State your needs clearly", "Ask about costs", "Confirm paperwork"],
+    starterPhrases: ["Voinko nähdä asunnon?", "Mitä asiakirjoja tarvitsen?", "Milloin vuokra erääntyy?"],
+  },
+};
 
 export function FinnishLanguageBuddy() {
   const { state: userState, recordAction } = useUserProfile();
@@ -69,57 +53,97 @@ export function FinnishLanguageBuddy() {
     {
       id: "welcome",
       author: "buddy",
-      text: "Hei! Valitse ylävalikosta aihe ja aloitetaan harjoitus. 👋",
+      text: "Hei! Valitse harjoituksen aihe ja kirjoita viestisi — vastaan heti suomeksi ja pienellä englanninkielisellä vihjeellä.",
     },
   ]);
   const [sessionsCompleted, setSessionsCompleted] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const progressPercent = useMemo(() => Math.min(100, (messages.length - 1) * 10), [messages.length]);
+  const progressPercent = useMemo(() => Math.min(100, Math.max(10, (messages.length - 1) * 8)), [messages.length]);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleTopicChange = (nextTopic: TopicKey) => {
+    setTopic(nextTopic);
+    setMessages([{
+      id: `intro-${nextTopic}`,
+      author: "buddy",
+      text: `Harjoitellaan aihetta: ${TOPIC_DETAILS[nextTopic].label}. Aloita kertomalla tilanteesta tai käytä nopeaa aloitusta alta.`,
+    }]);
+    setInput("");
+    setError(null);
+  };
+
+  const handleSend = async (prompt?: string) => {
+    const messageToSend = (prompt ?? input).trim();
+    if (!messageToSend) return;
 
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       author: "you",
-      text: input.trim(),
+      text: messageToSend,
     };
 
-    const botResponse: ChatMessage = {
-      id: `buddy-${Date.now()}`,
-      author: "buddy",
-      text: generateBuddyResponse(topic, input.trim()),
-    };
-
-    setMessages((prev) => [...prev, userMessage, botResponse]);
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
+    setLoading(true);
+    setError(null);
 
-    recordAction({
-      id: `language-buddy-turn-${Date.now()}`,
-      label: `Practiced Finnish (${topic})`,
-      category: "learning",
-      xp: 12,
-      impactPoints: 9,
-      skill: {
-        id: `skill-language-${topic}`,
-        title: `Language practice: ${TOPICS.find((t) => t.id === topic)?.label ?? topic}`,
-        category: "Language",
-        details: "AI Language Buddy session logged",
-        source: "course",
-      },
-    });
+    try {
+      const response = await fetch("/api/language-buddy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ topic, message: messageToSend }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
+      const data = await response.json();
+      const replyText: string = data.reply ?? "Anteeksi, yhteys katkesi. Kokeile uudelleen.";
+
+      const botMessage: ChatMessage = {
+        id: `buddy-${Date.now()}`,
+        author: "buddy",
+        text: replyText,
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+
+      recordAction({
+        id: `language-buddy-turn-${Date.now()}`,
+        label: `AI buddy practice (${topic})`,
+        category: "learning",
+        xp: 18,
+        impactPoints: 14,
+        skill: {
+          id: `skill-language-${topic}`,
+          title: `Language practice: ${TOPIC_DETAILS[topic].label}`,
+          category: "Language",
+          details: "AI Language Buddy session",
+          source: "course",
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      setError("Yhteys OpenAI-palveluun epäonnistui. Yritä uudelleen.");
+      setMessages((prev) => prev.slice(0, -1));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCompleteSession = () => {
     setSessionsCompleted((prev) => prev + 1);
     recordAction({
       id: `language-buddy-session-${Date.now()}`,
-      label: `Completed Language Buddy session (${topic})`,
+      label: `Logged Finnish session (${topic})`,
       category: "learning",
       xp: 45,
-      impactPoints: 30,
+      impactPoints: 32,
       impactHours: 0.5,
-      badgeLabel: sessionsCompleted === 0 ? "Language Buddy" : sessionsCompleted + 1 === 5 ? "Finnish Explorer" : undefined,
       reminder: {
         title: "Practice Finnish again",
         dueAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
@@ -132,135 +156,192 @@ export function FinnishLanguageBuddy() {
     <section
       style={{
         borderRadius: 20,
-        padding: 24,
-        background: "#fff",
         border: "1px solid #e2e8f0",
-        boxShadow: "0 16px 32px rgba(15, 23, 42, 0.08)",
-        marginBottom: 28,
+        background: "#fff",
+        boxShadow: "0 16px 32px rgba(15,23,42,0.08)",
+        padding: 24,
         display: "grid",
-        gap: 16,
+        gap: 20,
       }}
     >
-      <header style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+      <header style={{ display: "grid", gap: 14 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }}>
           <div>
-            <p style={{ margin: 0, fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#475569" }}>
+            <p style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: 1.3, textTransform: "uppercase", color: "#475569" }}>
               AI Language Buddy
             </p>
             <h2 style={{ margin: "6px 0 0 0", fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
               Practice Finnish with real-life scenarios
             </h2>
+            <p style={{ margin: "8px 0 0 0", fontSize: 14, color: "#475569", maxWidth: 520 }}>
+              Select a scenario, type in Finnish or English, and the buddy replies instantly in Finnish with helpful hints.
+            </p>
           </div>
           <div
             style={{
-              padding: "10px 16px",
-              borderRadius: 12,
-              border: "1px solid #cbd5f5",
-              background: "rgba(59,130,246,0.1)",
-              color: "#1d4ed8",
+              borderRadius: 14,
+              border: "1px solid rgba(59,130,246,0.2)",
+              background: "rgba(59,130,246,0.08)",
+              padding: "12px 18px",
               fontWeight: 700,
+              color: "#1d4ed8",
             }}
           >
             Skill Passport entries {userState.skillPassport.entries.length}
           </div>
         </div>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          {TOPICS.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => {
-                setTopic(item.id);
-                setMessages([
-                  {
-                    id: `intro-${item.id}`,
-                    author: "buddy",
-                    text: item.systemPrompt,
-                  },
-                ]);
-              }}
-              style={{
-                padding: "8px 14px",
-                borderRadius: 999,
-                border: "1px solid #cbd5f5",
-                background: topic === item.id ? "linear-gradient(135deg, #2563eb, #7c3aed)" : "#fff",
-                color: topic === item.id ? "#fff" : "#1e293b",
-                fontWeight: 600,
-                cursor: "pointer",
-              }}
-            >
-              {item.label}
-            </button>
-          ))}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+          {(Object.keys(TOPIC_DETAILS) as TopicKey[]).map((key) => {
+            const detail = TOPIC_DETAILS[key];
+            const active = key === topic;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => handleTopicChange(key)}
+                style={{
+                  textAlign: "left",
+                  borderRadius: 16,
+                  border: active ? "1px solid rgba(37,99,235,0.45)" : "1px solid rgba(148,163,184,0.35)",
+                  background: active ? "linear-gradient(135deg, rgba(37,99,235,0.12), rgba(124,58,237,0.12))" : "#f8fafc",
+                  padding: 16,
+                  cursor: "pointer",
+                  display: "grid",
+                  gap: 6,
+                }}
+              >
+                <div style={{ fontWeight: 700, color: "#0f172a" }}>{detail.label}</div>
+                <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.5 }}>{detail.tagline}</div>
+              </button>
+            );
+          })}
         </div>
       </header>
 
-      <div
-        style={{
-          borderRadius: 16,
-          border: "1px solid #e2e8f0",
-          background: "#f8fafc",
-          padding: 16,
-          maxHeight: 320,
-          overflowY: "auto",
-          display: "grid",
-          gap: 12,
-        }}
-      >
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            style={{
-              alignSelf: message.author === "you" ? "end" : "start",
-              background: message.author === "you" ? "#2563eb" : "#fff",
-              color: message.author === "you" ? "#fff" : "#1e293b",
-              padding: "10px 14px",
-              borderRadius: 12,
-              maxWidth: "85%",
-              boxShadow: "0 8px 16px rgba(15,23,42,0.08)",
-            }}
-          >
-            <div style={{ fontSize: 12, opacity: 0.7, marginBottom: 4 }}>
-              {message.author === "you" ? "You" : "Buddy"}
-            </div>
-            <div style={{ fontSize: 14, lineHeight: 1.6 }}>{message.text}</div>
-          </div>
-        ))}
-      </div>
-
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-        <input
-          type="text"
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          placeholder="Kirjoita viesti / Write your message"
+      <div style={{ display: "grid", gap: 16 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {TOPIC_DETAILS[topic].starterPhrases.map((phrase) => (
+            <button
+              key={phrase}
+              type="button"
+              onClick={() => handleSend(phrase)}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 999,
+                border: "1px solid rgba(148,163,184,0.4)",
+                background: "#fff",
+                fontSize: 12,
+                fontWeight: 600,
+                color: "#1e293b",
+                cursor: "pointer",
+              }}
+            >
+              {phrase}
+            </button>
+          ))}
+        </div>
+        <div
           style={{
-            flex: "1 1 240px",
-            padding: "12px 14px",
-            borderRadius: 12,
-            border: "1px solid #cbd5f5",
-            fontSize: 14,
-          }}
-        />
-        <button
-          type="button"
-          onClick={handleSend}
-          style={{
-            padding: "12px 16px",
-            borderRadius: 12,
-            border: "none",
-            background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-            color: "#fff",
-            fontWeight: 700,
-            cursor: "pointer",
+            borderRadius: 16,
+            border: "1px solid #e2e8f0",
+            background: "#f8fafc",
+            padding: 16,
+            maxHeight: 300,
+            overflowY: "auto",
+            display: "grid",
+            gap: 12,
           }}
         >
-          Send
-        </button>
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              style={{
+                alignSelf: message.author === "you" ? "end" : "start",
+                background: message.author === "you" ? "linear-gradient(135deg, #2563eb, #7c3aed)" : "#fff",
+                color: message.author === "you" ? "#fff" : "#1e293b",
+                padding: "10px 14px",
+                borderRadius: 12,
+                maxWidth: "85%",
+                boxShadow: "0 8px 16px rgba(15,23,42,0.08)",
+              }}
+            >
+              <div style={{ fontSize: 11, opacity: 0.75, marginBottom: 4 }}>{message.author === "you" ? "You" : "Buddy"}</div>
+              <div style={{ fontSize: 14, lineHeight: 1.55, whiteSpace: "pre-wrap" }}>{message.text}</div>
+            </div>
+          ))}
+          {loading && (
+            <div
+              style={{
+                alignSelf: "start",
+                background: "#fff",
+                color: "#1e293b",
+                padding: "10px 14px",
+                borderRadius: 12,
+                boxShadow: "0 8px 16px rgba(15,23,42,0.08)",
+              }}
+            >
+              Kirjoitetaan vastausta...
+            </div>
+          )}
+        </div>
+        {error && (
+          <div
+            style={{
+              borderRadius: 12,
+              border: "1px solid rgba(239,68,68,0.4)",
+              background: "rgba(254,226,226,0.7)",
+              color: "#991b1b",
+              padding: "10px 14px",
+              fontSize: 12,
+              fontWeight: 600,
+            }}
+          >
+            {error}
+          </div>
+        )}
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <input
+            type="text"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            placeholder="Kirjoita viesti / Write your message"
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                handleSend();
+              }
+            }}
+            style={{
+              flex: "1 1 260px",
+              padding: "12px 14px",
+              borderRadius: 12,
+              border: "1px solid #cbd5f5",
+              fontSize: 14,
+            }}
+            disabled={loading}
+          />
+          <button
+            type="button"
+            onClick={() => handleSend()}
+            disabled={loading}
+            style={{
+              padding: "12px 16px",
+              borderRadius: 12,
+              border: "none",
+              background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+              color: "#fff",
+              fontWeight: 700,
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.6 : 1,
+            }}
+          >
+            Send
+          </button>
+        </div>
       </div>
 
       <footer style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
-        <div style={{ flex: "1 1 200px" }}>
+        <div style={{ flex: "1 1 220px" }}>
           <div style={{ marginBottom: 6, fontSize: 12, fontWeight: 700, color: "#475569" }}>Progress</div>
           <div
             style={{

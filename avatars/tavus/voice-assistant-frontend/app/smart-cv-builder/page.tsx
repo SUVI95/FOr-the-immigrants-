@@ -8,10 +8,10 @@ import CVTemplate from "@/components/CVTemplate";
 import { useTranslation } from "@/components/i18n/TranslationProvider";
 import { useUserProfile } from "@/context/UserProfileContext";
 
-export default function CVPage() {
+export default function SmartCVBuilderPage() {
   const { t } = useTranslation();
   const { state: userState } = useUserProfile();
-  const [activeTab, setActiveTab] = useState("explore");
+  const [activeTab, setActiveTab] = useState("smart-cv-builder");
   const [room] = useState(new Room());
   const [language, setLanguage] = useState<"en" | "fi">("en");
 
@@ -70,26 +70,33 @@ export default function CVPage() {
   return (
     <RoomContext.Provider value={room}>
       <div className="app">
-        <Sidebar 
-          activeTab={activeTab} 
-          onTabChange={setActiveTab} 
-          onLearnFinnishClick={handleLearnFinnishClick} 
-        />
+        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onLearnFinnishClick={handleLearnFinnishClick} />
 
         <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "40px 20px", background: "#fafafa", minHeight: "100vh" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
-            <h1 style={{
-              fontSize: "2rem",
-              fontWeight: 800,
-              background: "linear-gradient(135deg, #64748b 0%, #111827 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              margin: 0,
-            }}>
-              CV
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "2rem",
+                fontWeight: 800,
+                background: "linear-gradient(135deg, #64748b 0%, #111827 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                margin: 0,
+              }}
+            >
+              Smart CV Builder
             </h1>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <label style={{ color: "#374151", fontSize: 14 }}>Language</label>
+              <label style={{ color: "#374151", fontSize: 14 }}>{t("language") ?? "Language"}</label>
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as "en" | "fi")}
@@ -100,7 +107,15 @@ export default function CVPage() {
               </select>
               <button
                 onClick={() => window.print()}
-                style={{ padding: "10px 14px", background: "#111827", color: "white", borderRadius: 8, border: "none", fontWeight: 700, cursor: "pointer" }}
+                style={{
+                  padding: "10px 14px",
+                  background: "#111827",
+                  color: "white",
+                  borderRadius: 8,
+                  border: "none",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
               >
                 Download PDF
               </button>
@@ -113,5 +128,3 @@ export default function CVPage() {
     </RoomContext.Provider>
   );
 }
-
-

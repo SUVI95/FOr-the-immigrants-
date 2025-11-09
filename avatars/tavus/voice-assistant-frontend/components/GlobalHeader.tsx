@@ -10,7 +10,7 @@ const LANG_STORAGE_KEY = "knuut_lang";
 
 export default function GlobalHeader() {
   const pathname = usePathname();
-  const { lang: ctxLang, setLang: setCtxLang } = useTranslation();
+  const { lang: ctxLang, setLang: setCtxLang, t } = useTranslation();
   const [lang, setLang] = useState<Lang>(ctxLang);
 
   // Apply language to html attribute and store
@@ -23,6 +23,10 @@ export default function GlobalHeader() {
     }
     setCtxLang(lang);
   }, [lang, setCtxLang]);
+
+  useEffect(() => {
+    setLang(ctxLang);
+  }, [ctxLang]);
 
   // Skip auto-translation on Learn Finnish page
   const isLearnFinnish = pathname?.startsWith("/learn-finnish");
@@ -59,8 +63,7 @@ export default function GlobalHeader() {
         borderBottom: "1px solid #e5e7eb",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ fontSize: 18 }}>🌐</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
         <select
           value={lang}
           onChange={(e) => setLang(e.target.value as Lang)}
@@ -101,10 +104,10 @@ export default function GlobalHeader() {
             gap: 10,
             boxShadow: "0 4px 8px rgba(67,56,202,0.08)",
           }}
-          title="Ask Knuut AI"
+          title={t("ask_knuut")}
         >
           <span aria-hidden>🎤</span>
-          <span>Ask Knuut</span>
+          <span>{t("ask_knuut")}</span>
         </button>
 
         <button
@@ -123,7 +126,7 @@ export default function GlobalHeader() {
           }}
         >
           <span style={{ marginRight: 8 }} aria-hidden>＋</span>
-          Create Event
+          {t("create_event")}
         </button>
       </div>
     </div>
