@@ -6,14 +6,14 @@ import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import { useTranslation } from "@/components/i18n/TranslationProvider";
-import { CommunityConnectorCard } from "@/components/dashboard/CommunityConnectorCard";
-import { IntegrationHubMap } from "@/components/dashboard/IntegrationHubMap";
-import { StoryCreator } from "@/components/dashboard/StoryCreator";
-import { ImpactWalletSummary } from "@/components/dashboard/ImpactWalletSummary";
-import { SkillPassportSummary } from "@/components/dashboard/SkillPassportSummary";
-import DataProtectionPanel from "@/components/DataProtectionPanel";
+import WelcomeSnapshot from "@/components/dashboard/WelcomeSnapshot";
+import { ProgressOverview } from "@/components/dashboard/ProgressOverview";
+import { LocalHelpPreview } from "@/components/dashboard/LocalHelpPreview";
+import { CommunityPulse } from "@/components/dashboard/CommunityPulse";
+import SafetyFooter from "@/components/dashboard/SafetyFooter";
 import { useUserProfile } from "@/context/UserProfileContext";
 import { AISuggestionFeed } from "@/components/dashboard/AISuggestionFeed";
+import { StoryCreator } from "@/components/dashboard/StoryCreator";
 
 type TabKey = "explore" | "create";
 
@@ -68,12 +68,12 @@ export default function Page() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "minmax(340px, 1.3fr) minmax(220px, 0.7fr)",
-                gap: 24,
+                gridTemplateColumns: "minmax(360px, 1.3fr) minmax(220px, 0.7fr)",
+                gap: 22,
                 alignItems: "stretch",
               }}
             >
-              <CommunityConnectorCard />
+              <WelcomeSnapshot />
               <aside
                  style={{
                    borderRadius: 28,
@@ -199,7 +199,7 @@ export default function Page() {
                     cursor: "pointer",
                   }}
                 >
-                  {tab === "explore" ? `${t("explore")} roadmap` : "Create & share"}
+                  {tab === "explore" ? `${t("explore")} roadmap` : "Post & Inspire"}
                 </button>
               ))}
             </nav>
@@ -208,17 +208,14 @@ export default function Page() {
             {activeTab === "explore" ? (
               <div style={{ display: "grid", gap: 24 }}>
                 <AISuggestionFeed />
-                <IntegrationHubMap />
-                <ImpactWalletSummary />
-                <SkillPassportSummary />
-                <DataProtectionPanel />
+                <ProgressOverview />
+                <LocalHelpPreview />
+                <CommunityPulse />
+                <SafetyFooter />
               </div>
             ) : (
               <div style={{ display: "grid", gap: 24 }}>
                 <StoryCreator />
-                <ImpactWalletSummary />
-                <SkillPassportSummary />
-                <DataProtectionPanel />
               </div>
             )}
             </div>
