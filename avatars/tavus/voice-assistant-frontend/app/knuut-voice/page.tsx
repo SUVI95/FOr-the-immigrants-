@@ -267,7 +267,7 @@ export default function KnuutVoicePage() {
                   boxShadow: "0 16px 32px rgba(124,58,237,0.3), 0 0 0 4px rgba(124,58,237,0.1)",
                   animation: "float 3s ease-in-out infinite"
                 }}>
-                <span className="fa-solid fa-waveform-lines" style={{
+                <span className="fa-solid fa-hands-helping" style={{
                     fontSize: 28,
                     color: "#ffffff",
                     filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))"
