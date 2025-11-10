@@ -179,7 +179,7 @@ const LEVEL_THRESHOLDS: Array<{
 const defaultMotivation = "You helped 2 people this week — great work!";
 
 const INITIAL_STATE: UserProfileState = {
-  name: "Amina",
+  name: "Suvi",
   level: "Explorer",
   xp: 180,
   previousLevelXp: 0,
