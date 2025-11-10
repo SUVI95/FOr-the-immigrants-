@@ -18,6 +18,8 @@ import { StoryCreator } from "@/components/dashboard/StoryCreator";
 type TabKey = "explore" | "create";
 
 const quickPrompts = [
+  { id: "prompt-newcomer", label: "I'm new here - help me", icon: "🆘", urgent: true },
+  { id: "prompt-work-now", label: "I need work now", icon: "💼", urgent: true },
   { id: "prompt-events", label: "Show events this week", icon: "📅" },
   { id: "prompt-resources", label: "Find resources near me", icon: "📍" },
   { id: "prompt-admin", label: "How do I register my address?", icon: "🏠" },
@@ -129,24 +131,51 @@ export default function Page() {
                     <button
                       key={prompt.id}
                       type="button"
-                      onClick={() => handlePromptClick(prompt.id, prompt.label)}
+                      onClick={() => {
+                        if (prompt.id === "prompt-newcomer") {
+                          window.location.href = "/first-30-days";
+                        } else if (prompt.id === "prompt-work-now") {
+                          window.location.href = "/work-opportunities?filter=work-now";
+                        } else {
+                          handlePromptClick(prompt.id, prompt.label);
+                        }
+                      }}
                       style={{
                         display: "flex",
                         alignItems: "center",
                         gap: 10,
                         padding: "12px 16px",
                         borderRadius: 16,
-                        border: "1px solid rgba(79,70,229,0.2)",
-                        background: "rgba(255,255,255,0.92)",
-                        fontWeight: 600,
-                        color: "#1e293b",
+                        border: (prompt as any).urgent 
+                          ? "2px solid rgba(239,68,68,0.4)" 
+                          : "1px solid rgba(79,70,229,0.2)",
+                        background: (prompt as any).urgent
+                          ? "linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(239,68,68,0.05) 100%)"
+                          : "rgba(255,255,255,0.92)",
+                        fontWeight: (prompt as any).urgent ? 700 : 600,
+                        color: (prompt as any).urgent ? "#dc2626" : "#1e293b",
                         cursor: "pointer",
-                        boxShadow: "0 10px 20px rgba(124,58,237,0.12)",
+                        boxShadow: (prompt as any).urgent
+                          ? "0 10px 20px rgba(239,68,68,0.2)"
+                          : "0 10px 20px rgba(124,58,237,0.12)",
                         minHeight: 72,
+                        position: "relative",
                       }}
                     >
                       <span style={{ fontSize: 20 }}>{prompt.icon}</span>
                       <span style={{ textAlign: "left", lineHeight: 1.4 }}>{prompt.label}</span>
+                      {(prompt as any).urgent && (
+                        <span style={{
+                          position: "absolute",
+                          top: 4,
+                          right: 4,
+                          width: 8,
+                          height: 8,
+                          borderRadius: "50%",
+                          background: "#ef4444",
+                          boxShadow: "0 0 8px rgba(239,68,68,0.8)",
+                        }}></span>
+                      )}
                     </button>
                   ))}
                 </div>
