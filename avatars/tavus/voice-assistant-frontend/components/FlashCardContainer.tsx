@@ -81,7 +81,7 @@ export default function FlashCardContainer() {
       // Clean up RPC method when component unmounts
       room.localParticipant.unregisterRpcMethod("client.flashcard");
     };
-  }, [room, flashCards.length]);
+  }, [room]);
 
   const handleFlip = async (id: string) => {
     try {
@@ -125,16 +125,84 @@ export default function FlashCardContainer() {
     <AnimatePresence>
       {isVisible && currentCard && (
         <motion.div
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 100 }}
-          className="fixed right-8 top-24 w-96 bg-white text-slate-900 p-5 rounded-xl shadow-2xl z-50 border border-gray-200"
+          initial={{ opacity: 0, y: -20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20, scale: 0.95 }}
+          style={{
+            position: "fixed",
+            right: "32px",
+            top: "120px",
+            width: "420px",
+            maxWidth: "90vw",
+            background: "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.98) 100%)",
+            color: "#1e293b",
+            padding: "28px",
+            borderRadius: "24px",
+            boxShadow: "0 24px 48px rgba(15,23,42,0.2), 0 0 0 1px rgba(124,58,237,0.1)",
+            zIndex: 9999,
+            border: "2px solid rgba(124,58,237,0.2)",
+            backdropFilter: "blur(20px)"
+          }}
         >
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Flash Card</h2>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+            paddingBottom: "16px",
+            borderBottom: "2px solid rgba(124,58,237,0.1)"
+          }}>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px"
+            }}>
+              <div style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "12px",
+                background: "linear-gradient(135deg, #667eea 0%, #7c3aed 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 8px 16px rgba(124,58,237,0.3)"
+              }}>
+                <span className="fa-solid fa-lightbulb" style={{
+                  color: "#ffffff",
+                  fontSize: "18px"
+                }}></span>
+              </div>
+              <h2 style={{
+                fontSize: "22px",
+                fontWeight: 800,
+                color: "#0f172a",
+                margin: 0
+              }}>Flash Card</h2>
+            </div>
             <button 
               onClick={() => setIsVisible(false)}
-              className="text-gray-500 hover:text-gray-700"
+              style={{
+                background: "rgba(148,163,184,0.1)",
+                border: "none",
+                borderRadius: "8px",
+                width: "32px",
+                height: "32px",
+                cursor: "pointer",
+                color: "#64748b",
+                fontSize: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.2s"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(148,163,184,0.2)";
+                e.currentTarget.style.color = "#1e293b";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(148,163,184,0.1)";
+                e.currentTarget.style.color = "#64748b";
+              }}
             >
               ×
             </button>
@@ -143,25 +211,89 @@ export default function FlashCardContainer() {
           <FlashCard card={currentCard} onFlip={handleFlip} />
           
           {flashCards.length > 1 && (
-            <div className="flex justify-between mt-4">
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: "24px",
+              paddingTop: "20px",
+              borderTop: "2px solid rgba(124,58,237,0.1)"
+            }}>
               <button
                 onClick={() => setCurrentCardIndex(prev => 
                   prev !== null ? Math.max(0, prev - 1) : 0
                 )}
                 disabled={currentCardIndex === 0}
-                className="px-3 py-1 bg-indigo-600 text-white rounded disabled:opacity-50"
+                style={{
+                  padding: "10px 18px",
+                  background: currentCardIndex === 0 
+                    ? "rgba(148,163,184,0.2)" 
+                    : "linear-gradient(135deg, #667eea 0%, #7c3aed 100%)",
+                  color: currentCardIndex === 0 ? "#94a3b8" : "#ffffff",
+                  border: "none",
+                  borderRadius: "12px",
+                  fontWeight: 600,
+                  cursor: currentCardIndex === 0 ? "not-allowed" : "pointer",
+                  opacity: currentCardIndex === 0 ? 0.5 : 1,
+                  boxShadow: currentCardIndex === 0 ? "none" : "0 8px 16px rgba(124,58,237,0.3)",
+                  transition: "all 0.2s"
+                }}
+                onMouseEnter={(e) => {
+                  if (currentCardIndex !== 0) {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 12px 24px rgba(124,58,237,0.4)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (currentCardIndex !== 0) {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 8px 16px rgba(124,58,237,0.3)";
+                  }
+                }}
               >
-                Previous
+                ← Previous
               </button>
-              <span>{(currentCardIndex ?? 0) + 1} / {flashCards.length}</span>
+              <span style={{
+                fontSize: "14px",
+                fontWeight: 700,
+                color: "#64748b",
+                background: "rgba(124,58,237,0.1)",
+                padding: "8px 16px",
+                borderRadius: "12px"
+              }}>{(currentCardIndex ?? 0) + 1} / {flashCards.length}</span>
               <button
                 onClick={() => setCurrentCardIndex(prev => 
                   prev !== null ? Math.min(flashCards.length - 1, prev + 1) : 0
                 )}
                 disabled={currentCardIndex === flashCards.length - 1}
-                className="px-3 py-1 bg-indigo-600 text-white rounded disabled:opacity-50"
+                style={{
+                  padding: "10px 18px",
+                  background: currentCardIndex === flashCards.length - 1
+                    ? "rgba(148,163,184,0.2)"
+                    : "linear-gradient(135deg, #667eea 0%, #7c3aed 100%)",
+                  color: currentCardIndex === flashCards.length - 1 ? "#94a3b8" : "#ffffff",
+                  border: "none",
+                  borderRadius: "12px",
+                  fontWeight: 600,
+                  cursor: currentCardIndex === flashCards.length - 1 ? "not-allowed" : "pointer",
+                  opacity: currentCardIndex === flashCards.length - 1 ? 0.5 : 1,
+                  boxShadow: currentCardIndex === flashCards.length - 1 ? "none" : "0 8px 16px rgba(124,58,237,0.3)",
+                  transition: "all 0.2s"
+                }}
+                onMouseEnter={(e) => {
+                  if (currentCardIndex !== flashCards.length - 1) {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 12px 24px rgba(124,58,237,0.4)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (currentCardIndex !== flashCards.length - 1) {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 8px 16px rgba(124,58,237,0.3)";
+                  }
+                }}
               >
-                Next
+                Next →
               </button>
             </div>
           )}

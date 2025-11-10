@@ -378,91 +378,127 @@ export function FinnishLanguageBuddy() {
 
         <aside
           style={{
-            borderRadius: 22,
-            border: "1px solid rgba(37,99,235,0.25)",
-            background: "linear-gradient(135deg, #eef2ff 0%, #e0f2fe 100%)",
-            padding: 22,
+            borderRadius: 20,
+            border: "1px solid #e5e7eb",
+            background: "#ffffff",
+            padding: 20,
             display: "grid",
-            gap: 16,
+            gap: 20,
             alignContent: "start",
           }}
         >
-          <div style={{ display: "grid", gap: 6 }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: "#1d4ed8" }}>Today’s Goal</span>
-            <div style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>
-              10 messages → {messagesSent}/{dailyGoalTarget} done
+          <div
+            style={{
+              padding: 16,
+              borderRadius: 12,
+              background: "#f9fafb",
+              border: "1px solid #e5e7eb",
+              display: "grid",
+              gap: 12,
+            }}
+          >
+            <div style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              Today's Goal
+            </div>
+            <div style={{ display: "grid", gap: 8 }}>
+              <div style={{ fontSize: 20, fontWeight: 700, color: "#0f172a" }}>
+                {messagesSent} / {dailyGoalTarget} messages
+              </div>
+              <div
+                style={{
+                  height: 8,
+                  borderRadius: 999,
+                  background: "#e5e7eb",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    width: `${Math.min(100, (messagesSent / dailyGoalTarget) * 100)}%`,
+                    height: "100%",
+                    background: "#3b82f6",
+                    transition: "width 0.3s ease",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 12,
+            }}
+          >
+            <div
+              style={{
+                padding: 12,
+                borderRadius: 12,
+                background: "#f9fafb",
+                border: "1px solid #e5e7eb",
+                textAlign: "center",
+              }}
+            >
+              <div style={{ fontSize: 11, color: "#64748b", marginBottom: 4 }}>Level</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#0f172a" }}>{levelLabel}</div>
             </div>
             <div
               style={{
-                height: 12,
-                borderRadius: 999,
-                background: "rgba(59,130,246,0.15)",
-                overflow: "hidden",
+                padding: 12,
+                borderRadius: 12,
+                background: "#f9fafb",
+                border: "1px solid #e5e7eb",
+                textAlign: "center",
               }}
             >
-              <div
-                style={{
-                  width: `${Math.min(100, (messagesSent / dailyGoalTarget) * 100)}%`,
-                  height: "100%",
-                  background: "linear-gradient(135deg, #22d3ee, #6366f1)",
-                  transition: "width 0.3s ease",
-                }}
-              />
+              <div style={{ fontSize: 11, color: "#64748b", marginBottom: 4 }}>Streak</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#0f172a" }}>🔥 {streakDays}</div>
             </div>
           </div>
 
           <div
             style={{
-              display: "grid",
-              gap: 10,
-              padding: 14,
-              borderRadius: 16,
-              background: "rgba(255,255,255,0.75)",
-              border: "1px solid rgba(148,163,184,0.3)",
+              padding: 16,
+              borderRadius: 12,
+              background: "#f9fafb",
+              border: "1px solid #e5e7eb",
+              textAlign: "center",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#475569" }}>
-              <span>Level</span>
-              <span>{levelLabel}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#475569" }}>
-              <span>Streak</span>
-              <span>🔥 {streakDays} days</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#475569" }}>
-              <span>XP gained</span>
-              <span>+{xpEarned}</span>
-            </div>
+            <div style={{ fontSize: 11, color: "#64748b", marginBottom: 4 }}>XP Gained</div>
+            <div style={{ fontSize: 24, fontWeight: 700, color: "#22c55e" }}>+{xpEarned}</div>
           </div>
 
           <div
             style={{
-              borderRadius: 16,
-              border: "1px solid rgba(34,197,94,0.25)",
-              background: "rgba(34,197,94,0.08)",
+              borderRadius: 12,
+              border: "1px solid #d1fae5",
+              background: "#f0fdf4",
               padding: 16,
               display: "grid",
-              gap: 10,
+              gap: 12,
             }}
           >
-            <span style={{ fontSize: 13, fontWeight: 700, color: "#166534" }}>Quick tip</span>
-            <p style={{ margin: 0, fontSize: 12.5, color: "#166534" }}>
-              Log your session to add it to Skill Passport and unlock extra XP towards Connector level.
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#166534" }}>💡 Tip</div>
+            <p style={{ margin: 0, fontSize: 13, color: "#166534", lineHeight: 1.5 }}>
+              Log your session to get XP and unlock new levels.
             </p>
             <button
               type="button"
               onClick={handleCompleteSession}
               style={{
-                padding: "10px 14px",
-                borderRadius: 12,
+                padding: "10px 16px",
+                borderRadius: 8,
                 border: "none",
-                background: "linear-gradient(135deg, #22c55e, #16a34a)",
-                color: "#fff",
-                fontWeight: 700,
+                background: "#22c55e",
+                color: "#ffffff",
+                fontWeight: 600,
+                fontSize: 13,
                 cursor: "pointer",
               }}
             >
-              Log session ({sessionsCompleted} completed)
+              Log Session
             </button>
           </div>
         </aside>

@@ -18,7 +18,11 @@ import json
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, List, TypedDict
+from typing import Optional, List
+try:
+    from typing_extensions import TypedDict
+except ImportError:
+    from typing import TypedDict
 from datetime import datetime
 from dotenv import load_dotenv
 from livekit.agents import JobContext, WorkerOptions, cli, RoomOutputOptions, RoomInputOptions
@@ -250,84 +254,163 @@ class AvatarAgent(Agent):
         # This Agent only provides instructions and function tools
         super().__init__(
             instructions="""
-                You are Knuut AI — an immigrant language coach, career mentor, and integration guide for Finland.
-                Your mission is to bridge people to Finnish opportunities with voice-to-voice coaching.
+                You are Knuut AI — an energetic, enthusiastic, and deeply engaging language coach, career mentor, and integration guide for Finland. Your mission is to make learning Finnish exciting, accessible, and fun while helping immigrants thrive in Finland.
 
-                Voice & tone: friendly, confident, attentive, supportive; natural and human. Use brief, clear sentences.
-                Be multilingual: auto-detect the user’s spoken language immediately and respond in that language.
-                - If the user switches language mid-conversation, adapt instantly.
-                - Keep replies bilingual when teaching (user’s language + Finnish), but keep them concise.
+                PERSONALITY & ENGAGEMENT (CRITICAL FOR INVESTOR DEMO):
+                - Be EXTREMELY enthusiastic, warm, and encouraging — like the best teacher who makes learning addictive
+                - Show genuine excitement when the user makes progress: "Wow! That's amazing! You're learning so fast!"
+                - Use active listening: "I hear you!", "That's a great question!", "Let me help you with that!"
+                - Be conversational and natural — like talking to a friend who's also an expert teacher
+                - Celebrate small wins: "Perfect!", "Excellent pronunciation!", "You've got this!"
+                - Show energy and passion: Make the user feel like they're in the best language class ever
+                - Be responsive and adaptive: If the user seems confused, slow down and explain differently
+                - Use encouraging phrases: "You're doing fantastic!", "Keep going!", "I'm so proud of your progress!"
 
-                What you do:
-                - Coach Finnish through conversation; adapt A0 → professional fluency; track progress.
-                - Mentor for jobs in Finland: CV, applications, interviews, workplace culture & etiquette.
-                - Guide integration: permits/registration basics (remind to verify with authorities).
-                - Help find community groups and events: mothers with kids, language exchange, cultural groups, sports, etc.
-                - Organize and discover meetups: coffee meetups, playdates, cultural events, networking events in Kajaani.
-                - Provide emotional support and practical next steps.
+                RESPONSE SPEED & EFFICIENCY:
+                - Keep responses SHORT and FAST (1-2 sentences maximum for voice interactions)
+                - Respond immediately to questions — no long explanations unless specifically asked
+                - Break complex topics into bite-sized chunks
+                - Use quick confirmations: "Got it!", "Perfect!", "Exactly!"
+                - If you need to explain something longer, say: "Let me break this down quickly..."
 
-                Local context (very important): You are operating in Finland, specifically Kajaani.
-                - Know key institutions and resources: InfoFinland, Migri (residence permits), DVV (population register), Kela (social security), Vero (taxes), Omakanta/My Kanta (health records), Traficom (driving licence), Police ID.
-                - City services for Kajaani: city website, newcomers information, libraries, community centers.
-                - Jobs: recommend and guide through Finnish job platforms including duunijobs.fi (requested), TE Services / Työmarkkinatori (Job Market Finland), LinkedIn, Indeed Finland. Help with searches around Kajaani and Kainuu region.
-                - When asked about jobs, provide concrete next actions (search queries, how to register as jobseeker, how to get a tax card, how to get a Finnish ID, how to book Migri appointments).
+                TEACHING STYLE - MANDATORY FUNCTION TOOL USAGE:
+                ⚠️ CRITICAL: You MUST use function tools - this is NOT optional ⚠️
+                
+                AVAILABLE FUNCTION TOOLS:
+                1. create_flash_card(question: str, answer: str) - Creates visible flashcard on screen
+                2. create_quiz(questions: List[QuizQuestionDict]) - Creates visible quiz on screen
+                
+                MANDATORY RULES:
+                - User says "quiz", "test", "practice", "make a quiz", "create a quiz", "give me a quiz"
+                  → IMMEDIATELY call create_quiz() with 3-5 questions about Finnish
+                - User says "teach me Finnish", "show me Finnish words", "what does X mean"
+                  → CALL create_flash_card() for EACH word you mention
+                - Teaching ANY new Finnish word/phrase (like "Hei", "Kiitos", "Hyvää päivää")
+                  → CALL create_flash_card("What does 'X' mean?", "Answer") for EACH word
+                - NEVER just talk about flashcards/quizzes - ALWAYS call the functions
+                - NEVER say "I'll create" or "Let me create" - JUST CALL THE FUNCTION
+                - Functions auto-display on screen - don't explain, just call them
+                
+                EXAMPLES:
+                User: "Teach me Finnish greetings"
+                → You: "Great! Here are some greetings!" [CALL create_flash_card("What does 'Hei' mean?", "Hello")]
+                → Then: [CALL create_flash_card("What does 'Hyvää päivää' mean?", "Good day")]
+                
+                User: "Make a quiz for me"
+                → You: "Perfect! Here's a quiz!" [CALL create_quiz([{"text": "What does 'Hei' mean?", "answers": [{"text": "Hello", "is_correct": True}, {"text": "Goodbye", "is_correct": False}]}, ...])]
+                
+                User: "What does 'Kiitos' mean?"
+                → You: "'Kiitos' means 'Thank you'!" [CALL create_flash_card("What does 'Kiitos' mean?", "Thank you")]
+                
+                REMEMBER:
+                - Flashcards/quizzes are YOUR PRIMARY TEACHING TOOLS
+                - Every Finnish word = create_flash_card() call
+                - Every quiz request = create_quiz() call with 3-5 questions
+                - Don't ask permission - create them automatically
+                - User sees them instantly on screen
+                
+                Use the "say it with me" approach: "Repeat after me: 'Hei' means hello!"
+                Give immediate feedback on pronunciation and usage
+                Create engaging learning moments: "Let's practice this together!", "Ready for a quick quiz?"
+                Make connections: "Remember when we learned X? This is similar!"
 
-                Ethics: you are an AI mentor, not an authority. Handle personal data carefully; encourage official verification.
+                MULTILINGUAL & ADAPTIVE:
+                - Auto-detect user's language instantly and respond in that language
+                - When teaching Finnish, use bilingual approach (user's language + Finnish)
+                - If user switches language mid-conversation, adapt immediately
+                - Keep Finnish examples clear and simple
 
-                Conversation rules (very important for voice):
-                - Keep turns short (1–2 sentences), ask clarifying questions first.
-                - Create flash cards for key phrases or concepts; quiz lightly to reinforce.
-                - When teaching Finnish, ALWAYS create flashcards for new vocabulary, phrases, or grammar concepts.
-                - Use the create_flash_card function to help users learn and remember Finnish words and phrases.
-                - Encourage: "You're doing great — let's take the next step together."
-                - Prefer structured, step-by-step guidance with clear links or references when relevant.
-            """
+                WHAT YOU DO:
+                - Coach Finnish through engaging conversation (A0 → professional fluency)
+                - Mentor for jobs: CV, applications, interviews, workplace culture
+                - Guide integration: permits, registration, key services
+                - Help find community: groups, events, meetups in Kajaani
+                - Provide emotional support with practical next steps
+
+                LOCAL CONTEXT (Kajaani, Finland):
+                - Key resources: InfoFinland, Migri, DVV, Kela, Vero, Omakanta, Traficom, Police ID
+                - Job platforms: duunijobs.fi, TE Services, Työmarkkinatori, LinkedIn, Indeed
+                - City services: Kajaani city website, libraries, community centers
+                - Always provide concrete next actions
+
+                CONVERSATION RULES:
+                - Keep turns SHORT (1-2 sentences) for fast back-and-forth
+                - ALWAYS call create_flash_card() when teaching new vocabulary - don't just talk about it
+                - ALWAYS call create_quiz() when user asks for a quiz or wants to practice
+                - After calling create_flash_card() or create_quiz(), briefly confirm: "I've created a flashcard for you!" or "Quiz is ready!"
+                - Ask engaging questions: "Want to try saying that?", "Ready for a challenge?"
+                - Show enthusiasm for every interaction
+                - Be the teacher who makes students excited to learn
+                
+                FUNCTION TOOL REMINDER:
+                - You MUST use create_flash_card(question: str, answer: str) for every new word/phrase
+                - You MUST use create_quiz(questions: List[QuizQuestionDict]) when user wants to practice
+                - These tools automatically display on the user's screen - just call them!
+            """,
+            allow_interruptions=True  # Enable interruptions for faster response
         )
 
     @function_tool
     async def create_flash_card(self, context: RunContext[UserData], question: str, answer: str):
-        """Create a new flash card and display it to the user.
+        """Create a new flash card and display it to the user. USE THIS whenever you teach a new Finnish word or phrase.
+        
+        IMPORTANT: This function automatically displays the flashcard on the user's screen. Just call it with the question and answer.
 
         Args:
-            question: The question or front side of the flash card
-            answer: The answer or back side of the flash card
+            question: The question or front side of the flash card (e.g., "What does 'Hei' mean?")
+            answer: The answer or back side of the flash card (e.g., "Hello")
         """
-        userdata = context.userdata
-        card = userdata.add_flash_card(question, answer)
+        try:
+            userdata = context.userdata
+            logger.info(f"🃏 Creating flashcard: Q='{question}' A='{answer}'")
+            card = userdata.add_flash_card(question, answer)
 
-        # Get the room from the userdata
-        if not userdata.ctx or not userdata.ctx.room:
-            return f"Created a flash card, but couldn't access the room to send it."
+            # Get the room from the userdata
+            if not userdata.ctx or not userdata.ctx.room:
+                logger.error("❌ Cannot access room from userdata.ctx")
+                return f"Created a flash card, but couldn't access the room to send it."
 
-        room = userdata.ctx.room
+            room = userdata.ctx.room
 
-        # Get the first participant in the room (should be the client)
-        participants = room.remote_participants
-        if not participants:
-            return f"Created a flash card, but no participants found to send it to."
+            # Get the first participant in the room (should be the client)
+            participants = room.remote_participants
+            if not participants:
+                logger.error("❌ No remote participants found in room")
+                return f"Created a flash card, but no participants found to send it to."
 
-        # Get the first participant from the dictionary of remote participants
-        participant = next(iter(participants.values()), None)
-        if not participant:
-            return f"Created a flash card, but couldn't get the first participant."
-        payload = {
-            "action": "show",
-            "id": card.id,
-            "question": card.question,
-            "answer": card.answer,
-            "index": len(userdata.flash_cards) - 1
-        }
+            # Get the first participant from the dictionary of remote participants
+            participant = next(iter(participants.values()), None)
+            if not participant:
+                logger.error("❌ Could not get first participant")
+                return f"Created a flash card, but couldn't get the first participant."
+            
+            payload = {
+                "action": "show",
+                "id": card.id,
+                "question": card.question,
+                "answer": card.answer,
+                "index": len(userdata.flash_cards) - 1
+            }
 
-        # Make sure payload is properly serialized
-        json_payload = json.dumps(payload)
-        logger.info(f"Sending flash card payload: {json_payload}")
-        await room.local_participant.perform_rpc(
-            destination_identity=participant.identity,
-            method="client.flashcard",
-            payload=json_payload
-        )
+            # Make sure payload is properly serialized
+            json_payload = json.dumps(payload)
+            logger.info(f"📤 Sending flashcard via RPC to {participant.identity}: {json_payload}")
+            
+            try:
+                await room.local_participant.perform_rpc(
+                    destination_identity=participant.identity,
+                    method="client.flashcard",
+                    payload=json_payload
+                )
+                logger.info(f"✅ Flashcard sent successfully!")
+            except Exception as e:
+                logger.error(f"❌ Error sending flashcard via RPC: {e}", exc_info=True)
+                return f"Created a flash card but failed to send it: {str(e)}"
 
-        return f"I've created a flash card with the question: '{question}'"
+            return f"Flashcard created and displayed! Question: '{question}'"
+        except Exception as e:
+            logger.error(f"❌ Error in create_flash_card: {e}", exc_info=True)
+            return f"Error creating flashcard: {str(e)}"
 
     @function_tool
     async def flip_flash_card(self, context: RunContext[UserData], card_id: str):
@@ -375,65 +458,107 @@ class AvatarAgent(Agent):
 
     @function_tool
     async def create_quiz(self, context: RunContext[UserData], questions: List[QuizQuestionDict]):
-        """Create a new quiz with multiple choice questions and display it to the user.
+        """Create a new quiz with multiple choice questions and display it to the user. USE THIS when user asks for a quiz or wants to practice.
+        
+        IMPORTANT: This function automatically displays the quiz on the user's screen. Just call it with the questions.
+        You MUST include at least 3-5 questions. Each question needs at least 2-4 answer options, with exactly ONE marked as correct.
 
         Args:
-            questions: A list of question objects. Each question object should have:
-                - text: The question text
-                - answers: A list of answer objects, each with:
-                    - text: The answer text
-                    - is_correct: Boolean indicating if this is the correct answer
+            questions: A list of question objects. Each question object must have:
+                - text: The question text (e.g., "What does 'Hei' mean?")
+                - answers: A list of 2-4 answer objects, each with:
+                    - text: The answer text (e.g., "Hello")
+                    - is_correct: Boolean - set to True for the correct answer, False for others
+                    
+        Example:
+            questions = [
+                {
+                    "text": "What does 'Hei' mean?",
+                    "answers": [
+                        {"text": "Hello", "is_correct": True},
+                        {"text": "Goodbye", "is_correct": False},
+                        {"text": "Thank you", "is_correct": False}
+                    ]
+                },
+                {
+                    "text": "How do you say 'Good morning' in Finnish?",
+                    "answers": [
+                        {"text": "Hyvää huomenta", "is_correct": True},
+                        {"text": "Hei", "is_correct": False},
+                        {"text": "Kiitos", "is_correct": False}
+                    ]
+                }
+            ]
         """
-        userdata = context.userdata
-        quiz = userdata.add_quiz(questions)
+        try:
+            userdata = context.userdata
+            logger.info(f"📝 Creating quiz with {len(questions)} questions")
+            
+            if not questions or len(questions) == 0:
+                logger.error("❌ No questions provided to create_quiz")
+                return "Error: Quiz must have at least one question. Please provide questions."
+            
+            quiz = userdata.add_quiz(questions)
 
-        # Get the room from the userdata
-        if not userdata.ctx or not userdata.ctx.room:
-            return f"Created a quiz, but couldn't access the room to send it."
+            # Get the room from the userdata
+            if not userdata.ctx or not userdata.ctx.room:
+                logger.error("❌ Cannot access room from userdata.ctx")
+                return f"Created a quiz, but couldn't access the room to send it."
 
-        room = userdata.ctx.room
+            room = userdata.ctx.room
 
-        # Get the first participant in the room (should be the client)
-        participants = room.remote_participants
-        if not participants:
-            return f"Created a quiz, but no participants found to send it to."
+            # Get the first participant in the room (should be the client)
+            participants = room.remote_participants
+            if not participants:
+                logger.error("❌ No remote participants found in room")
+                return f"Created a quiz, but no participants found to send it to."
 
-        # Get the first participant from the dictionary of remote participants
-        participant = next(iter(participants.values()), None)
-        if not participant:
-            return f"Created a quiz, but couldn't get the first participant."
+            # Get the first participant from the dictionary of remote participants
+            participant = next(iter(participants.values()), None)
+            if not participant:
+                logger.error("❌ Could not get first participant")
+                return f"Created a quiz, but couldn't get the first participant."
 
-        # Format questions for client
-        client_questions = []
-        for q in quiz.questions:
-            client_answers = []
-            for a in q.answers:
-                client_answers.append({
-                    "id": a.id,
-                    "text": a.text
+            # Format questions for client
+            client_questions = []
+            for q in quiz.questions:
+                client_answers = []
+                for a in q.answers:
+                    client_answers.append({
+                        "id": a.id,
+                        "text": a.text
+                    })
+                client_questions.append({
+                    "id": q.id,
+                    "text": q.text,
+                    "answers": client_answers
                 })
-            client_questions.append({
-                "id": q.id,
-                "text": q.text,
-                "answers": client_answers
-            })
 
-        payload = {
-            "action": "show",
-            "id": quiz.id,
-            "questions": client_questions
-        }
+            payload = {
+                "action": "show",
+                "id": quiz.id,
+                "questions": client_questions
+            }
 
-        # Make sure payload is properly serialized
-        json_payload = json.dumps(payload)
-        logger.info(f"Sending quiz payload: {json_payload}")
-        await room.local_participant.perform_rpc(
-            destination_identity=participant.identity,
-            method="client.quiz",
-            payload=json_payload
-        )
+            # Make sure payload is properly serialized
+            json_payload = json.dumps(payload)
+            logger.info(f"📤 Sending quiz via RPC to {participant.identity}: {len(client_questions)} questions")
+            
+            try:
+                await room.local_participant.perform_rpc(
+                    destination_identity=participant.identity,
+                    method="client.quiz",
+                    payload=json_payload
+                )
+                logger.info(f"✅ Quiz sent successfully!")
+            except Exception as e:
+                logger.error(f"❌ Error sending quiz via RPC: {e}", exc_info=True)
+                return f"Created a quiz but failed to send it: {str(e)}"
 
-        return f"I've created a quiz with {len(questions)} questions. Please answer them when you're ready."
+            return f"Quiz created and displayed! It has {len(questions)} questions. Answer them when you're ready!"
+        except Exception as e:
+            logger.error(f"❌ Error in create_quiz: {e}", exc_info=True)
+            return f"Error creating quiz: {str(e)}"
 
     @function_tool
     async def create_group(self, context: RunContext[UserData], name: str, description: str, 
@@ -764,7 +889,8 @@ class AvatarAgent(Agent):
         return f"I found {len(events_data)} upcoming events. Check them out!"
 
     async def on_enter(self):
-        # Initial greeting is handled by session.generate_reply() after session.start()
+        # Greeting is handled in entrypoint after session.start()
+        # This ensures session is fully initialized before generating audio
         pass
 
 async def entrypoint(ctx: JobContext):
@@ -776,39 +902,92 @@ async def entrypoint(ctx: JobContext):
     # Create a single AgentSession with userdata
     # Configure STT, LLM, TTS for the session - Tavus will handle the audio/video output
     userdata = UserData(ctx=ctx)
+    
+    # Check if Deepgram API key is available, if not use OpenAI STT as fallback
+    import os
+    # Verify OpenAI API key is loaded
+    openai_key = os.getenv("OPENAI_API_KEY")
+    if openai_key:
+        logger.info(f"✅ OpenAI API key loaded (length: {len(openai_key)})")
+    else:
+        logger.error("❌ OPENAI_API_KEY not found in environment! Voice will not work.")
+        # Try to reload from .env file
+        from pathlib import Path
+        load_dotenv(dotenv_path=Path(__file__).parent.parent.parent / '.env', override=True)
+        openai_key = os.getenv("OPENAI_API_KEY")
+        if openai_key:
+            logger.info(f"✅ OpenAI API key loaded from .env file (length: {len(openai_key)})")
+        else:
+            logger.error("❌ OPENAI_API_KEY still not found after reloading .env file!")
+    
+    deepgram_key = os.getenv("DEEPGRAM_API_KEY")
+    if deepgram_key:
+        stt_provider = deepgram.STT(model="nova-3", language="en")
+        logger.info("Using Deepgram STT")
+    else:
+        # Fallback to OpenAI STT if Deepgram key is not available
+        stt_provider = openai.STT()
+        logger.warning("DEEPGRAM_API_KEY not found, using OpenAI STT as fallback")
+    
+    # Create LLM with explicit error handling and optimized for speed
+    try:
+        llm_provider = openai.LLM(model="gpt-4o-mini")
+        logger.info("✅ OpenAI LLM initialized with model: gpt-4o-mini")
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize OpenAI LLM: {e}", exc_info=True)
+        raise
+    
+    # Configure VAD for faster response - lower silence duration means faster turn detection
+    vad = silero.VAD.load(
+        min_speech_duration=0.2,  # Faster detection of speech start
+        min_silence_duration=0.4,  # Lower silence threshold for faster turn detection
+    )
+    
+    # Use faster turn detection model
+    turn_detection = EnglishModel()
+    
     session = AgentSession[UserData](
         userdata=userdata,
-        # Original working STT configuration
-        stt=deepgram.STT(model="nova-3", language="en"),
-        llm="openai/gpt-4.1-mini",
-        tts=openai.TTS(),  # OpenAI TTS - using your API key
-        vad=silero.VAD.load(),
-        turn_detection=EnglishModel()
+        stt=stt_provider,
+        llm=llm_provider,  # Use the initialized LLM provider
+        tts=openai.TTS(),  # OpenAI TTS - using default voice
+        vad=vad,  # Optimized VAD for faster response
+        turn_detection=turn_detection,
     )
 
-    # Ensure agent responds to user input
+    # Ensure agent responds quickly to user input with partial transcripts for faster response
     @session.on("user_input_transcribed")
     def _on_transcript(event):
         try:
             transcript = getattr(event, "transcript", "").strip()
             is_final = getattr(event, "is_final", False)
-            if is_final and transcript:
-                logger.info(f"Final transcript received, generating reply: {transcript}")
-                # generate_reply returns a SpeechHandle, not a coroutine - call it directly
-                try:
-                    speech_handle = session.generate_reply(user_input=transcript)
-                    logger.info(f"Reply generation started for: {transcript}")
-                except Exception as e:
-                    logger.error(f"Error calling generate_reply: {e}", exc_info=True)
+            if transcript:  # Respond to both partial and final transcripts for faster interaction
+                logger.info(f"Transcript received (final={is_final}): {transcript}")
+                if is_final:  # Only generate reply on final transcript to avoid duplicates
+                    try:
+                        speech_handle = session.generate_reply(user_input=transcript)
+                        logger.info(f"Reply generation started immediately for: {transcript}")
+                    except Exception as e:
+                        logger.error(f"Error calling generate_reply: {e}", exc_info=True)
         except Exception as e:
             logger.error(f"Error in transcript handler: {e}", exc_info=True)
 
-    # Create the avatar session
-    avatar = tavus.AvatarSession(
-        replica_id="r70c81a0519b",
-        persona_id="p9cfffba3847",
-        avatar_participant_name="assistant"
-    )
+    # Create the avatar session (optional - will skip if Tavus key is missing)
+    avatar = None
+    tavus_key = os.getenv("TAVUS_API_KEY")
+    if tavus_key:
+        try:
+            avatar = tavus.AvatarSession(
+                replica_id="r70c81a0519b",
+                persona_id="p9cfffba3847",
+                avatar_participant_name="assistant"
+            )
+            logger.info("Tavus avatar session created")
+        except Exception as e:
+            logger.warning(f"Failed to create Tavus avatar session: {e}, continuing without avatar")
+            avatar = None
+    else:
+        logger.warning("TAVUS_API_KEY not found, continuing without avatar (audio-only mode)")
 
     # Register RPC method for flipping flash cards from client
     async def handle_flip_flash_card(rpc_data):
@@ -1068,35 +1247,46 @@ async def entrypoint(ctx: JobContext):
         handle_process_user_input
     )
 
-    # Start the agent session first to enable audio input/output
-    logger.info("Starting agent session...")
+    # Start the agent session with optimized settings for fast response
+    logger.info("Starting agent session with optimized settings...")
     await session.start(
         room=ctx.room,
-        room_input_options=RoomInputOptions(),  # Revert to default working config
+        room_input_options=RoomInputOptions(
+            # Optimize for faster audio processing
+            audio_sample_rate=16000,  # Standard sample rate for faster processing
+            audio_num_channels=1,  # Mono audio for faster processing
+        ),
         room_output_options=RoomOutputOptions(
-            audio_enabled=True,  # Enable audio output - Tavus avatar will publish audio track
+            audio_enabled=True,  # Enable audio output
         ),
         agent=agent
     )
-    logger.info("Agent session started successfully")
+    logger.info("Agent session started successfully with fast response settings")
     
     # Start the avatar with the same session - Tavus will receive TTS audio from the session
-    logger.info("Starting Tavus avatar session...")
-    try:
-        await avatar.start(session, room=ctx.room)
-        logger.info("Tavus avatar session started successfully")
-    except Exception as e:
-        logger.error(f"Failed to start Tavus avatar: {e}", exc_info=True)
-        raise
+    # Make Tavus optional - if it fails, continue without avatar (audio-only mode)
+    if avatar:
+        logger.info("Starting Tavus avatar session...")
+        try:
+            await avatar.start(session, room=ctx.room)
+            logger.info("Tavus avatar session started successfully")
+        except Exception as e:
+            logger.error(f"Failed to start Tavus avatar: {e}", exc_info=True)
+            logger.warning("Continuing without Tavus avatar - audio-only mode")
+            # Don't raise - continue without avatar so the agent still works
+    else:
+        logger.info("Skipping Tavus avatar (not configured or failed to initialize)")
     
     # Generate initial greeting after both session and avatar are started
     logger.info("Generating initial greeting...")
     try:
-        # generate_reply returns a SpeechHandle, not a coroutine - call it directly
+        # generate_reply() generates LLM response and TTS audio, then publishes audio track
         speech_handle = session.generate_reply()
-        logger.info(f"Initial greeting generated successfully: {speech_handle}")
+        logger.info(f"Initial greeting generation started: {speech_handle}")
     except Exception as e:
         logger.error(f"Error generating initial greeting: {e}", exc_info=True)
+        # If greeting fails, log but don't crash - agent can still respond to user input
+        logger.warning("Agent will continue without initial greeting")
 
 if __name__ == "__main__":
     cli.run_app(

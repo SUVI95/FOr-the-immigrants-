@@ -51,40 +51,66 @@ export default function KnuutVoicePage() {
   useReduceConsoleNoise();
 
   const onConnectButtonClicked = useCallback(async () => {
+    try {
+      console.log("🔄 Starting connection process...");
     const url = new URL(
       process.env.NEXT_PUBLIC_CONN_DETAILS_ENDPOINT ?? "/api/connection-details",
       window.location.origin
     );
     const response = await fetch(url.toString());
-    const connectionDetailsData: ConnectionDetails = await response.json();
-
-    await room.connect(connectionDetailsData.serverUrl, connectionDetailsData.participantToken);
-    await room.localParticipant.setMicrophoneEnabled(true);
-
-    try {
-      const pubs = Array.from(room.localParticipant.tracks.values());
-      if (!pubs.find(p => p.source === 'microphone')) {
-        console.warn('Microphone track not published, retrying enable...');
-        await room.localParticipant.setMicrophoneEnabled(true);
+      if (!response.ok) {
+        throw new Error(`Failed to get connection details: ${response.status}`);
       }
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      console.log('Audio input devices:', devices.filter(d => d.kind === 'audioinput'));
-    } catch (e) {
-      console.warn('Device check failed:', e);
-    }
+    const connectionDetailsData: ConnectionDetails = await response.json();
+      console.log("✅ Got connection details, connecting to room...");
 
-    try {
-      const dispatchResponse = await fetch("/api/dispatch", {
+      // Add timeout for connection
+      const connectPromise = room.connect(connectionDetailsData.serverUrl, connectionDetailsData.participantToken);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Connection timeout after 10 seconds")), 10000)
+      );
+      
+      await Promise.race([connectPromise, timeoutPromise]);
+      console.log("✅ Connected to room");
+
+      // Enable microphone with timeout
+      try {
+        await Promise.race([
+          room.localParticipant.setMicrophoneEnabled(true),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("Microphone enable timeout")), 5000))
+        ]);
+        console.log("✅ Microphone enabled");
+      } catch (e) {
+        console.warn("⚠️ Microphone enable failed or timed out:", e);
+      }
+
+      // Dispatch agent with timeout
+      try {
+        console.log("🔄 Dispatching agent...");
+        const dispatchResponse = await Promise.race([
+          fetch("/api/dispatch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ roomName: connectionDetailsData.roomName }),
-      });
+          }),
+          new Promise<Response>((_, reject) => 
+            setTimeout(() => reject(new Error("Dispatch timeout")), 10000)
+          )
+        ]);
+        
       if (!dispatchResponse.ok) {
         const errorText = await dispatchResponse.text();
-        console.error("Failed to dispatch agent:", errorText);
+          console.error("❌ Failed to dispatch agent:", errorText);
+        } else {
+          console.log("✅ Agent dispatched successfully");
+        }
+      } catch (error) {
+        console.error("❌ Error dispatching agent:", error);
+        // Don't throw - continue even if dispatch fails
       }
     } catch (error) {
-      console.error("Error dispatching agent:", error);
+      console.error("❌ Connection error:", error);
+      alert(`Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`);
     }
   }, [room]);
 
@@ -182,31 +208,117 @@ export default function KnuutVoicePage() {
       <div className="app">
         <Sidebar activeTab={activeTab} onTabChange={handleTabChange} onLearnFinnishClick={handleLearnFinnishClick} />
 
-        <main>
+        <main style={{ 
+          background: "linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)",
+          minHeight: "100vh",
+          padding: "32px 40px"
+        }}>
           <div className="hero">
-            <section className="welcome">
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+            <section className="welcome" style={{
+              background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.98) 100%)",
+              border: "1px solid rgba(148,163,184,0.2)",
+              borderRadius: "32px",
+              padding: "40px 36px",
+              boxShadow: "0 32px 64px rgba(15,23,42,0.08), 0 0 0 1px rgba(255,255,255,0.5) inset",
+              position: "relative",
+              overflow: "hidden"
+            }}>
+              {/* Animated background gradient */}
+              <div style={{
+                position: "absolute",
+                top: "-50%",
+                right: "-20%",
+                width: "600px",
+                height: "600px",
+                background: "radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)",
+                borderRadius: "50%",
+                animation: "pulse 8s ease-in-out infinite",
+                pointerEvents: "none"
+              }}></div>
+              <div style={{
+                position: "absolute",
+                bottom: "-30%",
+                left: "-10%",
+                width: "500px",
+                height: "500px",
+                background: "radial-gradient(circle, rgba(34,211,238,0.12) 0%, transparent 70%)",
+                borderRadius: "50%",
+                animation: "pulse 10s ease-in-out infinite",
+                pointerEvents: "none"
+              }}></div>
+
+              <div style={{ 
+                display: "flex", 
+                alignItems: "center", 
+                gap: 16, 
+                marginBottom: 12,
+                position: "relative",
+                zIndex: 1
+              }}>
+                <div style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: "20px",
+                  background: "linear-gradient(135deg, #667eea 0%, #7c3aed 50%, #ec4899 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 16px 32px rgba(124,58,237,0.3), 0 0 0 4px rgba(124,58,237,0.1)",
+                  animation: "float 3s ease-in-out infinite"
+                }}>
                 <span className="fa-solid fa-waveform-lines" style={{
-                  fontSize: 26,
-                  color: "#7c3aed",
-                  filter: "drop-shadow(0 2px 8px rgba(124,58,237,0.35))"
+                    fontSize: 28,
+                    color: "#ffffff",
+                    filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))"
                 }} aria-hidden="true"></span>
+                </div>
+                <div>
                 <h1 style={{
                   margin: 0,
-                  fontSize: "2.2rem",
-                  fontWeight: 800,
-                  background: "linear-gradient(135deg, #667eea 0%, #7c3aed 50%, #22d3ee 100%)",
+                    fontSize: "2.8rem",
+                    fontWeight: 900,
+                    background: "linear-gradient(135deg, #667eea 0%, #7c3aed 30%, #ec4899 60%, #22d3ee 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  letterSpacing: 0.2
-                }}>{t("voice")}</h1>
+                    backgroundClip: "text",
+                    letterSpacing: "-0.02em",
+                    lineHeight: 1.1,
+                    position: "relative"
+                  }}>Knuut AI Voice</h1>
+                  <div style={{
+                    marginTop: 8,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8
+                  }}>
+                    <span style={{
+                      display: "inline-block",
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      background: "linear-gradient(135deg, #22c55e, #16a34a)",
+                      boxShadow: "0 0 12px rgba(34,197,94,0.6)",
+                      animation: "pulse 2s ease-in-out infinite"
+                    }}></span>
+                    <span style={{
+                      fontSize: "13px",
+                      fontWeight: 600,
+                      color: "#64748b",
+                      letterSpacing: "0.5px"
+                    }}>AI-Powered Language Learning</span>
+                  </div>
+                </div>
               </div>
               <p style={{
-                fontSize: 14,
-                color: "#64748b",
-                marginBottom: 18,
+                fontSize: 16,
+                color: "#475569",
+                marginBottom: 32,
+                lineHeight: 1.6,
+                position: "relative",
+                zIndex: 1,
+                fontWeight: 500
               }}>
-                Talk naturally. Knuut will listen, think, and respond in real-time.
+                Experience the future of language learning. Talk naturally with Knuut AI — your personal Finnish teacher that listens, understands, and responds in real-time with engaging conversations.
               </p>
 
               <div
@@ -215,101 +327,222 @@ export default function KnuutVoicePage() {
                 role="button"
                 tabIndex={0}
                 aria-pressed={isListening}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 20,
+                  padding: "20px 28px",
+                  borderRadius: "20px",
+                  border: voiceEnabled 
+                    ? "2px solid rgba(34,197,94,0.4)" 
+                    : "2px solid rgba(124,58,237,0.3)",
+                  background: voiceEnabled
+                    ? "linear-gradient(135deg, rgba(34,197,94,0.1) 0%, rgba(16,185,129,0.08) 100%)"
+                    : "linear-gradient(135deg, rgba(102,126,234,0.12) 0%, rgba(124,58,237,0.1) 100%)",
+                  cursor: "pointer",
+                  width: "max-content",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  boxShadow: voiceEnabled
+                    ? "0 20px 40px rgba(34,197,94,0.2), 0 0 0 4px rgba(34,197,94,0.1)"
+                    : "0 16px 32px rgba(124,58,237,0.15), 0 0 0 2px rgba(124,58,237,0.05)",
+                  position: "relative",
+                  zIndex: 1,
+                  transform: "translateY(0)",
+                }}
+                onMouseEnter={(e) => {
+                  if (!voiceEnabled) {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 20px 40px rgba(124,58,237,0.25), 0 0 0 4px rgba(124,58,237,0.1)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!voiceEnabled) {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 16px 32px rgba(124,58,237,0.15), 0 0 0 2px rgba(124,58,237,0.05)";
+                  }
+                }}
               >
-                <div className="mic" style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 999,
+                <div style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: "50%",
                   display: "grid",
                   placeItems: "center",
-                  background: "linear-gradient(135deg, rgba(102,126,234,.18), rgba(124,58,237,.14))",
-                  border: "1px solid rgba(124,58,237,.35)"
+                  background: voiceEnabled
+                    ? "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)"
+                    : "linear-gradient(135deg, #667eea 0%, #7c3aed 100%)",
+                  boxShadow: voiceEnabled
+                    ? "0 12px 24px rgba(34,197,94,0.4), inset 0 2px 4px rgba(255,255,255,0.3)"
+                    : "0 12px 24px rgba(124,58,237,0.3), inset 0 2px 4px rgba(255,255,255,0.3)",
+                  position: "relative",
+                  animation: isListening ? "pulse 1.5s ease-in-out infinite" : "none"
                 }}>
-                  <i className="fa-solid fa-microphone" style={{ color: "#4338ca" }}></i>
+                  <i className="fa-solid fa-microphone" style={{ 
+                    color: "#ffffff",
+                    fontSize: 22,
+                    filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))"
+                  }}></i>
+                  {isListening && (
+                    <div style={{
+                      position: "absolute",
+                      inset: "-8px",
+                      borderRadius: "50%",
+                      border: "3px solid rgba(34,197,94,0.4)",
+                      animation: "ripple 1.5s ease-out infinite"
+                    }}></div>
+                  )}
                 </div>
-                <div className="cta">
-                  <span>
+                <div style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 4
+                }}>
+                  <span style={{
+                    fontSize: "18px",
+                    fontWeight: 700,
+                    color: voiceEnabled ? "#166534" : "#4338ca",
+                    letterSpacing: "0.3px"
+                  }}>
                     {voiceEnabled
                       ? isListening
-                        ? "Listening…"
-                        : "Voice Ready"
-                      : "Enable Voice"}
+                        ? "🎤 Listening..."
+                        : "✅ Voice Ready"
+                      : "🚀 Enable Voice"}
                   </span>
-                  <i className="fa-solid fa-chevron-right"></i>
+                  <span style={{
+                    fontSize: "13px",
+                    color: "#64748b",
+                    fontWeight: 500
+                  }}>
+                    {voiceEnabled 
+                      ? "Knuut is ready to help you learn" 
+                      : "Click to start your learning journey"}
+                  </span>
+                </div>
+                <div style={{
+                  marginLeft: "auto",
+                  width: 40,
+                  height: 40,
+                  borderRadius: "12px",
+                  background: "rgba(255,255,255,0.6)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+                }}>
+                  <i className="fa-solid fa-chevron-right" style={{ 
+                    color: "#4338ca",
+                    fontSize: 16
+                  }}></i>
                 </div>
               </div>
 
-              <div className="chips" style={{ gap: 12 }}>
+              <div style={{ 
+                display: "flex", 
+                flexWrap: "wrap", 
+                gap: 14,
+                marginTop: 32,
+                position: "relative",
+                zIndex: 1
+              }}>
+                {[
+                  { icon: "📅", label: "Show events near me", color: "#7c3aed", bg: "rgba(124,58,237,0.1)" },
+                  { icon: "📍", label: "Find Finnish lessons", color: "#0ea5e9", bg: "rgba(14,165,233,0.1)" },
+                  { icon: "🏠", label: "Register my address", color: "#22c55e", bg: "rgba(34,197,94,0.1)" },
+                  { icon: "🇫🇮", label: "Teach me Finnish", color: "#6366f1", bg: "rgba(99,102,241,0.1)" }
+                ].map((chip, idx) => (
                 <button
-                  className="chip"
-                  onClick={() => handleChipClick("Show events near me")}
+                    key={idx}
+                    onClick={() => handleChipClick(chip.label)}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
-                    gap: 8,
-                    background: "rgba(124,58,237,0.06)",
-                    borderColor: "#c4b5fd",
-                    color: "#4c1d95",
-                    fontWeight: 600
-                  }}
-                >
-                  <i className="fa-regular fa-calendar" aria-hidden></i>
-                  <span>Show events near me</span>
+                      gap: 10,
+                      padding: "14px 20px",
+                      borderRadius: "16px",
+                      border: `2px solid ${chip.color}40`,
+                      background: `linear-gradient(135deg, ${chip.bg}, rgba(255,255,255,0.8))`,
+                      color: chip.color,
+                      fontWeight: 700,
+                      fontSize: "14px",
+                      cursor: "pointer",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      boxShadow: "0 8px 16px rgba(0,0,0,0.08)",
+                      position: "relative",
+                      overflow: "hidden"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-3px) scale(1.02)";
+                      e.currentTarget.style.boxShadow = `0 12px 24px ${chip.color}30`;
+                      e.currentTarget.style.borderColor = chip.color;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0) scale(1)";
+                      e.currentTarget.style.boxShadow = "0 8px 16px rgba(0,0,0,0.08)";
+                      e.currentTarget.style.borderColor = `${chip.color}40`;
+                    }}
+                  >
+                    <span style={{ fontSize: "18px" }}>{chip.icon}</span>
+                    <span>{chip.label}</span>
                 </button>
-                <button
-                  className="chip"
-                  onClick={() => handleChipClick("Where can I find Finnish lessons?")}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 8,
-                    background: "rgba(14,165,233,0.06)",
-                    borderColor: "#93c5fd",
-                    color: "#1e3a8a",
-                    fontWeight: 600
-                  }}
-                >
-                  <i className="fa-solid fa-location-dot" aria-hidden></i>
-                  <span>Where can I find Finnish lessons?</span>
-                </button>
-                <button
-                  className="chip"
-                  onClick={() => handleChipClick("How do I register my address?")}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 8,
-                    background: "rgba(34,197,94,0.06)",
-                    borderColor: "#86efac",
-                    color: "#166534",
-                    fontWeight: 600
-                  }}
-                >
-                  <i className="fa-regular fa-id-card" aria-hidden></i>
-                  <span>How do I register my address?</span>
-                </button>
-                <button
-                  className="chip"
-                  onClick={() => handleChipClick("Teach me Finnish greetings")}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 8,
-                    background: "rgba(99,102,241,0.06)",
-                    borderColor: "#a5b4fc",
-                    color: "#3730a3",
-                    fontWeight: 600
-                  }}
-                >
-                  <i className="fa-solid fa-language" aria-hidden></i>
-                  <span>Teach me Finnish greetings</span>
-                </button>
+                ))}
               </div>
 
               {voiceEnabled && (
-                <div className="chat visible" style={{ background: "#ffffff" }}>
+                <div style={{ 
+                  marginTop: 32,
+                  borderRadius: "24px",
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.98) 100%)",
+                  border: "2px solid rgba(124,58,237,0.15)",
+                  padding: "28px",
+                  boxShadow: "0 24px 48px rgba(15,23,42,0.12), 0 0 0 1px rgba(255,255,255,0.5) inset",
+                  position: "relative",
+                  zIndex: 1,
+                  minHeight: "400px"
+                }}>
+                  <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  marginBottom: 20,
+                  paddingBottom: 16,
+                  borderBottom: "2px solid rgba(148,163,184,0.1)"
+                }}>
+                    <div style={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: "50%",
+                      background: "linear-gradient(135deg, #22c55e, #16a34a)",
+                      boxShadow: "0 0 12px rgba(34,197,94,0.6)",
+                      animation: "pulse 2s ease-in-out infinite"
+                    }}></div>
+                    <h3 style={{
+                      margin: 0,
+                      fontSize: "18px",
+                      fontWeight: 800,
+                      color: "#0f172a",
+                      letterSpacing: "0.3px"
+                    }}>Live Conversation</h3>
+                  </div>
                   {chatMessages.map((msg, idx) => (
-                    <div key={idx} className={`bubble ${msg.type}`}>
+                    <div key={idx} style={{
+                      maxWidth: "75%",
+                      padding: "14px 18px",
+                      borderRadius: "18px",
+                      marginBottom: 12,
+                      background: msg.type === "bot" 
+                        ? "linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(124,58,237,0.08) 100%)"
+                        : "linear-gradient(135deg, rgba(148,163,184,0.1) 0%, rgba(148,163,184,0.05) 100%)",
+                      border: msg.type === "bot"
+                        ? "1px solid rgba(124,58,237,0.2)"
+                        : "1px solid rgba(148,163,184,0.2)",
+                      marginLeft: msg.type === "user" ? "auto" : 0,
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                      fontSize: "15px",
+                      lineHeight: 1.6,
+                      color: "#1e293b",
+                      fontWeight: 500
+                    }}>
                       {msg.text}
                     </div>
                   ))}
@@ -343,18 +576,73 @@ export default function KnuutVoicePage() {
               </div>
             </section>
 
-            <section className="panel" style={{
-              background: "linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.6))",
-              border: "1px solid rgba(148,163,184,0.25)",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-              backdropFilter: "saturate(1.2) blur(8px)"
+            <section style={{
+              background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.98) 100%)",
+              border: "2px solid rgba(124,58,237,0.15)",
+              borderRadius: "32px",
+              padding: "36px 32px",
+              boxShadow: "0 32px 64px rgba(15,23,42,0.08), 0 0 0 1px rgba(255,255,255,0.5) inset",
+              position: "relative",
+              overflow: "hidden"
             }}>
-              <h3 style={{ marginTop: 0, fontWeight: 800, letterSpacing: 0.3, color: "#0f172a" }}>Voice Assistant</h3>
-              <p style={{ fontSize: 13, color: "#475569", marginBottom: 14 }}>
-                Interactive flashcards and quizzes will appear here as you learn with Knuut.
-              </p>
+              {/* Decorative gradient */}
+              <div style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "300px",
+                height: "300px",
+                background: "radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%)",
+                borderRadius: "50%",
+                transform: "translate(30%, -30%)",
+                pointerEvents: "none"
+              }}></div>
               
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 20,
+                position: "relative",
+                zIndex: 1
+              }}>
+                <div style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "14px",
+                  background: "linear-gradient(135deg, #667eea 0%, #7c3aed 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 12px 24px rgba(124,58,237,0.25)"
+                }}>
+                  <span className="fa-solid fa-brain" style={{
+                    fontSize: 22,
+                    color: "#ffffff"
+                  }}></span>
+                </div>
+                <div>
+                  <h3 style={{ 
+                    margin: 0, 
+                    fontWeight: 900, 
+                    letterSpacing: "-0.02em", 
+                    color: "#0f172a",
+                    fontSize: "24px"
+                  }}>Interactive Learning</h3>
+                  <p style={{ 
+                    margin: "4px 0 0 0",
+                    fontSize: "14px", 
+                    color: "#64748b",
+                    fontWeight: 500
+                  }}>
+                    Flashcards and quizzes appear automatically
+                  </p>
+                </div>
+              </div>
+              
+              <div style={{ position: "relative", zIndex: 1 }}>
               <FlashcardPanel />
+              </div>
             </section>
           </div>
         </main>
@@ -372,41 +660,101 @@ function VoiceAssistantContent() {
   useEffect(() => {
     if (audioTrack) {
       console.log("✅ Audio track detected:", audioTrack);
-      console.log("Audio track state:", audioTrack?.state);
-      console.log("Audio track kind:", audioTrack?.kind);
+      // audioTrack is a TrackReference, access the actual track via publication or track
+      const track = audioTrack.publication?.track || audioTrack.track;
+      if (track) {
+        console.log("Audio track details:", {
+          state: track.state,
+          kind: track.kind,
+          muted: track.isMuted,
+          enabled: !track.isMuted,
+        });
+      }
     } else {
-      console.log("❌ No audio track detected");
+      console.log("❌ No audio track detected. Agent state:", agentState);
     }
-  }, [audioTrack]);
+  }, [audioTrack, agentState]);
 
   return (
-    <div style={{ marginTop: "14px" }}>
+    <div style={{ marginTop: "20px" }}>
       {videoTrack ? (
-        <div style={{ borderRadius: "16px", overflow: "hidden", marginBottom: "14px" }}>
+        <div style={{ 
+          borderRadius: "24px", 
+          overflow: "hidden", 
+          marginBottom: "20px",
+          boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+          border: "2px solid rgba(124,58,237,0.2)"
+        }}>
           <VideoTrack trackRef={videoTrack} />
         </div>
       ) : (
         audioTrack ? (
-          <div style={{ height: "100px", marginBottom: "14px" }}>
+          <div style={{ 
+            height: "120px", 
+            marginBottom: "20px",
+            borderRadius: "20px",
+            background: "linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(124,58,237,0.05) 100%)",
+            border: "2px solid rgba(124,58,237,0.15)",
+            padding: "20px",
+            boxShadow: "0 12px 24px rgba(124,58,237,0.1)"
+          }}>
             <BarVisualizer
               state={agentState}
-              barCount={5}
+              barCount={7}
               trackRef={audioTrack}
               className="agent-visualizer"
-              options={{ minHeight: 24 }}
+              options={{ minHeight: 32 }}
             />
           </div>
         ) : (
           <div style={{ 
-            padding: "16px", 
-            background: "#fef3c7", 
-            border: "1px solid #fde68a", 
-            borderRadius: "8px",
-            marginBottom: "14px"
+            padding: "24px", 
+            background: "linear-gradient(135deg, rgba(251,191,36,0.1) 0%, rgba(251,191,36,0.05) 100%)", 
+            border: "2px solid rgba(251,191,36,0.3)", 
+            borderRadius: "20px",
+            marginBottom: "20px",
+            boxShadow: "0 8px 16px rgba(251,191,36,0.15)"
           }}>
-            <p style={{ margin: 0, fontSize: "14px", color: "#92400e" }}>
-              ⚠️ Waiting for audio track... Agent state: {agentState}
-            </p>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12
+            }}>
+              <div style={{
+                width: 40,
+                height: 40,
+                borderRadius: "12px",
+                background: "linear-gradient(135deg, #fbbf24, #f59e0b)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 8px 16px rgba(251,191,36,0.3)"
+              }}>
+                <span className="fa-solid fa-hourglass-half" style={{
+                  color: "#ffffff",
+                  fontSize: 18,
+                  animation: "spin 2s linear infinite"
+                }}></span>
+              </div>
+              <div>
+                <p style={{ 
+                  margin: 0, 
+                  fontSize: "16px", 
+                  color: "#92400e",
+                  fontWeight: 700
+                }}>
+                  Connecting to Knuut AI...
+                </p>
+                <p style={{ 
+                  margin: "4px 0 0 0", 
+                  fontSize: "13px", 
+                  color: "#a16207",
+                  fontWeight: 500
+                }}>
+                  Agent state: {agentState}
+                </p>
+              </div>
+            </div>
           </div>
         )
       )}

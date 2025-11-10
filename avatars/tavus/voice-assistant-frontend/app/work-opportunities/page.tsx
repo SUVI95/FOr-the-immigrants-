@@ -297,10 +297,12 @@ export default function WorkOpportunitiesPage() {
           <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: 1.4, textTransform: "uppercase", opacity: 0.85 }}>
             Work Opportunities
           </span>
-          <h1 style={{ margin: 0, fontSize: "2.6rem", lineHeight: 1.1, fontWeight: 800 }}>Jobs, internships, and training in one place.</h1>
-          <p style={{ margin: 0, fontSize: "1.05rem", maxWidth: 640, lineHeight: 1.7, opacity: 0.9 }}>
-            This is your hub for every employer and job feature Knuut offers — powered by Duunijobs AI. Apply in seconds, log XP
-            automatically, and keep your Smart CV in sync.
+          <h1 style={{ margin: 0, fontSize: "2.2rem", lineHeight: 1.15, fontWeight: 800 }}>
+            Build your next step — job, internship, or training — all in one place.
+          </h1>
+          <p style={{ margin: 0, fontSize: "1.05rem", maxWidth: 720, lineHeight: 1.7, opacity: 0.95 }}>
+            Knuut connects your skills, goals, and learning journey directly to real opportunities. Find roles that match your Finnish
+            level, apply in seconds with your Smart CV, and grow your experience every time you act.
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
             <button
@@ -361,9 +363,9 @@ export default function WorkOpportunitiesPage() {
         >
           <header style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
             <div>
-              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Recommended for you</h2>
+              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Recommended for You</h2>
               <p style={{ margin: "6px 0 0 0", fontSize: 14.5, color: "#475569" }}>
-                Jobs suggested by Knuut AI based on your Smart CV, Skill Passport, and Journey progress.
+                Handpicked by Knuut AI — based on your Smart CV, Skill Passport, and Journey progress.
               </p>
             </div>
             <span style={{ fontSize: 12, fontWeight: 600, color: "#2563eb" }}>Updated a few minutes ago</span>
@@ -486,8 +488,7 @@ export default function WorkOpportunitiesPage() {
             />
           </div>
           <div style={{ fontSize: 13, color: "#475569" }}>
-            {filteredJobs.length} opportunity{filteredJobs.length === 1 ? "" : "ies"} found. AI will nudge you when similar roles
-            appear.
+            {filteredJobs.length} opportunit{filteredJobs.length === 1 ? "y" : "ies"} found. AI will nudge you when similar roles appear.
           </div>
         </section>
 
@@ -506,9 +507,9 @@ export default function WorkOpportunitiesPage() {
         >
           <header style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
             <div>
-              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Company visits & training</h2>
+              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Company Visits & Training</h2>
               <p style={{ margin: "6px 0 0 0", fontSize: 14.5, color: "#475569" }}>
-                Companies open for visits, internships, and micro-apprenticeships. Each action logs XP in your Journey.
+                See companies in Kajaani that are open for visits, mentoring, or internships. Every action logs XP and grows your verified experience.
               </p>
             </div>
             <a
@@ -616,9 +617,9 @@ export default function WorkOpportunitiesPage() {
 
         <section style={{ display: "grid", gap: 20 }}>
           <header>
-            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Open job listings</h2>
+            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Live Job Listings</h2>
             <p style={{ margin: "6px 0 0 0", fontSize: 14.5, color: "#475569" }}>
-              Pulled directly from Duunijobs.fi. Look for badges like “Inclusive Employer” or “First Job in Finland”.
+              Sourced directly from Duunijobs — filtered for inclusive and newcomer-friendly employers.
             </p>
           </header>
           {filteredJobs.map((job) => (
@@ -887,14 +888,12 @@ export default function WorkOpportunitiesPage() {
           <span style={{ fontSize: 12, letterSpacing: 1.4, fontWeight: 700, textTransform: "uppercase", opacity: 0.9 }}>
             Smart CV Builder
           </span>
-          <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800 }}>Connect your story to every opportunity.</h2>
-          <p style={{ margin: 0, fontSize: 14.5, maxWidth: 600, lineHeight: 1.7 }}>
-            Auto-generate your CV from your profile, translate it to Finnish or English instantly, and export wherever you need.
-          </p>
+          <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800 }}>Your AI-powered CV — built from verified actions.</h2>
           <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 8, fontSize: 14.5, lineHeight: 1.6 }}>
-            <li>Apply directly to roles on Duunijobs.fi with a ready summary.</li>
-            <li>Share your CV with LinkedIn or verified partner companies.</li>
-            <li>Send your profile to municipalities via Organizer Tools in one click.</li>
+            <li>Auto-updates from your Knuut profile and Skill Passport</li>
+            <li>Translates instantly to Finnish or English</li>
+            <li>Export to LinkedIn or verified employer partners</li>
+            <li>Send directly to municipalities or TE offices in one click</li>
           </ul>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <a
@@ -933,7 +932,7 @@ export default function WorkOpportunitiesPage() {
                 cursor: "pointer",
               }}
             >
-              Generate AI summary
+              Generate AI Summary
             </button>
           </div>
         </section>

@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
+import { motion } from "framer-motion";
 import Sidebar from "@/components/Sidebar";
 import FinnishLanguageBuddy from "@/components/FinnishLanguageBuddy";
 import FinnishTextbookContent from "@/components/FinnishTextbookContent";
@@ -33,72 +34,72 @@ const SKILL_TRACKS: SkillTrack[] = [
   {
     id: "track-a1",
     title: "A1 • Everyday Finnish",
-    description: "Survival phrases, greetings, and daily routines. Master 120+ essential words and 8 core grammar rules.",
+    description: "Learn hello, thanks, and daily words. Start here!",
     progressPercent: 40,
     lessons: 12,
     completedLessons: 5,
     statusLabel: "In Progress",
-    cta: "Continue Learning →",
+    cta: "Continue",
     color: "#6366f1",
     icon: "👋",
   },
   {
     id: "track-a2",
     title: "A2 • Work & Study",
-    description: "Finnish for job interviews, emails, and campus life. Build professional confidence with 200+ vocabulary.",
+    description: "Job interviews and emails. Get ready for work!",
     progressPercent: 60,
     lessons: 15,
     completedLessons: 9,
     statusLabel: "In Progress",
-    cta: "Continue Learning →",
+    cta: "Continue",
     color: "#22c55e",
     icon: "💼",
   },
   {
     id: "track-b1",
     title: "B1 • Community Life",
-    description: "Talk naturally about family, hobbies, and local news. Advanced conversations with 350+ words.",
+    description: "Talk about family and hobbies. Make friends!",
     progressPercent: 15,
     lessons: 18,
     completedLessons: 3,
-    statusLabel: "Ready to Start",
-    cta: "Start Learning →",
+    statusLabel: "Ready",
+    cta: "Start",
     color: "#f59e0b",
     icon: "🗣️",
   },
   {
     id: "track-b2",
     title: "B2 • Workplaces",
-    description: "Lead conversations and solve problems in Finnish. Professional fluency with 500+ vocabulary.",
+    description: "Lead meetings and solve problems. Be confident!",
     progressPercent: 5,
     lessons: 20,
     completedLessons: 1,
-    statusLabel: "Preview Available",
-    cta: "Preview Course →",
+    statusLabel: "Preview",
+    cta: "Preview",
     color: "#ec4899",
     icon: "🏢",
   },
   {
     id: "track-c1",
-    title: "C1 • Advanced Mastery",
-    description: "Academic and professional excellence. Native-level nuance with 800+ vocabulary.",
+    title: "C1 • Advanced",
+    description: "Speak like a native. Almost there!",
     progressPercent: 0,
     lessons: 25,
     completedLessons: 0,
-    statusLabel: "Coming Soon",
-    cta: "View Curriculum →",
+    statusLabel: "Soon",
+    cta: "View",
     color: "#8b5cf6",
     icon: "🎓",
   },
   {
     id: "track-c2",
-    title: "C2 • Native Fluency",
-    description: "Mentor others and teach Finnish. Complete mastery with 1000+ vocabulary and cultural depth.",
+    title: "C2 • Master",
+    description: "Teach others Finnish. You're a pro!",
     progressPercent: 0,
     lessons: 30,
     completedLessons: 0,
-    statusLabel: "Coming Soon",
-    cta: "View Curriculum →",
+    statusLabel: "Soon",
+    cta: "View",
     color: "#06b6d4",
     icon: "🌟",
   },
@@ -208,160 +209,290 @@ export default function LearnFinnishPage() {
             style={{
               position: "relative",
               borderRadius: 32,
-              padding: "40px 36px",
-              background: "linear-gradient(135deg, #4338ca 0%, #6366f1 45%, #ec4899 100%)",
-              color: "#f8fafc",
+              padding: "48px 40px",
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)",
+              color: "#ffffff",
               overflow: "hidden",
-              boxShadow: "0 32px 64px rgba(67,56,202,0.28)",
+              boxShadow: "0 20px 40px rgba(102,126,234,0.3)",
             }}
           >
+            {/* Animated background image */}
             <div
               style={{
                 position: "absolute",
                 inset: 0,
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1530023367847-a683933f4177?auto=format&fit=crop&w=1600&q=80')",
+                backgroundImage: "url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 opacity: 0.15,
+                mixBlendMode: "overlay",
               }}
             />
+            
+            {/* Animated gradient overlay */}
+            <motion.div
+              animate={{
+                backgroundPosition: ["0% 0%", "100% 100%"],
+              }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "radial-gradient(circle at 30% 40%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(255,255,255,0.08) 0%, transparent 50%)",
+                backgroundSize: "200% 200%",
+              }}
+            />
+
+            {/* Floating decorative elements */}
+            <motion.div
+              animate={{
+                y: [0, -20, 0],
+                rotate: [0, 5, 0],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              style={{
+                position: "absolute",
+                top: 40,
+                right: 60,
+                width: 80,
+                height: 80,
+                borderRadius: "50%",
+                background: "rgba(255,255,255,0.2)",
+                backdropFilter: "blur(10px)",
+                border: "2px solid rgba(255,255,255,0.3)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 32,
+              }}
+            >
+              📚
+            </motion.div>
+
+            <motion.div
+              animate={{
+                y: [0, 15, 0],
+                rotate: [0, -5, 0],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5,
+              }}
+              style={{
+                position: "absolute",
+                bottom: 50,
+                right: 100,
+                width: 60,
+                height: 60,
+                borderRadius: "50%",
+                background: "rgba(255,255,255,0.15)",
+                backdropFilter: "blur(10px)",
+                border: "2px solid rgba(255,255,255,0.25)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 28,
+              }}
+            >
+              ✏️
+            </motion.div>
+
+            <motion.div
+              animate={{
+                y: [0, -10, 0],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1,
+              }}
+              style={{
+                position: "absolute",
+                top: 120,
+                right: 200,
+                width: 50,
+                height: 50,
+                borderRadius: "50%",
+                background: "rgba(255,255,255,0.12)",
+                backdropFilter: "blur(8px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 24,
+              }}
+            >
+              🌟
+            </motion.div>
+
             <div
               style={{
                 position: "relative",
+                zIndex: 1,
                 display: "flex",
                 flexWrap: "wrap",
                 gap: 24,
                 alignItems: "center",
               }}
             >
-              <div style={{ display: "grid", gap: 16, flex: "1 1 400px", minWidth: 0 }}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                style={{ display: "grid", gap: 16, flex: "1 1 400px", minWidth: 0 }}
+              >
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <span
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
                     style={{
-                      padding: "6px 12px",
+                      padding: "8px 16px",
                       borderRadius: 999,
-                      background: "rgba(255,255,255,0.2)",
+                      background: "rgba(255,255,255,0.25)",
+                      backdropFilter: "blur(10px)",
                       fontSize: 12,
                       fontWeight: 700,
                       letterSpacing: 1.2,
+                      color: "#ffffff",
+                      border: "1px solid rgba(255,255,255,0.3)",
                     }}
                   >
                     🎓 COMPLETE FINNISH CURRICULUM
-                  </span>
+                  </motion.span>
                 </div>
-                <h1 style={{ margin: 0, fontSize: "2.2rem", lineHeight: 1.2, fontWeight: 800 }}>
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  style={{
+                    margin: 0,
+                    fontSize: "clamp(2rem, 5vw, 3rem)",
+                    lineHeight: 1.2,
+                    fontWeight: 800,
+                    color: "#ffffff",
+                    textShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                  }}
+                >
                   Learn Finnish with Knuut AI
-                </h1>
-                <p style={{ margin: 0, fontSize: "1.05rem", lineHeight: 1.6, opacity: 0.95, maxWidth: 560 }}>
-                  From A1 survival basics to C2 native fluency. Interactive lessons, AI conversations, music, culture, and real-world practice.
-                </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                  <button
+                </motion.h1>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  style={{
+                    margin: 0,
+                    fontSize: "1.1rem",
+                    lineHeight: 1.6,
+                    opacity: 0.95,
+                    maxWidth: 560,
+                    color: "#ffffff",
+                    textShadow: "0 1px 4px rgba(0,0,0,0.15)",
+                  }}
+                >
+                  Start from zero. Learn step by step. Speak Finnish like a local.
+                </motion.p>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  style={{ display: "flex", flexWrap: "wrap", gap: 12 }}
+                >
+                  <motion.button
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
                     type="button"
                     onClick={handleScrollToPractice}
                     style={{
-                      padding: "12px 20px",
+                      padding: "14px 24px",
                       borderRadius: 16,
                       border: "none",
-                      background: "rgba(15,23,42,0.35)",
-                      color: "#f8fafc",
+                      background: "rgba(255,255,255,0.95)",
+                      color: "#667eea",
                       fontWeight: 700,
-                      fontSize: 14,
+                      fontSize: 15,
                       cursor: "pointer",
-                      boxShadow: "0 8px 16px rgba(0,0,0,0.2)",
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
                     }}
                   >
                     Start Practicing →
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
                     type="button"
                     onClick={handleScrollToCurriculum}
                     style={{
-                      padding: "12px 20px",
+                      padding: "14px 24px",
                       borderRadius: 16,
-                      border: "2px solid rgba(248,250,252,0.6)",
-                      background: "rgba(248,250,252,0.15)",
-                      color: "#f8fafc",
+                      border: "2px solid rgba(255,255,255,0.5)",
+                      background: "rgba(255,255,255,0.15)",
+                      backdropFilter: "blur(10px)",
+                      color: "#ffffff",
                       fontWeight: 700,
-                      fontSize: 14,
+                      fontSize: 15,
                       cursor: "pointer",
                     }}
                   >
                     Explore Curriculum →
-                  </button>
-                </div>
-              </div>
-              <div
+                  </motion.button>
+                </motion.div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(2, 1fr)",
-                  gap: 14,
+                  gap: 16,
                   flex: "0 0 auto",
                   minWidth: 200,
                 }}
               >
-                <div
-                  style={{
-                    borderRadius: 20,
-                    padding: 18,
-                    background: "rgba(255,255,255,0.15)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.25)",
-                    display: "grid",
-                    gap: 6,
-                    textAlign: "center",
-                  }}
-                >
-                  <div style={{ fontSize: 28, fontWeight: 900 }}>{totalXP}</div>
-                  <div style={{ fontSize: 12, opacity: 0.9 }}>Total XP</div>
-                </div>
-                <div
-                  style={{
-                    borderRadius: 20,
-                    padding: 18,
-                    background: "rgba(255,255,255,0.15)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.25)",
-                    display: "grid",
-                    gap: 6,
-                    textAlign: "center",
-                  }}
-                >
-                  <div style={{ fontSize: 28, fontWeight: 900 }}>{wordsLearned}</div>
-                  <div style={{ fontSize: 12, opacity: 0.9 }}>Words Learned</div>
-                </div>
-                <div
-                  style={{
-                    borderRadius: 20,
-                    padding: 18,
-                    background: "rgba(255,255,255,0.15)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.25)",
-                    display: "grid",
-                    gap: 6,
-                    textAlign: "center",
-                  }}
-                >
-                  <div style={{ fontSize: 28, fontWeight: 900 }}>🔥 {streakDays}</div>
-                  <div style={{ fontSize: 12, opacity: 0.9 }}>Day Streak</div>
-                </div>
-                <div
-                  style={{
-                    borderRadius: 20,
-                    padding: 18,
-                    background: "rgba(255,255,255,0.15)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.25)",
-                    display: "grid",
-                    gap: 6,
-                    textAlign: "center",
-                  }}
-                >
-                  <div style={{ fontSize: 28, fontWeight: 900 }}>{certificatesEarned}</div>
-                  <div style={{ fontSize: 12, opacity: 0.9 }}>Certificates</div>
-                </div>
-              </div>
+                {[
+                  { value: totalXP, label: "Total XP", delay: 0.7 },
+                  { value: wordsLearned, label: "Words Learned", delay: 0.8 },
+                  { value: streakDays, label: "Day Streak", icon: "🔥", delay: 0.9 },
+                  { value: certificatesEarned, label: "Certificates", delay: 1.0 },
+                ].map((stat, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: stat.delay }}
+                    whileHover={{ scale: 1.05, y: -4 }}
+                    style={{
+                      borderRadius: 20,
+                      padding: 20,
+                      background: "rgba(255,255,255,0.95)",
+                      backdropFilter: "blur(20px)",
+                      border: "1px solid rgba(255,255,255,0.3)",
+                      display: "grid",
+                      gap: 8,
+                      textAlign: "center",
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <div style={{ fontSize: 28, fontWeight: 800, color: "#667eea" }}>
+                      {stat.icon && `${stat.icon} `}
+                      {stat.value}
+                    </div>
+                    <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>{stat.label}</div>
+                  </motion.div>
+                ))}
+              </motion.div>
             </div>
           </section>
 
@@ -372,22 +503,22 @@ export default function LearnFinnishPage() {
           <section style={{ display: "grid", gap: 24 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 12 }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: 32, fontWeight: 900, color: "#0f172a" }}>Complete Learning Path</h2>
+                <h2 style={{ margin: 0, fontSize: 32, fontWeight: 900, color: "#0f172a" }}>Your Learning Path</h2>
                 <p style={{ margin: "8px 0 0 0", fontSize: 15, color: "#64748b" }}>
-                  Master Finnish from beginner to mentor level. 120+ structured lessons across 6 levels.
+                  Go from beginner to expert. 6 levels. 120+ lessons.
                 </p>
               </div>
               <span
                 style={{
                   padding: "8px 16px",
                   borderRadius: 999,
-                  background: "linear-gradient(135deg, #e0f2fe, #ede9fe)",
-                  color: "#1d4ed8",
+                  background: "#eef2f7",
+                  color: "#0f172a",
                   fontSize: 13,
                   fontWeight: 700,
                 }}
               >
-                A1 → C2 Curriculum
+                A1 → C2
               </span>
             </div>
             <div
@@ -401,44 +532,70 @@ export default function LearnFinnishPage() {
                 <article
                   key={track.id}
                   style={{
-                    borderRadius: 28,
-                    padding: 28,
-                    background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
-                    border: "2px solid #e2e8f0",
-                    boxShadow: "0 24px 48px rgba(148,163,184,0.18)",
+                    borderRadius: 20,
+                    padding: 24,
+                    background: "#ffffff",
+                    border: `2px solid ${track.color}20`,
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
                     display: "grid",
-                    gap: 20,
-                    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                    gap: 16,
+                    transition: "all 0.2s ease",
+                    cursor: "pointer",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-4px)";
-                    e.currentTarget.style.boxShadow = "0 32px 64px rgba(148,163,184,0.24)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.borderColor = `${track.color}40`;
+                    e.currentTarget.style.boxShadow = `0 8px 20px ${track.color}20`;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 24px 48px rgba(148,163,184,0.18)";
+                    e.currentTarget.style.borderColor = `${track.color}20`;
+                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.06)";
+                  }}
+                  onClick={() => {
+                    if (track.id.includes("c1") || track.id.includes("c2")) {
+                      handleScrollToCurriculum();
+                    } else {
+                      alert("Opening lesson...");
+                    }
                   }}
                 >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
-                    <div style={{ display: "grid", gap: 8, flex: 1 }}>
-                      <div style={{ fontSize: 32 }}>{track.icon}</div>
-                      <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#0f172a" }}>{track.title}</h3>
-                      <p style={{ margin: 0, fontSize: 13.5, color: "#475569", lineHeight: 1.6 }}>{track.description}</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    <div
+                      style={{
+                        width: 64,
+                        height: 64,
+                        borderRadius: 16,
+                        background: `${track.color}15`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 32,
+                        flexShrink: 0,
+                      }}
+                    >
+                      {track.icon}
                     </div>
-                    <ProgressRing percent={track.progressPercent} color={track.color} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 4 }}>
+                        {track.title}
+                      </h3>
+                      <p style={{ margin: 0, fontSize: 14, color: "#64748b", lineHeight: 1.4 }}>{track.description}</p>
+                    </div>
                   </div>
-                  <div style={{ display: "grid", gap: 12 }}>
+                  
+                  <div style={{ display: "grid", gap: 8 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: 13, color: "#64748b" }}>Lessons</span>
-                      <span style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>
-                        {track.completedLessons} / {track.lessons}
+                      <span style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>Progress</span>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: track.color }}>
+                        {track.completedLessons}/{track.lessons}
                       </span>
                     </div>
                     <div
                       style={{
-                        height: 8,
+                        height: 6,
                         borderRadius: 999,
-                        background: "#e2e8f0",
+                        background: "#e5e7eb",
                         overflow: "hidden",
                       }}
                     >
@@ -446,50 +603,50 @@ export default function LearnFinnishPage() {
                         style={{
                           width: `${track.progressPercent}%`,
                           height: "100%",
-                          background: `linear-gradient(135deg, ${track.color}, ${track.color}dd)`,
-                          transition: "width 0.5s ease",
+                          background: track.color,
+                          transition: "width 0.3s ease",
                         }}
                       />
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span
-                        style={{
-                          padding: "4px 10px",
-                          borderRadius: 999,
-                          background: `${track.color}15`,
-                          color: track.color,
-                          fontSize: 12,
-                          fontWeight: 700,
-                        }}
-                      >
-                        {track.statusLabel}
-                      </span>
-                      <span style={{ fontSize: 12, color: "#64748b" }}>{track.progressPercent}% complete</span>
-                    </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (track.id.includes("c1") || track.id.includes("c2")) {
-                        handleScrollToCurriculum();
-                      } else {
-                        alert("Opening lesson...");
-                      }
-                    }}
-                    style={{
-                      padding: "12px 20px",
-                      borderRadius: 16,
-                      border: "none",
-                      background: `linear-gradient(135deg, ${track.color}, ${track.color}dd)`,
-                      color: "#fff",
-                      fontWeight: 700,
-                      fontSize: 14,
-                      cursor: "pointer",
-                      boxShadow: `0 12px 24px ${track.color}40`,
-                    }}
-                  >
-                    {track.cta}
-                  </button>
+
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span
+                      style={{
+                        padding: "4px 10px",
+                        borderRadius: 6,
+                        background: `${track.color}15`,
+                        color: track.color,
+                        fontSize: 11,
+                        fontWeight: 700,
+                      }}
+                    >
+                      {track.statusLabel}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (track.id.includes("c1") || track.id.includes("c2")) {
+                          handleScrollToCurriculum();
+                        } else {
+                          alert("Opening lesson...");
+                        }
+                      }}
+                      style={{
+                        padding: "8px 16px",
+                        borderRadius: 8,
+                        border: "none",
+                        background: track.progressPercent > 0 ? track.color : "#e5e7eb",
+                        color: track.progressPercent > 0 ? "#ffffff" : "#64748b",
+                        fontWeight: 600,
+                        fontSize: 13,
+                        cursor: "pointer",
+                      }}
+                    >
+                      {track.cta}
+                    </button>
+                  </div>
                 </article>
               ))}
             </div>
@@ -499,7 +656,7 @@ export default function LearnFinnishPage() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 10 }}>
               <div>
                 <h2 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "#0f172a" }}>Quick Challenges</h2>
-                <p style={{ margin: "6px 0 0 0", fontSize: 14, color: "#64748b" }}>Level up with bite-sized 5-minute wins</p>
+                <p style={{ margin: "6px 0 0 0", fontSize: 14, color: "#64748b" }}>5 minutes. Big wins.</p>
               </div>
             </div>
             <div
@@ -515,31 +672,37 @@ export default function LearnFinnishPage() {
                   type="button"
                   onClick={() => alert("Challenge starting...")}
                   style={{
-                    borderRadius: 20,
-                    border: "2px solid #e2e8f0",
-                    background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
-                    boxShadow: "0 16px 32px rgba(148,163,184,0.14)",
+                    borderRadius: 16,
+                    border: "1px solid #e5e7eb",
+                    background: "#ffffff",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
                     padding: 20,
-                    display: "grid",
-                    gap: 12,
-                    textAlign: "left",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
                     cursor: "pointer",
-                    transition: "transform 0.2s ease",
+                    transition: "all 0.2s ease",
+                    gap: 12,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                    e.currentTarget.style.boxShadow = "0 8px 16px rgba(0,0,0,0.08)";
+                    e.currentTarget.style.borderColor = "#cbd5e1";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)";
+                    e.currentTarget.style.borderColor = "#e5e7eb";
                   }}
                 >
-                  <div style={{ fontSize: 32 }}>{challenge.icon}</div>
-                  <div style={{ display: "grid", gap: 4 }}>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>{challenge.label}</span>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: 12, color: "#64748b" }}>{challenge.time}</span>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: "#22c55e" }}>+{challenge.xp} XP</span>
-                    </div>
+                  <div style={{ fontSize: 40, marginBottom: 4 }}>{challenge.icon}</div>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: "#0f172a", marginBottom: 8 }}>
+                    {challenge.label}
+                  </span>
+                  <div style={{ display: "flex", gap: 12, alignItems: "center", fontSize: 12, color: "#64748b" }}>
+                    <span>{challenge.time}</span>
+                    <span style={{ color: "#22c55e", fontWeight: 700 }}>+{challenge.xp} XP</span>
                   </div>
                 </button>
               ))}
@@ -549,9 +712,9 @@ export default function LearnFinnishPage() {
           <section ref={curriculumRef} style={{ display: "grid", gap: 24 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 12 }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: 32, fontWeight: 900, color: "#0f172a" }}>Interactive Curriculum</h2>
+                <h2 style={{ margin: 0, fontSize: 32, fontWeight: 900, color: "#0f172a" }}>Full Curriculum</h2>
                 <p style={{ margin: "8px 0 0 0", fontSize: 15, color: "#64748b" }}>
-                  Explore lessons, vocabulary, grammar, listening exercises, culture activities, and assignments
+                  All lessons, words, and exercises in one place.
                 </p>
               </div>
             </div>
@@ -571,9 +734,9 @@ export default function LearnFinnishPage() {
           <section id="finnish-progress-panel" style={{ display: "grid", gap: 24 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 12 }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: 32, fontWeight: 900, color: "#0f172a" }}>My Finnish Journey</h2>
+                <h2 style={{ margin: 0, fontSize: 32, fontWeight: 900, color: "#0f172a" }}>Your Progress</h2>
                 <p style={{ margin: "8px 0 0 0", fontSize: 15, color: "#64748b" }}>
-                  Track your progress, achievements, and certificates. Everything syncs automatically.
+                  See how much you've learned. Get certificates.
                 </p>
               </div>
             </div>
@@ -597,83 +760,73 @@ export default function LearnFinnishPage() {
               >
                 <div
                   style={{
-                    borderRadius: 24,
-                    padding: 28,
-                    background: "linear-gradient(135deg, rgba(59,130,246,0.1), rgba(59,130,246,0.05))",
-                    border: "2px solid rgba(59,130,246,0.2)",
+                    borderRadius: 16,
+                    padding: 24,
+                    background: "#ffffff",
+                    border: "1px solid #e5e7eb",
                     display: "grid",
                     gap: 8,
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: 42, fontWeight: 900, color: "#1d4ed8" }}>{totalXP}</div>
-                  <div style={{ fontSize: 13, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8, fontWeight: 700 }}>
-                    Total XP
-                  </div>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>{totalXP}</div>
+                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Total XP</div>
                 </div>
                 <div
                   style={{
-                    borderRadius: 24,
-                    padding: 28,
-                    background: "linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.05))",
-                    border: "2px solid rgba(34,197,94,0.2)",
+                    borderRadius: 16,
+                    padding: 24,
+                    background: "#ffffff",
+                    border: "1px solid #e5e7eb",
                     display: "grid",
                     gap: 8,
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: 42, fontWeight: 900, color: "#15803d" }}>{lessonsCompleted}</div>
-                  <div style={{ fontSize: 13, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8, fontWeight: 700 }}>
-                    Lessons Completed
-                  </div>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>{lessonsCompleted}</div>
+                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Lessons Done</div>
                 </div>
                 <div
                   style={{
-                    borderRadius: 24,
-                    padding: 28,
-                    background: "linear-gradient(135deg, rgba(236,72,153,0.1), rgba(236,72,153,0.05))",
-                    border: "2px solid rgba(236,72,153,0.2)",
+                    borderRadius: 16,
+                    padding: 24,
+                    background: "#ffffff",
+                    border: "1px solid #e5e7eb",
                     display: "grid",
                     gap: 8,
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: 42, fontWeight: 900, color: "#be185d" }}>{totalConversations}</div>
-                  <div style={{ fontSize: 13, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8, fontWeight: 700 }}>
-                    Conversations Logged
-                  </div>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>{totalConversations}</div>
+                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Conversations</div>
                 </div>
                 <div
                   style={{
-                    borderRadius: 24,
-                    padding: 28,
-                    background: "linear-gradient(135deg, rgba(139,92,246,0.1), rgba(139,92,246,0.05))",
-                    border: "2px solid rgba(139,92,246,0.2)",
+                    borderRadius: 16,
+                    padding: 24,
+                    background: "#ffffff",
+                    border: "1px solid #e5e7eb",
                     display: "grid",
                     gap: 8,
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: 42, fontWeight: 900, color: "#7c3aed" }}>{certificatesEarned}</div>
-                  <div style={{ fontSize: 13, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8, fontWeight: 700 }}>
-                    Certificates Earned
-                  </div>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>{certificatesEarned}</div>
+                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Certificates</div>
                 </div>
                 <div
                   style={{
-                    borderRadius: 24,
-                    padding: 28,
-                    background: "linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.05))",
-                    border: "2px solid rgba(245,158,11,0.2)",
+                    borderRadius: 16,
+                    padding: 24,
+                    background: "#ffffff",
+                    border: "1px solid #e5e7eb",
                     display: "grid",
                     gap: 8,
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: 42, fontWeight: 900, color: "#d97706" }}>🔥 {streakDays}</div>
-                  <div style={{ fontSize: 13, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8, fontWeight: 700 }}>
-                    Day Streak
-                  </div>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>🔥 {streakDays}</div>
+                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Day Streak</div>
                 </div>
               </div>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
@@ -717,9 +870,9 @@ export default function LearnFinnishPage() {
           <section style={{ display: "grid", gap: 24 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 12 }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: 32, fontWeight: 900, color: "#0f172a" }}>Skill Passport Highlights</h2>
+                <h2 style={{ margin: 0, fontSize: 32, fontWeight: 900, color: "#0f172a" }}>Your Achievements</h2>
                 <p style={{ margin: "8px 0 0 0", fontSize: 15, color: "#64748b" }}>
-                  Verified proof of learning ready for mentors, employers, and integration coaches
+                  Show what you learned. Share with employers.
                 </p>
               </div>
             </div>
@@ -734,53 +887,56 @@ export default function LearnFinnishPage() {
                 <article
                   key={entry.id}
                   style={{
-                    borderRadius: 24,
-                    padding: 24,
-                    background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
-                    border: "2px solid #e2e8f0",
-                    boxShadow: "0 20px 40px rgba(148,163,184,0.16)",
+                    borderRadius: 16,
+                    padding: 20,
+                    background: "#ffffff",
+                    border: "1px solid #e5e7eb",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
                     display: "grid",
-                    gap: 14,
+                    gap: 12,
                   }}
                 >
-                  <div style={{ display: "grid", gap: 6 }}>
+                  <div>
                     <span
                       style={{
-                        padding: "6px 12px",
-                        borderRadius: 999,
-                        background: "linear-gradient(135deg, #e0f2fe, #ede9fe)",
-                        color: "#1d4ed8",
-                        fontSize: 12,
+                        padding: "4px 10px",
+                        borderRadius: 6,
+                        background: "#eef2f7",
+                        color: "#0f172a",
+                        fontSize: 11,
                         fontWeight: 700,
-                        width: "fit-content",
+                        display: "inline-block",
+                        marginBottom: 8,
                       }}
                     >
                       {entry.category}
                     </span>
-                    <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#0f172a" }}>{entry.title}</h3>
-                    <p style={{ margin: 0, fontSize: 14, color: "#475569", lineHeight: 1.6 }}>
-                      {entry.details ?? "Completed AI sessions and verified practice."}
+                    <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 6 }}>
+                      {entry.title}
+                    </h3>
+                    <p style={{ margin: 0, fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>
+                      {entry.details ?? "You finished AI practice sessions."}
                     </p>
                   </div>
-                  <div style={{ fontSize: 13, color: "#64748b" }}>
-                    Updated {new Date(entry.earnedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                  </div>
-                  <div
-                    style={{
-                      padding: "8px 14px",
-                      borderRadius: 12,
-                      border: "2px solid rgba(34,197,94,0.3)",
-                      background: "linear-gradient(135deg, rgba(34,197,94,0.12), rgba(34,197,94,0.06))",
-                      color: "#166534",
-                      fontSize: 13,
-                      fontWeight: 700,
-                      width: "fit-content",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                    }}
-                  >
-                    ✅ Verified by AI coach
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: 12, color: "#64748b" }}>
+                      {new Date(entry.earnedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    </span>
+                    <span
+                      style={{
+                        padding: "4px 10px",
+                        borderRadius: 6,
+                        background: "#f0fdf4",
+                        color: "#166534",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                      }}
+                    >
+                      ✓ Verified
+                    </span>
                   </div>
                 </article>
               ))}
@@ -792,3 +948,4 @@ export default function LearnFinnishPage() {
     </RoomContext.Provider>
   );
 }
+

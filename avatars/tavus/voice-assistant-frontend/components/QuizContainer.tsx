@@ -116,16 +116,84 @@ export default function QuizContainer() {
     <AnimatePresence>
       {isVisible && currentQuestion && (
         <motion.div
-          initial={{ opacity: 0, x: -100 }} // Start from left
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
-          className="fixed left-8 top-1/4 w-80 bg-gray-900 p-4 rounded-lg shadow-lg"
+          initial={{ opacity: 0, y: -20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20, scale: 0.95 }}
+          style={{
+            position: "fixed",
+            left: "32px",
+            top: "120px",
+            width: "420px",
+            maxWidth: "90vw",
+            background: "linear-gradient(135deg, rgba(15,23,42,0.98) 0%, rgba(30,41,59,0.98) 100%)",
+            color: "#f8fafc",
+            padding: "28px",
+            borderRadius: "24px",
+            boxShadow: "0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,58,237,0.2)",
+            zIndex: 9999,
+            border: "2px solid rgba(124,58,237,0.3)",
+            backdropFilter: "blur(20px)"
+          }}
         >
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Quiz</h2>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+            paddingBottom: "16px",
+            borderBottom: "2px solid rgba(124,58,237,0.2)"
+          }}>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px"
+            }}>
+              <div style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "12px",
+                background: "linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 8px 16px rgba(236,72,153,0.4)"
+              }}>
+                <span className="fa-solid fa-question-circle" style={{
+                  color: "#ffffff",
+                  fontSize: "18px"
+                }}></span>
+              </div>
+              <h2 style={{
+                fontSize: "22px",
+                fontWeight: 800,
+                color: "#f8fafc",
+                margin: 0
+              }}>Quiz</h2>
+            </div>
             <button 
               onClick={() => setIsVisible(false)}
-              className="text-gray-400 hover:text-white"
+              style={{
+                background: "rgba(255,255,255,0.1)",
+                border: "none",
+                borderRadius: "8px",
+                width: "32px",
+                height: "32px",
+                cursor: "pointer",
+                color: "#94a3b8",
+                fontSize: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.2s"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.2)";
+                e.currentTarget.style.color = "#f8fafc";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+                e.currentTarget.style.color = "#94a3b8";
+              }}
             >
               ×
             </button>
@@ -137,33 +205,103 @@ export default function QuizContainer() {
             onAnswerSelect={(answerId) => handleAnswerSelect(currentQuestion.id, answerId)}
           />
           
-          <div className="flex justify-between mt-4">
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: "24px",
+            paddingTop: "20px",
+            borderTop: "2px solid rgba(124,58,237,0.2)"
+          }}>
             <button
               onClick={() => setCurrentQuestionIndex(prev => 
                 prev !== null ? Math.max(0, prev - 1) : 0
               )}
               disabled={currentQuestionIndex === 0}
-              className="px-3 py-1 bg-blue-600 rounded disabled:opacity-50"
+              style={{
+                padding: "10px 18px",
+                background: currentQuestionIndex === 0
+                  ? "rgba(148,163,184,0.2)"
+                  : "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                color: currentQuestionIndex === 0 ? "#94a3b8" : "#ffffff",
+                border: "none",
+                borderRadius: "12px",
+                fontWeight: 600,
+                cursor: currentQuestionIndex === 0 ? "not-allowed" : "pointer",
+                opacity: currentQuestionIndex === 0 ? 0.5 : 1,
+                boxShadow: currentQuestionIndex === 0 ? "none" : "0 8px 16px rgba(59,130,246,0.3)",
+                transition: "all 0.2s"
+              }}
             >
-              Previous
+              ← Previous
             </button>
-            <span>{(currentQuestionIndex ?? 0) + 1} / {questions.length}</span>
+            <span style={{
+              fontSize: "14px",
+              fontWeight: 700,
+              color: "#cbd5e1",
+              background: "rgba(124,58,237,0.2)",
+              padding: "8px 16px",
+              borderRadius: "12px"
+            }}>{(currentQuestionIndex ?? 0) + 1} / {questions.length}</span>
             {!isLastQuestion ? (
               <button
                 onClick={() => setCurrentQuestionIndex(prev => 
                   prev !== null ? Math.min(questions.length - 1, prev + 1) : 0
                 )}
-                className="px-3 py-1 bg-blue-600 rounded"
+                style={{
+                  padding: "10px 18px",
+                  background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                  color: "#ffffff",
+                  border: "none",
+                  borderRadius: "12px",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  boxShadow: "0 8px 16px rgba(59,130,246,0.3)",
+                  transition: "all 0.2s"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 12px 24px rgba(59,130,246,0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 8px 16px rgba(59,130,246,0.3)";
+                }}
               >
-                Next
+                Next →
               </button>
             ) : (
               <button
                 onClick={handleSubmitQuiz}
                 disabled={!allQuestionsAnswered}
-                className="px-3 py-1 bg-green-600 rounded disabled:opacity-50"
+                style={{
+                  padding: "10px 18px",
+                  background: !allQuestionsAnswered
+                    ? "rgba(148,163,184,0.2)"
+                    : "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+                  color: !allQuestionsAnswered ? "#94a3b8" : "#ffffff",
+                  border: "none",
+                  borderRadius: "12px",
+                  fontWeight: 700,
+                  cursor: !allQuestionsAnswered ? "not-allowed" : "pointer",
+                  opacity: !allQuestionsAnswered ? 0.5 : 1,
+                  boxShadow: !allQuestionsAnswered ? "none" : "0 8px 16px rgba(34,197,94,0.4)",
+                  transition: "all 0.2s"
+                }}
+                onMouseEnter={(e) => {
+                  if (allQuestionsAnswered) {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 12px 24px rgba(34,197,94,0.5)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (allQuestionsAnswered) {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 8px 16px rgba(34,197,94,0.4)";
+                  }
+                }}
               >
-                Submit Quiz
+                ✓ Submit Quiz
               </button>
             )}
           </div>
