@@ -151,28 +151,27 @@ function ProgressRing({ percent, size = 80, strokeWidth = 8, color }: { percent:
 
 function DateDisplay({ dateString }: { dateString: string }) {
   const [mounted, setMounted] = useState(false);
-  const [formattedDate, setFormattedDate] = useState<string>("");
   
   useEffect(() => {
     setMounted(true);
-    // Format only on client to avoid hydration mismatch
+  }, []);
+  
+  // Format only on client to avoid hydration mismatch
+  const formatDate = (dateStr: string): string => {
     try {
-      const date = new Date(dateString);
+      const date = new Date(dateStr);
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const month = monthNames[date.getMonth()];
       const day = date.getDate();
-      setFormattedDate(`${month} ${day}`);
+      return `${month} ${day}`;
     } catch {
-      setFormattedDate("");
+      return "";
     }
-  }, [dateString]);
+  };
   
-  // Don't render anything until mounted to avoid hydration mismatch
-  if (!mounted) {
-    return <span style={{ visibility: "hidden" }}>...</span>;
-  }
-  
-  return <span>{formattedDate}</span>;
+  // Return formatted date only after mount to avoid hydration mismatch
+  // Use suppressHydrationWarning as a safety net
+  return <span suppressHydrationWarning>{mounted ? formatDate(dateString) : ""}</span>;
 }
 
 export default function LearnFinnishPage() {
