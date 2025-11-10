@@ -27,6 +27,7 @@ type ListeningResource = {
   description: string;
   artist?: string;
   difficulty: string;
+  link?: string;
 };
 
 type CultureMoment = {
@@ -273,7 +274,7 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
       {
         id: "a2-audio-2",
         title: "Kela soittaa",
-        type: "audio",
+        type: "podcast",
         description: "Simulated phone call about changing an appointment.",
         difficulty: "Medium",
       },
@@ -856,11 +857,15 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
 
 const VIEWS = [
   { id: "overview", label: "Overview" },
+  { id: "modules", label: "Lesson modules" },
   { id: "vocabulary", label: "Vocabulary" },
-  { id: "phrases", label: "Useful phrases" },
+  { id: "phrases", label: "Key phrases" },
   { id: "grammar", label: "Grammar focus" },
+  { id: "listening", label: "Listening & Music" },
+  { id: "culture", label: "Culture & Community" },
+  { id: "assignments", label: "Assignments" },
   { id: "practice", label: "Practice ideas" },
-  { id: "drills", label: "Quick drills" },
+  { id: "drills", label: "Drills" },
 ] as const;
 
 type ViewId = (typeof VIEWS)[number]["id"];
@@ -890,6 +895,72 @@ export default function FinnishTextbookContent() {
 
   const viewContent = useMemo(() => {
     switch (view) {
+      case "modules":
+        return (
+          <div style={{ display: "grid", gap: 16 }}>
+            {summary.modules.map((module) => (
+              <div
+                key={module.id}
+                style={{
+                  borderRadius: 18,
+                  border: "1px solid rgba(59,130,246,0.25)",
+                  background: "linear-gradient(135deg, rgba(59,130,246,0.1), rgba(129,140,248,0.1))",
+                  padding: 18,
+                  display: "grid",
+                  gap: 12,
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#1e3a8a" }}>{module.title}</h3>
+                  <span
+                    style={{
+                      padding: "6px 12px",
+                      borderRadius: 999,
+                      background: "rgba(59,130,246,0.15)",
+                      color: "#1d4ed8",
+                      fontSize: 12,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {module.duration}
+                  </span>
+                </div>
+                <div style={{ display: "grid", gap: 6, color: "#1f2937", fontSize: 13.5, lineHeight: 1.6 }}>
+                  <strong style={{ fontSize: 13, color: "#4338ca", textTransform: "uppercase", letterSpacing: 0.6 }}>
+                    Learning outcomes
+                  </strong>
+                  <ul style={{ margin: 0, paddingInlineStart: 18 }}>
+                    {module.outcomes.map((outcome) => (
+                      <li key={`${module.id}-outcome-${outcome}`}>{outcome}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div style={{ display: "grid", gap: 6 }}>
+                  <strong style={{ fontSize: 13, color: "#16a34a", textTransform: "uppercase", letterSpacing: 0.6 }}>
+                    Resources & activities
+                  </strong>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                    {module.resources.map((resource) => (
+                      <span
+                        key={`${module.id}-resource-${resource}`}
+                        style={{
+                          padding: "6px 10px",
+                          borderRadius: 12,
+                          background: "rgba(34,197,94,0.12)",
+                          color: "#166534",
+                          fontSize: 12,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {resource}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
       case "vocabulary":
         return (
           <div style={{ display: "grid", gap: 12 }}>
@@ -908,6 +979,145 @@ export default function FinnishTextbookContent() {
               >
                 <span style={{ fontWeight: 700 }}>{item.finnish}</span>
                 <span style={{ color: "#475569" }}>{item.english}</span>
+              </div>
+            ))}
+          </div>
+        );
+      case "listening":
+        return (
+          <div style={{ display: "grid", gap: 16 }}>
+            {summary.listening.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  borderRadius: 18,
+                  border: "1px solid rgba(14,165,233,0.3)",
+                  background: "linear-gradient(135deg, rgba(224,242,254,0.75), rgba(224,231,255,0.9))",
+                  padding: 18,
+                  display: "grid",
+                  gap: 10,
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  <div style={{ display: "grid", gap: 4 }}>
+                    <h4 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: "#0f172a" }}>{item.title}</h4>
+                    <span style={{ fontSize: 12.5, color: "#475569" }}>{item.description}</span>
+                  </div>
+                  <span
+                    style={{
+                      padding: "6px 12px",
+                      borderRadius: 999,
+                      background: "rgba(37,99,235,0.15)",
+                      color: "#1d4ed8",
+                      fontSize: 12,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {item.type} · {item.difficulty}
+                  </span>
+                </div>
+                {item.artist && <span style={{ fontSize: 12.5, color: "#4338ca", fontWeight: 600 }}>Artist / source: {item.artist}</span>}
+                <button
+                  type="button"
+                  onClick={() => alert("Audio preview coming soon.")}
+                  style={{
+                    justifySelf: "flex-start",
+                    padding: "8px 14px",
+                    borderRadius: 12,
+                    border: "none",
+                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                    color: "#fff",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  Play preview
+                </button>
+              </div>
+            ))}
+          </div>
+        );
+      case "culture":
+        return (
+          <div style={{ display: "grid", gap: 16 }}>
+            {summary.culture.map((item, index) => (
+              <div
+                key={item.id}
+                style={{
+                  position: "relative",
+                  borderRadius: 18,
+                  border: "1px solid rgba(248,113,113,0.25)",
+                  background: "linear-gradient(135deg, rgba(254,226,226,0.7), rgba(254,243,199,0.7))",
+                  padding: 18,
+                  display: "grid",
+                  gap: 10,
+                  boxShadow: "0 16px 32px rgba(248,113,113,0.18)",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: 12,
+                    right: 18,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "#be123c",
+                  }}
+                >
+                  #{index + 1}
+                </span>
+                <h4 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: "#9f1239" }}>{item.title}</h4>
+                <p style={{ margin: 0, fontSize: 13.5, color: "#7f1d1d", lineHeight: 1.6 }}>{item.description}</p>
+                <div
+                  style={{
+                    padding: "10px 12px",
+                    borderRadius: 12,
+                    background: "rgba(225,29,72,0.12)",
+                    color: "#be123c",
+                    fontSize: 12.5,
+                    fontWeight: 600,
+                  }}
+                >
+                  Activity: {item.activity}
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      case "assignments":
+        return (
+          <div style={{ display: "grid", gap: 16 }}>
+            {summary.assignments.map((assignment) => (
+              <div
+                key={assignment.id}
+                style={{
+                  borderRadius: 18,
+                  border: "1px solid rgba(34,197,94,0.25)",
+                  background: "linear-gradient(135deg, rgba(240,253,244,0.9), rgba(187,247,208,0.7))",
+                  padding: 18,
+                  display: "grid",
+                  gap: 10,
+                }}
+              >
+                <h4 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: "#166534" }}>{assignment.title}</h4>
+                <p style={{ margin: 0, fontSize: 13.5, color: "#166534", lineHeight: 1.6 }}>{assignment.description}</p>
+                <div style={{ fontSize: 12.5, color: "#065f46", fontWeight: 600 }}>Deliverable: {assignment.deliverable}</div>
+                <button
+                  type="button"
+                  onClick={() => alert("Assignment submission coming soon.")}
+                  style={{
+                    justifySelf: "flex-start",
+                    padding: "8px 14px",
+                    borderRadius: 12,
+                    border: "none",
+                    background: "linear-gradient(135deg, #22c55e, #16a34a)",
+                    color: "#fff",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  Launch assignment
+                </button>
               </div>
             ))}
           </div>
@@ -1101,29 +1311,47 @@ export default function FinnishTextbookContent() {
       }}
     >
       <header style={{ display: "grid", gap: 16 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-          <div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+          <div style={{ display: "grid", gap: 6, maxWidth: 520 }}>
             <p style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: 1.3, textTransform: "uppercase", color: "#475569" }}>
               My Finnish Journey
             </p>
-            <h2 style={{ margin: "6px 0 0 0", fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
-              Select a level to unlock curated lessons
+            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
+              Level {summary.label} · {summary.tagline}
             </h2>
+            <p style={{ margin: 0, fontSize: 13.5, color: "#475569", lineHeight: 1.6 }}>{summary.message}</p>
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              border: "1px solid rgba(59,130,246,0.25)",
-              background: "rgba(59,130,246,0.1)",
-              borderRadius: 12,
-              padding: "10px 16px",
-              fontWeight: 700,
-              color: "#1d4ed8",
-            }}
-          >
-            Skill Passport entries {summary.vocabulary.length >= 6 ? 2 : 1}
+          <div style={{ display: "grid", gap: 8, minWidth: 200 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                border: "1px solid rgba(59,130,246,0.25)",
+                background: "rgba(59,130,246,0.1)",
+                borderRadius: 12,
+                padding: "10px 14px",
+                fontWeight: 700,
+                color: "#1d4ed8",
+              }}
+            >
+              {summary.modules.length} lesson modules
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                border: "1px solid rgba(14,165,233,0.25)",
+                background: "rgba(224,242,254,0.9)",
+                borderRadius: 12,
+                padding: "10px 14px",
+                fontWeight: 700,
+                color: "#0369a1",
+              }}
+            >
+              {summary.listening.length}+ listening tracks & playlists
+            </div>
           </div>
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
