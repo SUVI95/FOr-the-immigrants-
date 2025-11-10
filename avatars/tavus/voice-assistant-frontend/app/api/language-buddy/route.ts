@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "OpenAI API key not configured" }, { status: 500 });
     }
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
-        input: [
+        messages: [
           {
             role: "system",
             content: TOPIC_PROMPTS[topic],
@@ -45,7 +45,8 @@ export async function POST(request: Request) {
             content: message,
           },
         ],
-        max_output_tokens: 120,
+        max_tokens: 150,
+        temperature: 0.7,
       }),
     });
 
@@ -56,7 +57,7 @@ export async function POST(request: Request) {
     }
 
     const data = await response.json();
-    const output = data?.output?.[0]?.content?.[0]?.text ?? "Anteeksi, en ymmärtänyt. Kokeillaan uudelleen.";
+    const output = data?.choices?.[0]?.message?.content ?? "Anteeksi, en ymmärtänyt. Kokeillaan uudelleen.";
 
     return NextResponse.json({ reply: output });
   } catch (error) {
