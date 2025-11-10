@@ -150,25 +150,27 @@ function ProgressRing({ percent, size = 80, strokeWidth = 8, color }: { percent:
 }
 
 function DateDisplay({ dateString }: { dateString: string }) {
-  const [formattedDate, setFormattedDate] = useState<string>("");
-  const [mounted, setMounted] = useState(false);
+  const [formattedDate, setFormattedDate] = useState<string | null>(null);
   
   useEffect(() => {
-    setMounted(true);
     // Only format on client side to avoid hydration mismatch
-    const date = new Date(dateString);
-    // Use consistent format: "Mon Day" (e.g., "Nov 13")
-    const month = date.toLocaleDateString("en-US", { month: "short" });
-    const day = date.getDate();
-    setFormattedDate(`${month} ${day}`);
+    try {
+      const date = new Date(dateString);
+      // Use consistent format: "Mon Day" (e.g., "Nov 13") - no weekday, no comma
+      const month = date.toLocaleDateString("en-US", { month: "short" });
+      const day = date.getDate();
+      setFormattedDate(`${month} ${day}`);
+    } catch (e) {
+      setFormattedDate("Invalid date");
+    }
   }, [dateString]);
   
-  // Return empty placeholder during SSR to avoid mismatch
-  if (!mounted) {
-    return <span></span>;
+  // Return null during SSR/hydration to avoid mismatch - will render after useEffect
+  if (formattedDate === null) {
+    return null;
   }
   
-  return <span>{formattedDate}</span>;
+  return <>{formattedDate}</>;
 }
 
 export default function LearnFinnishPage() {
