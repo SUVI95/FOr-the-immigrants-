@@ -171,13 +171,6 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
               <span>{t("explore")}</span>
             </button>
             <button
-              className={`nav-btn ${currentPath.startsWith("/programs") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/programs"; }}
-            >
-              <i className="fa-solid fa-diagram-project"></i>
-              <span>{t("programs")}</span>
-            </button>
-            <button
               className={`nav-btn ${currentPath.startsWith("/events") ? "active" : ""}`}
               onClick={() => { window.location.href = "/events"; }}
             >
