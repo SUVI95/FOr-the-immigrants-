@@ -272,105 +272,10 @@ export default function LearnFinnishPage() {
               }}
             />
 
-            {/* Floating decorative elements - positioned on left side to avoid stat boxes */}
-            <motion.div
-              animate={{
-                y: [0, -20, 0],
-                rotate: [0, 5, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              style={{
-                position: "absolute",
-                top: 60,
-                left: 40,
-                width: 70,
-                height: 70,
-                borderRadius: "50%",
-                background: "rgba(255,255,255,0.25)",
-                backdropFilter: "blur(10px)",
-                border: "2px solid rgba(255,255,255,0.4)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 32,
-                zIndex: 0,
-                boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
-              }}
-            >
-              📚
-            </motion.div>
-
-            <motion.div
-              animate={{
-                y: [0, 15, 0],
-                rotate: [0, -5, 0],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5,
-              }}
-              style={{
-                position: "absolute",
-                bottom: 80,
-                left: 60,
-                width: 55,
-                height: 55,
-                borderRadius: "50%",
-                background: "rgba(255,255,255,0.2)",
-                backdropFilter: "blur(10px)",
-                border: "2px solid rgba(255,255,255,0.35)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 26,
-                zIndex: 0,
-                boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
-              }}
-            >
-              ✏️
-            </motion.div>
-
-            <motion.div
-              animate={{
-                y: [0, -10, 0],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1,
-              }}
-              style={{
-                position: "absolute",
-                top: 180,
-                left: 20,
-                width: 45,
-                height: 45,
-                borderRadius: "50%",
-                background: "rgba(255,255,255,0.18)",
-                backdropFilter: "blur(8px)",
-                border: "2px solid rgba(255,255,255,0.3)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 22,
-                zIndex: 0,
-                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-              }}
-            >
-              🌟
-            </motion.div>
-
             <div
               style={{
                 position: "relative",
-                zIndex: 2,
+                zIndex: 1,
                 display: "flex",
                 flexWrap: "wrap",
                 gap: 24,
