@@ -311,20 +311,20 @@ export default function WorkOpportunitiesPage() {
               marginBottom: 24,
               padding: "32px",
               borderRadius: 24,
-              background: "linear-gradient(135deg, #dc2626 0%, #ea580c 50%, #f59e0b 100%)",
+              background: "linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #ec4899 100%)",
               color: "#ffffff",
               border: "2px solid rgba(255,255,255,0.2)",
-              boxShadow: "0 20px 40px rgba(220,38,38,0.3)",
+              boxShadow: "0 20px 40px rgba(37,99,235,0.3)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
               <span style={{ fontSize: 32 }}>💼</span>
-              <h2 style={{ margin: 0, fontSize: 28, fontWeight: 800 }}>Work Now - No Perfect Finnish Required</h2>
+              <h2 style={{ margin: 0, fontSize: 28, fontWeight: 800 }}>Jobs That Welcome Newcomers</h2>
             </div>
             <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7, maxWidth: "800px", opacity: 0.95, marginBottom: 20 }}>
-              <strong>You don't need perfect Finnish to start working!</strong> These jobs are English-friendly, 
+              <strong>You don't need perfect Finnish to start your job search!</strong> These opportunities are English-friendly, 
               offer on-the-job training, or help you learn Finnish while you work. Many employers in Kajaani are 
-              welcoming and supportive of newcomers. Start earning income while you learn.
+              welcoming and supportive of newcomers. Explore opportunities that match your situation and start building your career in Finland.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
               <button
@@ -355,7 +355,7 @@ export default function WorkOpportunitiesPage() {
                   borderRadius: 12,
                   border: "none",
                   background: "rgba(255,255,255,0.95)",
-                  color: "#dc2626",
+                  color: "#2563eb",
                   fontWeight: 700,
                   fontSize: 14,
                   cursor: "pointer",
@@ -384,12 +384,12 @@ export default function WorkOpportunitiesPage() {
           </span>
           <h1 style={{ margin: 0, fontSize: "2.2rem", lineHeight: 1.15, fontWeight: 800 }}>
             {workNowFilter 
-              ? "Jobs You Can Start Now - English OK, Learn While Working"
+              ? "Jobs That Welcome Newcomers - English-Friendly Opportunities"
               : "Build your next step — job, internship, or training — all in one place."}
           </h1>
           <p style={{ margin: 0, fontSize: "1.05rem", maxWidth: 720, lineHeight: 1.7, opacity: 0.95 }}>
             {workNowFilter
-              ? "Find work that doesn't require perfect Finnish. Many employers in Kajaani offer training, mentoring, and support. Start earning while you learn the language naturally through work."
+              ? "Explore opportunities that don't require perfect Finnish. Many employers in Kajaani offer training, mentoring, and support. Find roles where you can learn the language naturally while building your career."
               : "Knuut connects your skills, goals, and learning journey directly to real opportunities. Find roles that match your Finnish level, apply in seconds with your Smart CV, and grow your experience every time you act."}
           </p>
           {!workNowFilter && (
@@ -404,14 +404,14 @@ export default function WorkOpportunitiesPage() {
                   padding: "12px 20px",
                   borderRadius: 12,
                   border: "2px solid rgba(255,255,255,0.5)",
-                  background: "rgba(239,68,68,0.3)",
+                  background: "rgba(37,99,235,0.3)",
                   color: "#ffffff",
                   fontWeight: 700,
                   fontSize: 14,
                   cursor: "pointer",
                 }}
               >
-                💼 I Need Work Now (No Finnish Required)
+                💼 Jobs for Newcomers (English OK)
               </button>
               <button
                 type="button"

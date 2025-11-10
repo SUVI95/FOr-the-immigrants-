@@ -135,7 +135,7 @@ const FIRST_MONTH_CHECKLIST: ChecklistItem[] = [
     timeframe: "Within 30 days",
     completed: false,
     resources: [
-      { label: "Jobs (no Finnish required)", href: "/work-opportunities?filter=work-now" },
+      { label: "Jobs for newcomers", href: "/work-opportunities?filter=work-now" },
       { label: "Job shadowing", href: "/work-opportunities?filter=shadowing" },
     ],
   },
@@ -311,7 +311,7 @@ export default function First30DaysPage() {
                       boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
                     }}
                   >
-                    💼 Find Work Now
+                    💼 Explore Work Opportunities
                   </button>
                 </div>
               </motion.div>

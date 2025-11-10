@@ -19,7 +19,7 @@ type TabKey = "explore" | "create";
 
 const quickPrompts = [
   { id: "prompt-newcomer", label: "I'm new here - help me", icon: "🆘", urgent: true },
-  { id: "prompt-work-now", label: "I need work now", icon: "💼", urgent: true },
+  { id: "prompt-work-now", label: "Find work opportunities", icon: "💼", urgent: true },
   { id: "prompt-events", label: "Show events this week", icon: "📅" },
   { id: "prompt-resources", label: "Find resources near me", icon: "📍" },
   { id: "prompt-admin", label: "How do I register my address?", icon: "🏠" },
