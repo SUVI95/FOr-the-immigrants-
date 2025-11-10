@@ -230,91 +230,6 @@ export default function LearnFinnishPage() {
           }}
         >
           <div style={{ display: "grid", gap: 24 }}>
-          {/* Knuut AI - The Central Connector Banner */}
-          <section
-            style={{
-              position: "relative",
-              borderRadius: 24,
-              padding: "32px 36px",
-              background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)",
-              color: "#ffffff",
-              overflow: "hidden",
-              boxShadow: "0 12px 32px rgba(15,23,42,0.4)",
-              border: "1px solid rgba(255,255,255,0.1)",
-            }}
-          >
-            {/* Animated background pattern */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                backgroundImage: "radial-gradient(circle at 20% 50%, rgba(99,102,241,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(139,92,246,0.15) 0%, transparent 50%)",
-                opacity: 0.6,
-              }}
-            />
-            
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              style={{ position: "relative", zIndex: 1, display: "grid", gap: 16 }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                  style={{
-                    fontSize: 32,
-                    filter: "drop-shadow(0 4px 8px rgba(99,102,241,0.5))",
-                  }}
-                >
-                  🤖
-                </motion.div>
-                <h2 style={{ margin: 0, fontSize: 28, fontWeight: 800, color: "#ffffff", letterSpacing: -0.5 }}>
-                  Knuut AI: Your Central Connector
-                </h2>
-              </div>
-              
-              <p style={{ margin: 0, fontSize: 18, color: "#e2e8f0", lineHeight: 1.7, maxWidth: "900px" }}>
-                <strong style={{ color: "#ffffff" }}>Knuut AI is your intelligent guide</strong> that connects you to everything you need: 
-                <strong style={{ color: "#a78bfa" }}> people, jobs, groups, and events</strong>. Think of Knuut as the glue that keeps 
-                your journey connected — providing <strong style={{ color: "#60a5fa" }}>real-time updates</strong> about what's happening 
-                around you, matching you with opportunities, and guiding your path forward.
-              </p>
-              
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginTop: 12 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", background: "rgba(255,255,255,0.1)", borderRadius: 12, backdropFilter: "blur(10px)" }}>
-                  <span style={{ fontSize: 24 }}>👥</span>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#a78bfa", textTransform: "uppercase", letterSpacing: 0.5 }}>Connect People</div>
-                    <div style={{ fontSize: 12, color: "#cbd5e1" }}>Find peers & mentors</div>
-                  </div>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", background: "rgba(255,255,255,0.1)", borderRadius: 12, backdropFilter: "blur(10px)" }}>
-                  <span style={{ fontSize: 24 }}>💼</span>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#60a5fa", textTransform: "uppercase", letterSpacing: 0.5 }}>Match Jobs</div>
-                    <div style={{ fontSize: 12, color: "#cbd5e1" }}>Real-time opportunities</div>
-                  </div>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", background: "rgba(255,255,255,0.1)", borderRadius: 12, backdropFilter: "blur(10px)" }}>
-                  <span style={{ fontSize: 24 }}>🎯</span>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#34d399", textTransform: "uppercase", letterSpacing: 0.5 }}>Live Updates</div>
-                    <div style={{ fontSize: 12, color: "#cbd5e1" }}>What's happening now</div>
-                  </div>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", background: "rgba(255,255,255,0.1)", borderRadius: 12, backdropFilter: "blur(10px)" }}>
-                  <span style={{ fontSize: 24 }}>🗺️</span>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#fbbf24", textTransform: "uppercase", letterSpacing: 0.5 }}>Guide Journey</div>
-                    <div style={{ fontSize: 12, color: "#cbd5e1" }}>Personalized path</div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </section>
-          
           <section
             style={{
               position: "relative",
@@ -510,10 +425,7 @@ export default function LearnFinnishPage() {
                     textShadow: "0 1px 4px rgba(0,0,0,0.15)",
                   }}
                 >
-                  Start from zero. Learn step by step. Speak Finnish like a local. 
-                  <strong style={{ display: "block", marginTop: 8, fontSize: "1.05rem" }}>
-                    Knuut AI connects you to real people, jobs, events, and opportunities — keeping your journey alive and growing.
-                  </strong>
+                  Start from zero. Learn step by step. Speak Finnish like a local.
                 </motion.p>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
