@@ -272,7 +272,7 @@ export default function LearnFinnishPage() {
               }}
             />
 
-            {/* Floating decorative elements */}
+            {/* Floating decorative elements - positioned on left side to avoid stat boxes */}
             <motion.div
               animate={{
                 y: [0, -20, 0],
@@ -285,18 +285,20 @@ export default function LearnFinnishPage() {
               }}
               style={{
                 position: "absolute",
-                top: 40,
-                right: 60,
-                width: 80,
-                height: 80,
+                top: 60,
+                left: 40,
+                width: 70,
+                height: 70,
                 borderRadius: "50%",
-                background: "rgba(255,255,255,0.2)",
+                background: "rgba(255,255,255,0.25)",
                 backdropFilter: "blur(10px)",
-                border: "2px solid rgba(255,255,255,0.3)",
+                border: "2px solid rgba(255,255,255,0.4)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 32,
+                zIndex: 0,
+                boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
               }}
             >
               📚
@@ -315,18 +317,20 @@ export default function LearnFinnishPage() {
               }}
               style={{
                 position: "absolute",
-                bottom: 50,
-                right: 100,
-                width: 60,
-                height: 60,
+                bottom: 80,
+                left: 60,
+                width: 55,
+                height: 55,
                 borderRadius: "50%",
-                background: "rgba(255,255,255,0.15)",
+                background: "rgba(255,255,255,0.2)",
                 backdropFilter: "blur(10px)",
-                border: "2px solid rgba(255,255,255,0.25)",
+                border: "2px solid rgba(255,255,255,0.35)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 28,
+                fontSize: 26,
+                zIndex: 0,
+                boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
               }}
             >
               ✏️
@@ -344,17 +348,20 @@ export default function LearnFinnishPage() {
               }}
               style={{
                 position: "absolute",
-                top: 120,
-                right: 200,
-                width: 50,
-                height: 50,
+                top: 180,
+                left: 20,
+                width: 45,
+                height: 45,
                 borderRadius: "50%",
-                background: "rgba(255,255,255,0.12)",
+                background: "rgba(255,255,255,0.18)",
                 backdropFilter: "blur(8px)",
+                border: "2px solid rgba(255,255,255,0.3)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 24,
+                fontSize: 22,
+                zIndex: 0,
+                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
               }}
             >
               🌟
@@ -363,7 +370,7 @@ export default function LearnFinnishPage() {
             <div
               style={{
                 position: "relative",
-                zIndex: 1,
+                zIndex: 2,
                 display: "flex",
                 flexWrap: "wrap",
                 gap: 24,
