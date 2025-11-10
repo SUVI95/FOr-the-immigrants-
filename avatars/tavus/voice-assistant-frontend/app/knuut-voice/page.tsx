@@ -10,6 +10,7 @@ import {
   BarVisualizer,
   DisconnectButton,
   VoiceAssistantControlBar,
+  useRoomContext,
 } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import TranscriptionView from "@/components/TranscriptionView";
@@ -654,9 +655,10 @@ export default function KnuutVoicePage() {
 }
 
 function VoiceAssistantContent() {
-  const { state: agentState, videoTrack, audioTrack } = useVoiceAssistant();
+  const { state: agentState, videoTrack, audioTrack, agent } = useVoiceAssistant();
+  const room = useRoomContext();
 
-  // Debug: Log audio track status
+  // Debug: Log audio track status and room participants
   useEffect(() => {
     if (audioTrack) {
       console.log("✅ Audio track detected:", audioTrack);
@@ -672,8 +674,24 @@ function VoiceAssistantContent() {
       }
     } else {
       console.log("❌ No audio track detected. Agent state:", agentState);
+      // Debug: Log all remote participants to see if agent is connected
+      if (room) {
+        const remoteParticipants = Array.from(room.remoteParticipants.values());
+        console.log("🔍 Remote participants in room:", remoteParticipants.map(p => ({
+          identity: p.identity,
+          name: p.name || '(no name)',
+          audioTracks: p.audioTracks ? Array.from(p.audioTracks.keys()) : [],
+          videoTracks: p.videoTracks ? Array.from(p.videoTracks.keys()) : [],
+          audioTrackPublications: p.audioTrackPublications ? Array.from(p.audioTrackPublications.keys()) : [],
+          videoTrackPublications: p.videoTrackPublications ? Array.from(p.videoTrackPublications.keys()) : [],
+        })));
+        console.log("🔍 Agent from useVoiceAssistant:", agent ? {
+          identity: agent.identity,
+          name: agent.name,
+        } : 'null');
+      }
     }
-  }, [audioTrack, agentState]);
+  }, [audioTrack, agentState, agent, room]);
 
   return (
     <div style={{ marginTop: "20px" }}>

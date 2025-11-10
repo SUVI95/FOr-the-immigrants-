@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import { motion } from "framer-motion";
@@ -147,6 +147,28 @@ function ProgressRing({ percent, size = 80, strokeWidth = 8, color }: { percent:
       </div>
     </div>
   );
+}
+
+function DateDisplay({ dateString }: { dateString: string }) {
+  const [formattedDate, setFormattedDate] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+    // Only format on client side to avoid hydration mismatch
+    const date = new Date(dateString);
+    // Use consistent format: "Mon Day" (e.g., "Nov 13")
+    const month = date.toLocaleDateString("en-US", { month: "short" });
+    const day = date.getDate();
+    setFormattedDate(`${month} ${day}`);
+  }, [dateString]);
+  
+  // Return empty placeholder during SSR to avoid mismatch
+  if (!mounted) {
+    return <span></span>;
+  }
+  
+  return <span>{formattedDate}</span>;
 }
 
 export default function LearnFinnishPage() {
@@ -920,7 +942,7 @@ export default function LearnFinnishPage() {
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontSize: 12, color: "#64748b" }}>
-                      {new Date(entry.earnedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      <DateDisplay dateString={entry.earnedAt} />
                     </span>
                     <span
                       style={{
