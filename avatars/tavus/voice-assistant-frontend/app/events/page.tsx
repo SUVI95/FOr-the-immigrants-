@@ -561,7 +561,7 @@ export default function EventsPage() {
               position: "absolute",
               inset: 0,
               backgroundImage:
-                "url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80')",
+                "url('https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1600&q=80')",
               backgroundSize: "cover",
               backgroundPosition: "center",
               opacity: 0.18,
