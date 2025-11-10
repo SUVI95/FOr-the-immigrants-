@@ -150,27 +150,22 @@ function ProgressRing({ percent, size = 80, strokeWidth = 8, color }: { percent:
 }
 
 function DateDisplay({ dateString }: { dateString: string }) {
-  const [formattedDate, setFormattedDate] = useState<string | null>(null);
-  
-  useEffect(() => {
-    // Only format on client side to avoid hydration mismatch
+  // Use a simple format that won't cause hydration issues
+  // Format manually to avoid locale differences between server and client
+  const formatDate = (dateStr: string): string => {
     try {
-      const date = new Date(dateString);
-      // Use consistent format: "Mon Day" (e.g., "Nov 13") - no weekday, no comma
-      const month = date.toLocaleDateString("en-US", { month: "short" });
+      const date = new Date(dateStr);
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const month = monthNames[date.getMonth()];
       const day = date.getDate();
-      setFormattedDate(`${month} ${day}`);
-    } catch (e) {
-      setFormattedDate("Invalid date");
+      return `${month} ${day}`;
+    } catch {
+      return "";
     }
-  }, [dateString]);
+  };
   
-  // Return null during SSR/hydration to avoid mismatch - will render after useEffect
-  if (formattedDate === null) {
-    return null;
-  }
-  
-  return <>{formattedDate}</>;
+  // Always render the same format - no locale-dependent formatting
+  return <span suppressHydrationWarning>{formatDate(dateString)}</span>;
 }
 
 export default function LearnFinnishPage() {
@@ -943,7 +938,7 @@ export default function LearnFinnishPage() {
                     </p>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 12, color: "#64748b" }}>
+                    <span style={{ fontSize: 12, color: "#64748b" }} suppressHydrationWarning>
                       <DateDisplay dateString={entry.earnedAt} />
                     </span>
                     <span
