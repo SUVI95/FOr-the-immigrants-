@@ -150,22 +150,29 @@ function ProgressRing({ percent, size = 80, strokeWidth = 8, color }: { percent:
 }
 
 function DateDisplay({ dateString }: { dateString: string }) {
-  // Use a simple format that won't cause hydration issues
-  // Format manually to avoid locale differences between server and client
-  const formatDate = (dateStr: string): string => {
+  const [mounted, setMounted] = useState(false);
+  const [formattedDate, setFormattedDate] = useState<string>("");
+  
+  useEffect(() => {
+    setMounted(true);
+    // Format only on client to avoid hydration mismatch
     try {
-      const date = new Date(dateStr);
+      const date = new Date(dateString);
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const month = monthNames[date.getMonth()];
       const day = date.getDate();
-      return `${month} ${day}`;
+      setFormattedDate(`${month} ${day}`);
     } catch {
-      return "";
+      setFormattedDate("");
     }
-  };
+  }, [dateString]);
   
-  // Always render the same format - no locale-dependent formatting
-  return <span suppressHydrationWarning>{formatDate(dateString)}</span>;
+  // Don't render anything until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return <span style={{ visibility: "hidden" }}>...</span>;
+  }
+  
+  return <span>{formattedDate}</span>;
 }
 
 export default function LearnFinnishPage() {
