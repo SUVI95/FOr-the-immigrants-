@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-type LevelKey = "A1" | "A2" | "B1" | "B2" | "C1";
+type LevelKey = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
 
 type Drill = {
   id: string;
@@ -12,15 +12,49 @@ type Drill = {
   sample?: string;
 };
 
+type LessonModule = {
+  id: string;
+  title: string;
+  duration: string;
+  outcomes: string[];
+  resources: string[];
+};
+
+type ListeningResource = {
+  id: string;
+  title: string;
+  type: "song" | "podcast" | "video";
+  description: string;
+  artist?: string;
+  difficulty: string;
+};
+
+type CultureMoment = {
+  id: string;
+  title: string;
+  description: string;
+  activity: string;
+};
+
+type Assignment = {
+  id: string;
+  title: string;
+  description: string;
+  deliverable: string;
+};
+
 type LevelSummary = {
   label: string;
   tagline: string;
   message: string;
   focusAreas: string[];
+  modules: LessonModule[];
   vocabulary: Array<{ finnish: string; english: string }>;
   phrases: Array<{ finnish: string; english: string }>;
   grammar: Array<{ title: string; bullets: string[] }>;
-  practice: Array<{ title: string; description: string }>;
+  listening: ListeningResource[];
+  culture: CultureMoment[];
+  assignments: Assignment[];
   drills: Drill[];
 };
 
@@ -34,6 +68,29 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
       "Numbers, dates, and prices",
       "Simple questions: kuka, missä, mikä",
       "Essential service phrases (kauppa, apteekki, bussi)",
+    ],
+    modules: [
+      {
+        id: "a1-mod-1",
+        title: "Meet & Greet",
+        duration: "35 min",
+        outcomes: ["Introduce yourself", "Ask someone's name", "Spell basic words"],
+        resources: ["Alphabet deck", "Pronunciation audio warm-up"],
+      },
+      {
+        id: "a1-mod-2",
+        title: "Café Confidence",
+        duration: "40 min",
+        outcomes: ["Order food & drinks", "Use polite forms", "Handle payments"],
+        resources: ["Menu role-play cards", "Tap-to-pay dialogue"],
+      },
+      {
+        id: "a1-mod-3",
+        title: "City Essentials",
+        duration: "45 min",
+        outcomes: ["Ask for directions", "Understand signage", "Use transport vocabulary"],
+        resources: ["Map flashcards", "Kajaanin paikallisliikenne video"],
+      },
     ],
     vocabulary: [
       { finnish: "Hei / Moi", english: "Hello / Hi" },
@@ -68,18 +125,56 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
         bullets: ["Minulla on lippu.", "Sinulla on avain.", "Hänellä on polkupyörä."],
       },
     ],
-    practice: [
+    listening: [
       {
-        title: "Mini dialogue",
-        description: "Order coffee and a bun at a café. Greet, order, pay, and thank the cashier in Finnish.",
+        id: "a1-audio-1",
+        title: "Hei Hei Kajaani",
+        type: "song",
+        description: "A cheerful greeting song introducing basic phrases.",
+        artist: "Knuut Kids Ensemble",
+        difficulty: "Very easy",
       },
       {
-        title: "Numbers drill",
-        description: "Practice reading prices aloud from a grocery flyer (esim. 3,49 €).",
+        id: "a1-audio-2",
+        title: "Torilla tavataan",
+        type: "podcast",
+        description: "Short dialogues at the Kajaani market square with slow narration.",
+        difficulty: "Easy",
       },
       {
-        title: "Listening tip",
-        description: "Watch Yle Uutiset selkosuomeksi for 3 minutes and write down five new words.",
+        id: "a1-audio-3",
+        title: "Supermarket Signs",
+        type: "video",
+        description: "Mini video explaining grocery words with visuals and captions.",
+        difficulty: "Easy",
+      },
+    ],
+    culture: [
+      {
+        id: "a1-culture-1",
+        title: "Kahvihetki etiquette",
+        description: "Understand how Finns share coffee breaks and polite small talk cues.",
+        activity: "Watch the coffee break clip and note three polite phrases.",
+      },
+      {
+        id: "a1-culture-2",
+        title: "Finnish music warm-up",
+        description: "Learn the chorus of the classic song 'Kultainen nuoruus'.",
+        activity: "Sing along using the provided lyrics video and highlight unknown words.",
+      },
+    ],
+    assignments: [
+      {
+        id: "a1-assignment-1",
+        title: "Introduce yourself video",
+        description: "Record a 45-second intro presenting your name, origin, and one hobby.",
+        deliverable: "Upload MP4 or share link for mentor feedback.",
+      },
+      {
+        id: "a1-assignment-2",
+        title: "Café role-play",
+        description: "Write a short dialogue ordering coffee and a pulla, include prices and polite endings.",
+        deliverable: "Submit script + audio reading.",
       },
     ],
     drills: [
@@ -111,6 +206,29 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
       "Booking appointments (ajanvaraus)",
       "Describing people, homes, and hobbies",
       "Using past tense for simple stories",
+    ],
+    modules: [
+      {
+        id: "a2-mod-1",
+        title: "Week in Motion",
+        duration: "45 min",
+        outcomes: ["Describe routines", "Use time expressions", "Explain travel plans"],
+        resources: ["Interactive planner", "Audio schedule prompts"],
+      },
+      {
+        id: "a2-mod-2",
+        title: "Appointments & Bookings",
+        duration: "40 min",
+        outcomes: ["Book doctor visits", "Change a reservation", "Confirm instructions"],
+        resources: ["Dialogue cards", "Pharmacy listening drill"],
+      },
+      {
+        id: "a2-mod-3",
+        title: "Storytelling starter",
+        duration: "50 min",
+        outcomes: ["Use past tense", "Describe events", "Share weekend highlights"],
+        resources: ["Timeline templates", "Selkokieli news clip"],
+      },
     ],
     vocabulary: [
       { finnish: "Herään kello seitsemän", english: "I wake up at seven" },
@@ -144,18 +262,56 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
         bullets: ["viime viikonloppuna", "ensi maanantaina", "kahden viikon päästä", "kolmen päivän ajan"],
       },
     ],
-    practice: [
+    listening: [
       {
-        title: "Schedule builder",
-        description: "Write your weekday routine using at least five time expressions and verbs in present tense.",
+        id: "a2-audio-1",
+        title: "Aamu Kajaanissa",
+        type: "podcast",
+        description: "A Finn describes their typical morning routine with transcripts.",
+        difficulty: "Easy",
       },
       {
-        title: "Role-play: pharmacy",
-        description: "Explain symptoms, ask for medicine, and confirm instructions.",
+        id: "a2-audio-2",
+        title: "Kela soittaa",
+        type: "audio",
+        description: "Simulated phone call about changing an appointment.",
+        difficulty: "Medium",
       },
       {
-        title: "Listening challenge",
-        description: "Listen to a short Finnish podcast (3 min) and note three new words.",
+        id: "a2-audio-3",
+        title: "Pop playlist: Arjen rytmi",
+        type: "song",
+        description: "Handpicked Finnish pop tracks with lyric annotations for daily actions.",
+        artist: "Knuut AI Spotify Mix",
+        difficulty: "Easy",
+      },
+    ],
+    culture: [
+      {
+        id: "a2-culture-1",
+        title: "Pharmacy etiquette",
+        description: "Learn how to queue, request medicine, and thank the staff politely.",
+        activity: "Watch the role-play and list three polite requests.",
+      },
+      {
+        id: "a2-culture-2",
+        title: "Finnish TV evening",
+        description: "Preview subtitles from a YLE series to get used to spoken slang.",
+        activity: "Match ten expressions from the clip with their English meaning.",
+      },
+    ],
+    assignments: [
+      {
+        id: "a2-assignment-1",
+        title: "Weekly planner",
+        description: "Write a paragraph describing your week using six time expressions.",
+        deliverable: "Submit text + audio reading for pronunciation notes.",
+      },
+      {
+        id: "a2-assignment-2",
+        title: "Appointment reschedule",
+        description: "Create a short email or message moving a booked appointment, include reason and new time.",
+        deliverable: "Upload email draft (Finnish) as PDF.",
       },
     ],
     drills: [
@@ -187,6 +343,29 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
       "Formal vs informal language",
       "Storytelling in past tense",
     ],
+    modules: [
+      {
+        id: "b1-mod-1",
+        title: "Interview Lab",
+        duration: "55 min",
+        outcomes: ["Present work history", "Discuss strengths", "Ask follow-up questions"],
+        resources: ["Interview question deck", "Model answers audio"],
+      },
+      {
+        id: "b1-mod-2",
+        title: "School & Community",
+        duration: "45 min",
+        outcomes: ["Talk about school meetings", "Understand school reports", "Coordinate events"],
+        resources: ["Parents evening transcript", "Event planning worksheet"],
+      },
+      {
+        id: "b1-mod-3",
+        title: "Story Arc",
+        duration: "50 min",
+        outcomes: ["Narrate past events", "Use connectors", "Explain outcomes"],
+        resources: ["Narrative timeline builder", "Audio example: volunteer story"],
+      },
+    ],
     vocabulary: [
       { finnish: "Työkokemus", english: "Work experience" },
       { finnish: "Vahvuuteni", english: "My strengths" },
@@ -217,14 +396,56 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
         bullets: ["tässä yrityksessä arvostetaan", "palautetta kerätään", "päätös tehdään"],
       },
     ],
-    practice: [
+    listening: [
       {
-        title: "Interview prep",
-        description: "Record answers to three Finnish interview questions and note useful vocabulary.",
+        id: "b1-audio-1",
+        title: "Työhaastattelun kulku",
+        type: "podcast",
+        description: "Recruiter explains common Finnish interview steps.",
+        difficulty: "Medium",
       },
       {
-        title: "Meeting summary",
-        description: "Write a six-sentence summary of a meeting or class you recently attended.",
+        id: "b1-audio-2",
+        title: "Kajaani Career Night",
+        type: "video",
+        description: "Panel discussion with subtitles focusing on networking phrases.",
+        difficulty: "Medium",
+      },
+      {
+        id: "b1-audio-3",
+        title: "Suomi Soul Playlist",
+        type: "song",
+        description: "Playlist of modern Finnish soul music with lyric flashcards.",
+        artist: "Curated by Knuut AI",
+        difficulty: "Medium",
+      },
+    ],
+    culture: [
+      {
+        id: "b1-culture-1",
+        title: "Work fika vs kahvitauko",
+        description: "Compare Swedish 'fika' and Finnish 'kahvitauko' cultures and discussion norms.",
+        activity: "Fill the venn diagram with three similarities and differences.",
+      },
+      {
+        id: "b1-culture-2",
+        title: "Kainuu community events",
+        description: "Preview local city events and practise small talk topics.",
+        activity: "Match events with appropriate conversation starters.",
+      },
+    ],
+    assignments: [
+      {
+        id: "b1-assignment-1",
+        title: "Interview pitch",
+        description: "Write and record a two-minute pitch for a job you want in Kajaani.",
+        deliverable: "Submit script + video for mentor review.",
+      },
+      {
+        id: "b1-assignment-2",
+        title: "Meeting minutes",
+        description: "Summarise a real or simulated meeting in 120 words, highlight action points.",
+        deliverable: "Upload summary doc.",
       },
     ],
     drills: [
@@ -256,6 +477,29 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
       "Societal vocabulary",
       "Networking and professional events",
     ],
+    modules: [
+      {
+        id: "b2-mod-1",
+        title: "Argument Toolkit",
+        duration: "55 min",
+        outcomes: ["Present opinions", "Use advanced connectors", "Rebut counterarguments"],
+        resources: ["Debate card set", "Opinion essay model"],
+      },
+      {
+        id: "b2-mod-2",
+        title: "Impact Finnish",
+        duration: "50 min",
+        outcomes: ["Discuss community initiatives", "Use civic vocabulary", "Propose solutions"],
+        resources: ["Integration workshop clip", "Impact vocabulary deck"],
+      },
+      {
+        id: "b2-mod-3",
+        title: "Networking Mastery",
+        duration: "45 min",
+        outcomes: ["Facilitate introductions", "Follow up professionally", "Use nuance"],
+        resources: ["LinkedIn message templates", "Networking audio simulation"],
+      },
+    ],
     vocabulary: [
       { finnish: "Kestävä kehitys", english: "Sustainable development" },
       { finnish: "Hyvinvointi", english: "Wellbeing" },
@@ -285,14 +529,56 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
         bullets: ["yhtäältä... toisaalta", "huolimatta siitä, että", "siitä huolimatta"],
       },
     ],
-    practice: [
+    listening: [
       {
-        title: "Opinion column",
-        description: "Write 150 words about a local issue. Present pros and cons, then state your recommendation.",
+        id: "b2-audio-1",
+        title: "Taloustunti",
+        type: "podcast",
+        description: "Economics talk show discussing Finnish labour market trends.",
+        difficulty: "Challenging",
       },
       {
-        title: "Panel prep",
-        description: "Prepare three arguments for and against remote work. Practice saying them aloud.",
+        id: "b2-audio-2",
+        title: "Kaupunki ja tulevaisuus",
+        type: "video",
+        description: "Panel on smart city development with dense technical vocabulary.",
+        difficulty: "Challenging",
+      },
+      {
+        id: "b2-audio-3",
+        title: "FinnJazz Focus",
+        type: "song",
+        description: "Jazz playlist featuring Finnish artists to improve listening to natural rhythm.",
+        artist: "FinnJazz Collective",
+        difficulty: "Challenging",
+      },
+    ],
+    culture: [
+      {
+        id: "b2-culture-1",
+        title: "Boardroom etiquette",
+        description: "Understand unspoken norms of Finnish professional meetings.",
+        activity: "Watch briefing, then list three dos and don'ts.",
+      },
+      {
+        id: "b2-culture-2",
+        title: "Community grant pitch",
+        description: "Learn how NGOs pitch to Finnish municipalities, practise persuasive language.",
+        activity: "Draft a 90-second pitch outline.",
+      },
+    ],
+    assignments: [
+      {
+        id: "b2-assignment-1",
+        title: "Opinion column",
+        description: "Write 180 words about a local issue, include two opposing viewpoints and recommendation.",
+        deliverable: "Submit article draft + audio commentary.",
+      },
+      {
+        id: "b2-assignment-2",
+        title: "Networking follow-up",
+        description: "Create a follow-up email summarising a professional meeting, use advanced connectors.",
+        deliverable: "Upload email in Finnish.",
       },
     ],
     drills: [
@@ -323,6 +609,29 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
       "Academic and corporate Finnish",
       "Facilitating workshops and negotiations",
     ],
+    modules: [
+      {
+        id: "c1-mod-1",
+        title: "Thought Leadership",
+        duration: "60 min",
+        outcomes: ["Chair discussions", "Use persuasive nuance", "Respond diplomatically"],
+        resources: ["Leadership speech samples", "Facilitation checklist"],
+      },
+      {
+        id: "c1-mod-2",
+        title: "Academic Edge",
+        duration: "55 min",
+        outcomes: ["Analyse research", "Summarise complex texts", "Present findings"],
+        resources: ["Academic article toolkit", "Note-taking templates"],
+      },
+      {
+        id: "c1-mod-3",
+        title: "Negotiation Finnish",
+        duration: "60 min",
+        outcomes: ["Negotiate terms", "Clarify conditions", "Document agreements"],
+        resources: ["Contract language deck", "Negotiation role-play audio"],
+      },
+    ],
     vocabulary: [
       { finnish: "Kokonaisvaltainen", english: "Holistic" },
       { finnish: "Läpileikkaava kysymys", english: "Cross-cutting issue" },
@@ -347,14 +656,56 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
         bullets: ["kehittäminen", "toteutuminen", "merkityksellisyys", "osallistuminen"],
       },
     ],
-    practice: [
+    listening: [
       {
-        title: "Executive summary",
-        description: "Summarise a Finnish article in 200 words, highlighting key recommendations and next steps.",
+        id: "c1-audio-1",
+        title: "Yliopistostudio",
+        type: "podcast",
+        description: "Academic roundtable discussing social policy research.",
+        difficulty: "Advanced",
       },
       {
+        id: "c1-audio-2",
+        title: "Johtajuus live",
+        type: "video",
+        description: "Livestream of a leadership summit with rapid-fire interviews.",
+        difficulty: "Advanced",
+      },
+      {
+        id: "c1-audio-3",
+        title: "Finno-Beat Playlist",
+        type: "song",
+        description: "Blend of contemporary Finnish electro and indie with complex lyrics.",
+        artist: "Knuut AI Sound Lab",
+        difficulty: "Advanced",
+      },
+    ],
+    culture: [
+      {
+        id: "c1-culture-1",
+        title: "Finland in EU",
+        description: "Explore Finland's role in EU negotiations and related terminology.",
+        activity: "Analyse a news clip and list five negotiation phrases.",
+      },
+      {
+        id: "c1-culture-2",
+        title: "Academic networking",
+        description: "Understand how Finnish academics collaborate and share results.",
+        activity: "Plan a 3-minute research elevator pitch.",
+      },
+    ],
+    assignments: [
+      {
+        id: "c1-assignment-1",
+        title: "Executive summary",
+        description: "Summarise a Finnish article in 200 words, highlighting key recommendations and next steps.",
+        deliverable: "Submit PDF + voice-over summary.",
+      },
+      {
+        id: "c1-assignment-2",
         title: "Facilitation script",
         description: "Design opening remarks for a community workshop using inclusive language and advanced vocabulary.",
+        deliverable: "Upload agenda + script.",
       },
     ],
     drills: [
@@ -372,6 +723,132 @@ const LEVELS: Record<LevelKey, LevelSummary> = {
         id: "c1-drill-3",
         question: "Fill in: 'Toimintaa tarkastellaan ______ (assuming that) resurssit riittävät.'",
         answer: "olettaen että",
+      },
+    ],
+  },
+  C2: {
+    label: "C2",
+    tagline: "Mastery & leadership",
+    message: "Operate at native-level nuance across professional, academic, and cultural contexts while mentoring others.",
+    focusAreas: [
+      "Strategic persuasion & influence",
+      "Specialised terminology across sectors",
+      "High-context cultural cues",
+      "Mentoring and coaching in Finnish",
+    ],
+    modules: [
+      {
+        id: "c2-mod-1",
+        title: "Strategic Finnish",
+        duration: "70 min",
+        outcomes: ["Craft persuasive narratives", "Lead multi-party negotiations", "Frame impact stories"],
+        resources: ["Case study bank", "Advanced rhetoric audio"],
+      },
+      {
+        id: "c2-mod-2",
+        title: "Media Masterclass",
+        duration: "60 min",
+        outcomes: ["Handle interviews", "Moderate panels", "Adapt language to audience"],
+        resources: ["Press conference toolkit", "Media appearance checklists"],
+      },
+      {
+        id: "c2-mod-3",
+        title: "Mentor Playbook",
+        duration: "55 min",
+        outcomes: ["Coach newcomers", "Deliver feedback", "Design learning experiences"],
+        resources: ["Mentor feedback templates", "Buddy support guides"],
+      },
+    ],
+    vocabulary: [
+      { finnish: "Yhteiskuntavastuu", english: "Corporate social responsibility" },
+      { finnish: "Ratkaisukeskeinen", english: "Solution-oriented" },
+      { finnish: "Luottamuksellisuus", english: "Confidentiality" },
+      { finnish: "Sidosryhmädialogi", english: "Stakeholder dialogue" },
+      { finnish: "Vaikuttavuusmittari", english: "Impact metric" },
+      { finnish: "Skaalautuva", english: "Scalable" },
+    ],
+    phrases: [
+      { finnish: "Haluan varmistaa, että kaikki näkökulmat tulevat esiin.", english: "I want to ensure every perspective is voiced." },
+      { finnish: "Voimmeko syventyä tähän teemaan fasilitoidussa työpajassa?", english: "Could we delve deeper into this theme in a facilitated workshop?" },
+      { finnish: "Arvioidaan vaikutuksia yhdessä kumppaneiden kanssa.", english: "Let’s assess the impacts together with partners." },
+    ],
+    grammar: [
+      {
+        title: "Nuanced modality",
+        bullets: ["saattaisi olla", "näyttäisi siltä", "voinee todeta"],
+      },
+      {
+        title: "High-level idioms",
+        bullets: ["tarttua härkää sarvista", "mennä syvään päähän", "olla ajan hermolla"],
+      },
+    ],
+    listening: [
+      {
+        id: "c2-audio-1",
+        title: "Finlandia Forum",
+        type: "podcast",
+        description: "Weekly political analysis with fast-paced debate segments.",
+        difficulty: "Expert",
+      },
+      {
+        id: "c2-audio-2",
+        title: "Symposium LIVE",
+        type: "video",
+        description: "Live-streamed academic symposium capturing spontaneous Q&A exchanges.",
+        difficulty: "Expert",
+      },
+      {
+        id: "c2-audio-3",
+        title: "Nordic Soundscape",
+        type: "song",
+        description: "Modern orchestral and electronic fusion pieces to train comprehension at speed.",
+        artist: "Knuut AI Sound Lab",
+        difficulty: "Expert",
+      },
+    ],
+    culture: [
+      {
+        id: "c2-culture-1",
+        title: "Leading in Finnish",
+        description: "Explore leadership expectations in Finnish organisations and how directness is balanced with empathy.",
+        activity: "Analyse leadership case study and craft a response scenario.",
+      },
+      {
+        id: "c2-culture-2",
+        title: "Mentor circle facilitation",
+        description: "Design and run multicultural peer circles with Finnish facilitation techniques.",
+        activity: "Outline a 60-minute mentor session agenda.",
+      },
+    ],
+    assignments: [
+      {
+        id: "c2-assignment-1",
+        title: "Policy pitch deck",
+        description: "Create a Finnish-language pitch deck advocating for a community innovation project.",
+        deliverable: "Upload deck + voice-over narration.",
+      },
+      {
+        id: "c2-assignment-2",
+        title: "Mentor reflection blog",
+        description: "Write a reflective blog post about guiding a mentee through Finnish integration milestones.",
+        deliverable: "Submit blog draft + summary audio.",
+      },
+    ],
+    drills: [
+      {
+        id: "c2-drill-1",
+        question: "Translate: 'Stakeholder dialogue must remain transparent.'",
+        answer: "Sidosryhmädialogin täytyy pysyä avoimena",
+      },
+      {
+        id: "c2-drill-2",
+        question: "What does 'olla ajan hermolla' mean?",
+        answer: "To keep up with the times",
+      },
+      {
+        id: "c2-drill-3",
+        question: "Fill in: 'Ratkaisumme ______ (seems to be) skaalautuva.'",
+        answer: "näyttäisi olevan",
       },
     ],
   },

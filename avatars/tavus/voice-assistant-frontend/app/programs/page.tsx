@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
-import { useTranslation } from "@/components/i18n/TranslationProvider";
 import { useUserProfile } from "@/context/UserProfileContext";
 
 type TrackWeek = {
@@ -161,13 +160,12 @@ const TRACKS: IntegrationTrack[] = [
 ];
 
 export default function ProgramsPage() {
-  const { t } = useTranslation();
   const { recordAction } = useUserProfile();
   const [room] = useState(new Room());
   const [activeTab, setActiveTab] = useState("programs");
-  const [expandedTrack, setExpandedTrack] = useState<string | null>(TRACKS[0]?.id ?? null);
   const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set());
   const [enrolledTracks, setEnrolledTracks] = useState<Set<string>>(new Set());
+  const [selectedTrack, setSelectedTrack] = useState<IntegrationTrack | null>(null);
 
   const progressByTrack = useMemo(() => {
     return TRACKS.reduce<Record<string, { completed: number; total: number }>>((acc, track) => {
@@ -186,7 +184,10 @@ export default function ProgramsPage() {
   };
 
   const handleEnroll = (track: IntegrationTrack) => {
-    if (enrolledTracks.has(track.id)) return;
+    if (enrolledTracks.has(track.id)) {
+      setSelectedTrack(track);
+      return;
+    }
     setEnrolledTracks((prev) => new Set(prev).add(track.id));
     recordAction({
       id: `track-enroll-${track.id}-${Date.now()}`,
@@ -200,6 +201,7 @@ export default function ProgramsPage() {
         channel: "in-app",
       },
     });
+    setSelectedTrack(track);
   };
 
   const handleCompleteTask = (track: IntegrationTrack, task: { id: string; text: string; xp: number; points: number }) => {
@@ -222,6 +224,10 @@ export default function ProgramsPage() {
     });
   };
 
+  const activeTrackId = Array.from(enrolledTracks)[0];
+  const activeTrack = activeTrackId ? TRACKS.find((track) => track.id === activeTrackId) ?? null : null;
+  const activeProgress = activeTrack ? progressByTrack[activeTrack.id] : null;
+
   return (
     <RoomContext.Provider value={room}>
       <div className="app">
@@ -241,192 +247,292 @@ export default function ProgramsPage() {
           style={{
             flex: 1,
             padding: "40px 28px",
-            background: "#f8fafc",
+            background: "#f3f4f6",
             minHeight: "100vh",
             overflowY: "auto",
             display: "grid",
             gap: 24,
           }}
         >
-          <header
+          <section
             style={{
-              background: "#fff",
-              borderRadius: 20,
-              padding: 24,
-              border: "1px solid #e2e8f0",
-              boxShadow: "0 16px 32px rgba(15, 23, 42, 0.08)",
+              borderRadius: 26,
+              padding: 28,
+              background: "linear-gradient(135deg, #f8fbff 0%, #e0f2fe 45%, #eef2ff 100%)",
+              border: "1px solid rgba(148,163,184,0.25)",
+              boxShadow: "0 24px 44px rgba(99,102,241,0.15)",
               display: "grid",
-              gap: 12,
+              gap: 16,
             }}
           >
-            <p style={{ margin: 0, fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.3, color: "#475569" }}>
-              Programs
-            </p>
-            <h1 style={{ margin: 0, fontSize: "2.5rem", fontWeight: 800, color: "#0f172a" }}>Fast Integration Tracks</h1>
-            <p style={{ margin: 0, color: "#475569" }}>
-              Four-week challenges to move from Explorer → Connector → Mentor. Earn Skill Badges and boost your level as you progress.
-            </p>
-          </header>
-
-          {TRACKS.map((track) => {
-            const progress = progressByTrack[track.id];
-            const percent = progress ? Math.round((progress.completed / progress.total) * 100) : 0;
-            const isEnrolled = enrolledTracks.has(track.id);
-
-            return (
-              <section
-                key={track.id}
+            <div style={{ display: "grid", gap: 10 }}>
+              <span style={{ fontSize: 12, letterSpacing: 1.2, textTransform: "uppercase", fontWeight: 700, color: "#4338ca" }}>
+                Programs
+              </span>
+              <h1 style={{ margin: 0, fontSize: "2.3rem", fontWeight: 800, color: "#111827" }}>Fast Integration Tracks</h1>
+              <p style={{ margin: 0, fontSize: 14.5, color: "#334155", maxWidth: 620 }}>
+                Learn, connect, and grow — one week at a time. Four-week tracks guided by Knuut AI to move you from Explorer to Connector.
+              </p>
+            </div>
+            {activeTrack && activeProgress && (
+              <div
                 style={{
-                  background: "#fff",
-                  borderRadius: 20,
-                  border: "1px solid #e2e8f0",
-                  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.08)",
-                  padding: 24,
-                  display: "grid",
+                  borderRadius: 18,
+                  padding: 18,
+                  background: "rgba(255,255,255,0.85)",
+                  border: "1px solid rgba(148,163,184,0.3)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
                   gap: 16,
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
-                  <div>
-                    <h2 style={{ margin: "0 0 8px 0", fontSize: 22, fontWeight: 700, color: "#0f172a" }}>{track.title}</h2>
-                    <p style={{ margin: 0, color: "#475569" }}>{track.description}</p>
-                    <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                <div>
+                  <strong style={{ fontSize: 14, color: "#1f2937" }}>My active track</strong>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>{activeTrack.title}</div>
+                  <span style={{ fontSize: 12.5, color: "#1d4ed8", fontWeight: 600 }}>
+                    {activeProgress.completed} of {activeProgress.total} tasks complete
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedTrack(activeTrack)}
+                  style={{
+                    padding: "10px 18px",
+                    borderRadius: 14,
+                    border: "none",
+                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                    color: "#fff",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  Continue track
+                </button>
+              </div>
+            )}
+          </section>
+
+          <section
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: 20,
+            }}
+          >
+            {TRACKS.map((track) => {
+              const progress = progressByTrack[track.id];
+              const percent = progress ? Math.round((progress.completed / progress.total) * 100) : 0;
+              const isEnrolled = enrolledTracks.has(track.id);
+
+              return (
+                <article
+                  key={track.id}
+                  style={{
+                    borderRadius: 22,
+                    padding: 22,
+                    background: "#fff",
+                    border: "1px solid #e2e8f0",
+                    boxShadow: "0 18px 32px rgba(148,163,184,0.12)",
+                    display: "grid",
+                    gap: 16,
+                  }}
+                >
+                  <div style={{ display: "grid", gap: 8 }}>
+                    <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#0f172a" }}>{track.title}</h2>
+                    <p style={{ margin: 0, fontSize: 13.5, color: "#475569" }}>{track.description}</p>
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                       <span
                         style={{
                           padding: "6px 10px",
                           borderRadius: 999,
-                          background: "#eef2ff",
-                          border: "1px solid #c7d2fe",
+                          background: "rgba(67,56,202,0.12)",
                           color: "#4338ca",
                           fontSize: 12,
-                          fontWeight: 700,
+                          fontWeight: 600,
+                        }}
+                      >
+                        🕓 4 weeks
+                      </span>
+                      <span
+                        style={{
+                          padding: "6px 10px",
+                          borderRadius: 999,
+                          background: "rgba(59,130,246,0.12)",
+                          color: "#1d4ed8",
+                          fontSize: 12,
+                          fontWeight: 600,
                         }}
                       >
                         {track.badge}
                       </span>
-                      <span style={{ fontSize: 12, color: "#166534", fontWeight: 700 }}>+{track.xp} XP</span>
+                      <span
+                        style={{
+                          padding: "6px 10px",
+                          borderRadius: 999,
+                          background: "rgba(34,197,94,0.12)",
+                          color: "#15803d",
+                          fontSize: 12,
+                          fontWeight: 600,
+                        }}
+                      >
+                        +{track.xp} XP
+                      </span>
                     </div>
                   </div>
-                  <div style={{ minWidth: 180, textAlign: "right" }}>
-                    <div style={{ fontSize: 12, color: "#475569", marginBottom: 6 }}>Progress</div>
-                    <div style={{ height: 12, borderRadius: 999, background: "#e2e8f0", position: "relative", overflow: "hidden" }}>
+
+                  <div style={{ display: "grid", gap: 8 }}>
+                    <div style={{ height: 8, borderRadius: 999, background: "#e2e8f0", overflow: "hidden" }}>
                       <div
                         style={{
-                          position: "absolute",
-                          inset: 0,
                           width: `${percent}%`,
+                          height: "100%",
                           background: "linear-gradient(135deg, #22d3ee, #6366f1)",
                           transition: "width 0.3s ease",
                         }}
                       />
                     </div>
-                    <div style={{ fontSize: 12, color: "#475569", marginTop: 6 }}>
-                      {progress.completed} / {progress.total} tasks
-                    </div>
+                    <span style={{ fontSize: 12, color: "#475569" }}>Progress: {percent}%</span>
                   </div>
-                </div>
 
-                <div style={{ display: "flex", gap: 12 }}>
                   <button
                     type="button"
-                    onClick={() => setExpandedTrack(expandedTrack === track.id ? null : track.id)}
+                    onClick={() => (isEnrolled ? setSelectedTrack(track) : handleEnroll(track))}
                     style={{
                       padding: "10px 16px",
-                      borderRadius: 12,
-                      border: "1px solid #cbd5f5",
-                      background: "#fff",
+                      borderRadius: 14,
+                      border: "none",
+                      background: isEnrolled ? "rgba(59,130,246,0.12)" : "linear-gradient(135deg, #22c55e, #16a34a)",
+                      color: isEnrolled ? "#1d4ed8" : "#fff",
                       fontWeight: 600,
                       cursor: "pointer",
                     }}
                   >
-                    {expandedTrack === track.id ? "Hide weekly plan" : "View weekly plan"}
+                    {isEnrolled ? "View track" : "Join track"}
                   </button>
+                </article>
+              );
+            })}
+          </section>
+
+          {selectedTrack && (
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="track-detail-title"
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(15,23,42,0.4)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 20,
+                zIndex: 2000,
+              }}
+            >
+              <div
+                style={{
+                  width: "min(90%, 720px)",
+                  maxHeight: "90vh",
+                  overflowY: "auto",
+                  background: "#fff",
+                  borderRadius: 24,
+                  padding: 28,
+                  display: "grid",
+                  gap: 20,
+                  boxShadow: "0 30px 60px rgba(15,23,42,0.35)",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+                  <div>
+                    <h2 id="track-detail-title" style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                      {selectedTrack.title}
+                    </h2>
+                    <p style={{ margin: "6px 0 0 0", color: "#475569" }}>{selectedTrack.description}</p>
+                  </div>
                   <button
                     type="button"
-                    onClick={() => handleEnroll(track)}
-                    disabled={isEnrolled}
+                    onClick={() => setSelectedTrack(null)}
                     style={{
-                      padding: "10px 16px",
-                      borderRadius: 12,
                       border: "none",
-                      background: isEnrolled ? "#bbf7d0" : "linear-gradient(135deg, #22c55e, #16a34a)",
-                      color: isEnrolled ? "#166534" : "#fff",
-                      fontWeight: 700,
-                      cursor: isEnrolled ? "default" : "pointer",
+                      background: "transparent",
+                      fontSize: 24,
+                      color: "#94a3b8",
+                      cursor: "pointer",
                     }}
+                    aria-label="Close track details"
                   >
-                    {isEnrolled ? "Enrolled" : "Join track"}
+                    ×
                   </button>
                 </div>
 
-                {expandedTrack === track.id && (
-                  <div style={{ display: "grid", gap: 16, marginTop: 8 }}>
-                    {track.weeks.map((week) => (
-                      <div
-                        key={week.title}
-                        style={{
-                          padding: 18,
-                          borderRadius: 14,
-                          background: "#f8fafc",
-                          border: "1px solid #e2e8f0",
-                          display: "grid",
-                          gap: 12,
-                        }}
-                      >
-                        <div>
-                          <h3 style={{ margin: "0 0 4px 0", fontSize: 16, fontWeight: 700, color: "#0f172a" }}>{week.title}</h3>
-                          <p style={{ margin: 0, fontSize: 13, color: "#475569" }}>{week.focus}</p>
-                        </div>
-                        <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
-                          {week.tasks.map((task) => (
-                            <li
-                              key={task.id}
+                {selectedTrack.weeks.map((week) => (
+                  <div
+                    key={week.title}
+                    style={{
+                      borderRadius: 18,
+                      border: "1px solid #e2e8f0",
+                      background: "#f8fafc",
+                      padding: 20,
+                      display: "grid",
+                      gap: 12,
+                    }}
+                  >
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: "#0f172a" }}>{week.title}</h3>
+                      <p style={{ margin: "4px 0 0 0", fontSize: 13.5, color: "#475569" }}>{week.focus}</p>
+                    </div>
+                    <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: 10 }}>
+                      {week.tasks.map((task) => {
+                        const done = completedTasks.has(task.id);
+                        return (
+                          <li
+                            key={task.id}
+                            style={{
+                              padding: 14,
+                              borderRadius: 14,
+                              background: done ? "#ecfdf5" : "#fff",
+                              border: done ? "1px solid #bbf7d0" : "1px solid #e2e8f0",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              gap: 12,
+                              flexWrap: "wrap",
+                            }}
+                          >
+                            <div style={{ display: "grid", gap: 4 }}>
+                              <span style={{ fontSize: 13.5, color: "#0f172a", fontWeight: 600 }}>{task.text}</span>
+                              <span style={{ fontSize: 12.5, color: "#15803d", fontWeight: 600 }}>
+                                +{task.xp} XP · +{task.points} pts
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleCompleteTask(selectedTrack, task)}
+                              disabled={done}
                               style={{
-                                padding: 12,
+                                padding: "8px 14px",
                                 borderRadius: 12,
-                                background: completedTasks.has(task.id) ? "#ecfdf5" : "#fff",
-                                border: completedTasks.has(task.id) ? "1px solid #bbf7d0" : "1px solid #e2e8f0",
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                gap: 12,
-                                flexWrap: "wrap",
+                                border: "none",
+                                background: done ? "#bbf7d0" : "linear-gradient(135deg, #2563eb, #7c3aed)",
+                                color: done ? "#166534" : "#fff",
+                                fontWeight: 600,
+                                cursor: done ? "default" : "pointer",
                               }}
                             >
-                              <div>
-                                <div style={{ fontSize: 13, color: "#0f172a", fontWeight: 600 }}>{task.text}</div>
-                                <div style={{ fontSize: 12, color: "#22c55e", fontWeight: 700 }}>
-                                  +{task.xp} XP · +{task.points} pts
-                                </div>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => handleCompleteTask(track, task)}
-                                disabled={completedTasks.has(task.id)}
-                                style={{
-                                  padding: "8px 12px",
-                                  borderRadius: 10,
-                                  border: "none",
-                                  background: completedTasks.has(task.id)
-                                    ? "#bbf7d0"
-                                    : "linear-gradient(135deg, #2563eb, #7c3aed)",
-                                  color: completedTasks.has(task.id) ? "#166534" : "#fff",
-                                  fontWeight: 700,
-                                  cursor: completedTasks.has(task.id) ? "default" : "pointer",
-                                }}
-                              >
-                                {completedTasks.has(task.id) ? "Done" : "Mark done"}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
+                              {done ? "Done" : "Mark done"}
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
-                )}
-              </section>
-            );
-          })}
+                ))}
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </RoomContext.Provider>
