@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import FlashCard, { FlashCardData } from "./FlashCard";
 import { useRoomContext, useVoiceAssistant } from "@livekit/components-react";
+import { useUserProfile } from "@/context/UserProfileContext";
 
 export default function FlashCardContainer() {
   const [flashCards, setFlashCards] = useState<FlashCardData[]>([]);
@@ -9,6 +10,7 @@ export default function FlashCardContainer() {
   const [isVisible, setIsVisible] = useState(false);
   const room = useRoomContext();
   const { agent } = useVoiceAssistant();
+  const { saveFlashcard } = useUserProfile();
 
   useEffect(() => {
     if (!room) return;
@@ -51,6 +53,16 @@ export default function FlashCardContainer() {
             }
           });
           
+          // Save to learning history
+          saveFlashcard({
+            id: payload.id,
+            question: payload.question,
+            answer: payload.answer,
+            createdAt: new Date().toISOString(),
+            topic: payload.topic || "Finnish Learning",
+            reviewedCount: 0,
+          });
+          
           setCurrentCardIndex(payload.index !== undefined ? payload.index : flashCards.length);
           setIsVisible(true);
         } else if (payload.action === "flip") {
@@ -81,7 +93,7 @@ export default function FlashCardContainer() {
       // Clean up RPC method when component unmounts
       room.localParticipant.unregisterRpcMethod("client.flashcard");
     };
-  }, [room]);
+  }, [room, saveFlashcard, flashCards.length]);
 
   const handleFlip = async (id: string) => {
     try {

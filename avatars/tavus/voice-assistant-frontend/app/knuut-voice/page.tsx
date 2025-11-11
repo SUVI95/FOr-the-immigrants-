@@ -21,6 +21,7 @@ import EventContainer from "@/components/EventContainer";
 import { CloseIcon } from "@/components/CloseIcon";
 import { NoAgentNotification } from "@/components/NoAgentNotification";
 import FlashcardPanel from "@/components/FlashcardPanel";
+import LearningHistoryPanel from "@/components/LearningHistoryPanel";
 import useReduceConsoleNoise from "@/hooks/useReduceConsoleNoise";
 import type { ConnectionDetails } from "../api/connection-details/route";
 import { useTranslation } from "@/components/i18n/TranslationProvider";
@@ -649,6 +650,7 @@ export default function KnuutVoicePage() {
         </main>
 
         <RoomAudioRenderer />
+        <LearningHistoryPanel />
       </div>
     </RoomContext.Provider>
   );

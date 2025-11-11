@@ -43,6 +43,47 @@ type SkillPassportEntry = {
   details?: string;
 };
 
+type LearningFlashCard = {
+  id: string;
+  question: string;
+  answer: string;
+  createdAt: string;
+  topic?: string;
+  reviewedCount: number;
+  lastReviewedAt?: string;
+};
+
+type LearningQuiz = {
+  id: string;
+  title: string;
+  questions: Array<{
+    id: string;
+    text: string;
+    answers: Array<{ id: string; text: string; isCorrect?: boolean }>;
+  }>;
+  createdAt: string;
+  completedAt?: string;
+  score?: number;
+  topic?: string;
+};
+
+type LearningLesson = {
+  id: string;
+  title: string;
+  content: string;
+  topic: string;
+  createdAt: string;
+  completedAt?: string;
+  notes?: string;
+};
+
+type LearningHistory = {
+  flashcards: LearningFlashCard[];
+  quizzes: LearningQuiz[];
+  lessons: LearningLesson[];
+  lastUpdatedAt: string;
+};
+
 type PathwayNode = {
   id: string;
   title: string;
@@ -147,6 +188,7 @@ type UserProfileState = {
       createdAt: string;
     }
   >;
+  learningHistory: LearningHistory;
 };
 
 type UserProfileAction =
@@ -155,7 +197,12 @@ type UserProfileAction =
   | { type: "TOGGLE_AUDIO_ASSIST" }
   | { type: "MARK_VERIFIED"; payload: Partial<SafetyState> }
   | { type: "UPDATE_GOALS"; payload: string[] }
-  | { type: "RESET_WEEKLY_METRICS" };
+  | { type: "RESET_WEEKLY_METRICS" }
+  | { type: "SAVE_FLASHCARD"; payload: LearningFlashCard }
+  | { type: "SAVE_QUIZ"; payload: LearningQuiz }
+  | { type: "SAVE_LESSON"; payload: LearningLesson }
+  | { type: "UPDATE_FLASHCARD"; payload: { id: string; updates: Partial<LearningFlashCard> } }
+  | { type: "DELETE_LEARNING_ITEM"; payload: { type: "flashcard" | "quiz" | "lesson"; id: string } };
 
 type UserProfileContextValue = {
   state: UserProfileState;
@@ -164,6 +211,11 @@ type UserProfileContextValue = {
   toggleAudioAssist: () => void;
   markVerified: (payload: Partial<SafetyState>) => void;
   updateGoals: (goals: string[]) => void;
+  saveFlashcard: (flashcard: LearningFlashCard) => void;
+  saveQuiz: (quiz: LearningQuiz) => void;
+  saveLesson: (lesson: LearningLesson) => void;
+  updateFlashcard: (id: string, updates: Partial<LearningFlashCard>) => void;
+  deleteLearningItem: (type: "flashcard" | "quiz" | "lesson", id: string) => void;
 };
 
 const LEVEL_THRESHOLDS: Array<{
@@ -319,6 +371,12 @@ const INITIAL_STATE: UserProfileState = {
   },
   reminders: [],
   actionHistory: {},
+  learningHistory: {
+    flashcards: [],
+    quizzes: [],
+    lessons: [],
+    lastUpdatedAt: new Date().toISOString(),
+  },
 };
 
 const UserProfileContext = createContext<UserProfileContextValue | undefined>(undefined);
@@ -553,10 +611,90 @@ function userProfileReducer(state: UserProfileState, action: UserProfileAction):
           })),
         },
       };
+    case "SAVE_FLASHCARD": {
+      const exists = state.learningHistory.flashcards.some((f) => f.id === action.payload.id);
+      return {
+        ...state,
+        learningHistory: {
+          ...state.learningHistory,
+          flashcards: exists
+            ? state.learningHistory.flashcards.map((f) =>
+                f.id === action.payload.id ? action.payload : f
+              )
+            : [action.payload, ...state.learningHistory.flashcards],
+          lastUpdatedAt: new Date().toISOString(),
+        },
+      };
+    }
+    case "SAVE_QUIZ": {
+      const exists = state.learningHistory.quizzes.some((q) => q.id === action.payload.id);
+      return {
+        ...state,
+        learningHistory: {
+          ...state.learningHistory,
+          quizzes: exists
+            ? state.learningHistory.quizzes.map((q) =>
+                q.id === action.payload.id ? action.payload : q
+              )
+            : [action.payload, ...state.learningHistory.quizzes],
+          lastUpdatedAt: new Date().toISOString(),
+        },
+      };
+    }
+    case "SAVE_LESSON": {
+      const exists = state.learningHistory.lessons.some((l) => l.id === action.payload.id);
+      return {
+        ...state,
+        learningHistory: {
+          ...state.learningHistory,
+          lessons: exists
+            ? state.learningHistory.lessons.map((l) =>
+                l.id === action.payload.id ? action.payload : l
+              )
+            : [action.payload, ...state.learningHistory.lessons],
+          lastUpdatedAt: new Date().toISOString(),
+        },
+      };
+    }
+    case "UPDATE_FLASHCARD":
+      return {
+        ...state,
+        learningHistory: {
+          ...state.learningHistory,
+          flashcards: state.learningHistory.flashcards.map((f) =>
+            f.id === action.payload.id ? { ...f, ...action.payload.updates } : f
+          ),
+          lastUpdatedAt: new Date().toISOString(),
+        },
+      };
+    case "DELETE_LEARNING_ITEM": {
+      const { type, id } = action.payload;
+      return {
+        ...state,
+        learningHistory: {
+          ...state.learningHistory,
+          flashcards:
+            type === "flashcard"
+              ? state.learningHistory.flashcards.filter((f) => f.id !== id)
+              : state.learningHistory.flashcards,
+          quizzes:
+            type === "quiz"
+              ? state.learningHistory.quizzes.filter((q) => q.id !== id)
+              : state.learningHistory.quizzes,
+          lessons:
+            type === "lesson"
+              ? state.learningHistory.lessons.filter((l) => l.id !== id)
+              : state.learningHistory.lessons,
+          lastUpdatedAt: new Date().toISOString(),
+        },
+      };
+    }
     default:
       return state;
   }
 }
+
+export type { LearningFlashCard, LearningQuiz, LearningLesson, LearningHistory };
 
 export function UserProfileProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(userProfileReducer, INITIAL_STATE);
@@ -566,6 +704,13 @@ export function UserProfileProvider({ children }: { children: React.ReactNode })
   const toggleAudioAssist = () => dispatch({ type: "TOGGLE_AUDIO_ASSIST" });
   const markVerified = (payload: Partial<SafetyState>) => dispatch({ type: "MARK_VERIFIED", payload });
   const updateGoals = (goals: string[]) => dispatch({ type: "UPDATE_GOALS", payload: goals.filter(Boolean) });
+  const saveFlashcard = (flashcard: LearningFlashCard) => dispatch({ type: "SAVE_FLASHCARD", payload: flashcard });
+  const saveQuiz = (quiz: LearningQuiz) => dispatch({ type: "SAVE_QUIZ", payload: quiz });
+  const saveLesson = (lesson: LearningLesson) => dispatch({ type: "SAVE_LESSON", payload: lesson });
+  const updateFlashcard = (id: string, updates: Partial<LearningFlashCard>) =>
+    dispatch({ type: "UPDATE_FLASHCARD", payload: { id, updates } });
+  const deleteLearningItem = (type: "flashcard" | "quiz" | "lesson", id: string) =>
+    dispatch({ type: "DELETE_LEARNING_ITEM", payload: { type, id } });
 
   const value = useMemo(
     () => ({
@@ -575,6 +720,11 @@ export function UserProfileProvider({ children }: { children: React.ReactNode })
       toggleAudioAssist,
       markVerified,
       updateGoals,
+      saveFlashcard,
+      saveQuiz,
+      saveLesson,
+      updateFlashcard,
+      deleteLearningItem,
     }),
     [state],
   );

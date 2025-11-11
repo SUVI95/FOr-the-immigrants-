@@ -17,6 +17,7 @@ export default function QuizContainer() {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
   const room = useRoomContext();
   const { agent } = useVoiceAssistant();
+  const { saveQuiz } = useUserProfile();
 
   useEffect(() => {
     if (!room) return;
@@ -46,6 +47,23 @@ export default function QuizContainer() {
           setQuestions(payload.questions);
           setCurrentQuestionIndex(0);
           setIsVisible(true);
+          
+          // Save to learning history
+          saveQuiz({
+            id: payload.id,
+            title: payload.title || "Finnish Quiz",
+            questions: payload.questions.map((q: any) => ({
+              id: q.id,
+              text: q.text,
+              answers: q.answers.map((a: any) => ({
+                id: a.id,
+                text: a.text,
+                isCorrect: a.is_correct || a.isCorrect,
+              })),
+            })),
+            createdAt: new Date().toISOString(),
+            topic: payload.topic || "Finnish Learning",
+          });
         } else if (payload.action === "hide") {
           setIsVisible(false);
         }
@@ -66,7 +84,7 @@ export default function QuizContainer() {
       // Clean up RPC method when component unmounts
       room.localParticipant.unregisterRpcMethod("client.quiz");
     };
-  }, [room]);
+  }, [room, saveQuiz]);
 
   const handleAnswerSelect = (questionId: string, answerId: string) => {
     setSelectedAnswers(prev => ({
