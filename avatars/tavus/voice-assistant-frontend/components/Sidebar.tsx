@@ -162,156 +162,45 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
 
         <div className="nav" ref={navRef}>
           <div className="nav-section">
-            <div className="nav-section-title">{t("actions")}</div>
+            <div className="nav-section-title">Core</div>
             <button
-              className={`nav-btn ${activeTab === "explore" || currentPath === "/" ? "active" : ""}`}
-              onClick={() => onTabChange("explore")}
+              className={`nav-btn ${currentPath === "/" || currentPath.startsWith("/journey") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/journey"; }}
             >
-              <i className="fa-solid fa-compass"></i>
-              <span>{t("explore")}</span>
-            </button>
-            <button
-              className={`nav-btn ${currentPath.startsWith("/events") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/events"; }}
-            >
-              <i className="fa-solid fa-calendar-days"></i>
-              <span>{t("events")}</span>
-            </button>
-            <button
-              className={`nav-btn ${currentPath.startsWith("/groups") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/groups"; }}
-            >
-              <i className="fa-solid fa-people-group"></i>
-              <span>{t("groups")}</span>
-            </button>
-            <button
-              className={`nav-btn ${currentPath.startsWith("/resources") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/resources"; }}
-            >
-              <i className="fa-solid fa-book"></i>
-              <span>{t("resources")}</span>
-            </button>
-            <button
-              className={`nav-btn ${currentPath.startsWith("/learn-finnish") ? "active" : ""}`}
-              onClick={() => {
-                if (onLearnFinnishClick) {
-                  onLearnFinnishClick();
-                } else {
-                  window.location.href = "/learn-finnish";
-                }
-              }}
-            >
-              <i className="fa-solid fa-language"></i>
-              <span>{t("learn_finnish")}</span>
+              <i className="fa-solid fa-route"></i>
+              <span>Journey</span>
             </button>
             <button
               className={`nav-btn ${currentPath.startsWith("/knuut-voice") ? "active" : ""}`}
               onClick={() => { window.location.href = "/knuut-voice"; }}
             >
               <i className="fa-solid fa-microphone-lines"></i>
-              <span>{t("voice")}</span>
-            </button>
-          </div>
-
-          <div className="nav-section">
-            <div className="nav-section-title">{t("connections")}</div>
-            <button
-              className={`nav-btn ${currentPath.startsWith("/connect-by-skills") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/connect-by-skills"; }}
-            >
-              <i className="fa-solid fa-people-arrows"></i>
-              <span>{t("connect_by_skills")}</span>
-            </button>
-            <button
-              className={`nav-btn ${currentPath.startsWith("/companies") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/companies"; }}
-            >
-              <i className="fa-solid fa-city"></i>
-              <span>{t("companies_training")}</span>
+              <span>Voice</span>
             </button>
             <button
               className={`nav-btn ${currentPath.startsWith("/work-opportunities") ? "active" : ""}`}
               onClick={() => { window.location.href = "/work-opportunities"; }}
             >
               <i className="fa-solid fa-briefcase"></i>
-              <span>{t("work_opportunities")}</span>
+              <span>Work</span>
             </button>
-          </div>
-
-          <div className="nav-section">
-            <div className="nav-section-title">{t("profile_progress")}</div>
             <button
-              className={`nav-btn ${currentPath.startsWith("/my-journey") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/my-journey"; }}
+              className={`nav-btn ${currentPath.startsWith("/community") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/community"; }}
             >
-              <i className="fa-solid fa-wallet"></i>
-              <span>{t("my_journey")}</span>
+              <i className="fa-solid fa-people-group"></i>
+              <span>Community</span>
             </button>
             <button
               className={`nav-btn ${currentPath.startsWith("/smart-cv-builder") ? "active" : ""}`}
               onClick={() => { window.location.href = "/smart-cv-builder"; }}
             >
               <i className="fa-solid fa-file-lines"></i>
-              <span>{t("smart_cv_builder")}</span>
+              <span>CV</span>
             </button>
           </div>
         </div>
 
-        {/* Content based on active tab (resources moved to dedicated page) */}
-        <div style={{ marginTop: "24px", maxHeight: "calc(100vh - 300px)", overflowY: "auto" }}>
-          {activeTab === "events" && (
-            <div>
-              <div className="section-title">UPCOMING EVENTS</div>
-              {events.length === 0 ? (
-                <p style={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "14px", marginTop: "12px", lineHeight: "1.6" }}>
-                  No upcoming events found. Try creating one or asking Knuut AI!
-                </p>
-              ) : (
-                <div className="res-list">
-                  {events.map((event) => (
-                    <EventCard
-                      key={event.id}
-                      event={event}
-                      onRSVP={handleRSVP}
-                      onViewMap={handleViewMap}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === "groups" && (
-            <div>
-              <div className="section-title">COMMUNITY GROUPS</div>
-              {groups.length === 0 ? (
-                <p style={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "14px", marginTop: "12px", lineHeight: "1.6" }}>
-                  No groups found. Be the first to create one!
-                </p>
-              ) : (
-                <div className="res-list">
-                  {groups.map((group) => (
-                    <GroupCard
-                      key={group.id}
-                      group={group}
-                      onJoin={handleJoinGroup}
-                      onViewMap={handleViewMap}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === "resources" && null}
-
-          {activeTab === "create" && (
-            <div>
-              <div className="section-title">CREATE EVENT</div>
-              <CreateEventForm onSubmit={handleCreateEvent} />
-            </div>
-          )}
-        </div>
       </aside>
 
       {/* CV moved to dedicated page */}
