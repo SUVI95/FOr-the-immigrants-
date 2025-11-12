@@ -82,12 +82,12 @@ export default function KnuutVoicePage() {
           new Promise((_, reject) => setTimeout(() => reject(new Error("Microphone enable timeout")), 5000))
         ]);
         console.log("✅ Microphone enabled");
-      } catch (e) {
+    } catch (e) {
         console.warn("⚠️ Microphone enable failed or timed out:", e);
-      }
+    }
 
       // Dispatch agent with timeout
-      try {
+    try {
         console.log("🔄 Dispatching agent...");
         const dispatchResponse = await Promise.race([
           fetch("/api/dispatch", {
@@ -482,8 +482,8 @@ export default function KnuutVoicePage() {
                       e.currentTarget.style.transform = "translateY(0) scale(1)";
                       e.currentTarget.style.boxShadow = "0 8px 16px rgba(0,0,0,0.08)";
                       e.currentTarget.style.borderColor = `${chip.color}40`;
-                    }}
-                  >
+                  }}
+                >
                     <span style={{ fontSize: "18px" }}>{chip.icon}</span>
                     <span>{chip.label}</span>
                 </button>
@@ -617,7 +617,7 @@ export default function KnuutVoicePage() {
                   alignItems: "center",
                   justifyContent: "center",
                   boxShadow: "0 12px 24px rgba(124,58,237,0.25)"
-                }}>
+            }}>
                   <span className="fa-solid fa-brain" style={{
                     fontSize: 22,
                     color: "#ffffff"
@@ -749,7 +749,7 @@ function VoiceAssistantContent() {
                 alignItems: "center",
                 justifyContent: "center",
                 boxShadow: "0 8px 16px rgba(251,191,36,0.3)"
-              }}>
+          }}>
                 <span className="fa-solid fa-hourglass-half" style={{
                   color: "#ffffff",
                   fontSize: 18,
@@ -772,7 +772,7 @@ function VoiceAssistantContent() {
                   fontWeight: 500
                 }}>
                   Agent state: {agentState}
-                </p>
+            </p>
               </div>
             </div>
           </div>

@@ -112,6 +112,13 @@ const QUICK_CHALLENGES: QuickChallenge[] = [
   { id: "qc-numbers", label: "Master numbers 1-100", xp: 25, icon: "🔢", time: "6 min" },
 ];
 
+const LEARNING_STATS = {
+  activeLearners: 89,
+  lessonsCompletedToday: 127,
+  wordsLearnedThisWeek: 342,
+  averageProgress: 68,
+};
+
 function ProgressRing({ percent, size = 80, strokeWidth = 8, color }: { percent: number; size?: number; strokeWidth?: number; color: string }) {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -288,23 +295,24 @@ export default function LearnFinnishPage() {
                 transition={{ duration: 0.6 }}
                 style={{ display: "grid", gap: 16, flex: "1 1 400px", minWidth: 0 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <motion.span
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                    style={{
-                      padding: "8px 16px",
-                      borderRadius: 999,
-                      background: "rgba(255,255,255,0.25)",
+                <div style={{ display: "grid", gap: 12 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                    <motion.span
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                      style={{
+                        padding: "8px 16px",
+                        borderRadius: 999,
+                        background: "rgba(255,255,255,0.25)",
                       backdropFilter: "blur(10px)",
                       fontSize: 12,
                       fontWeight: 700,
                       letterSpacing: 1.2,
                       color: "#ffffff",
                       border: "1px solid rgba(255,255,255,0.3)",
-                    }}
-                  >
+              }}
+            >
                     🎓 COMPLETE FINNISH CURRICULUM
                   </motion.span>
                 </div>
@@ -360,8 +368,8 @@ export default function LearnFinnishPage() {
                       fontSize: 15,
                     cursor: "pointer",
                       boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
-                    }}
-                  >
+                  }}
+                >
                     Start Practicing →
                   </motion.button>
                   <motion.button
@@ -870,8 +878,8 @@ export default function LearnFinnishPage() {
                         display: "flex",
                         alignItems: "center",
                         gap: 4,
-                      }}
-                    >
+                    }}
+                  >
                       ✓ Verified
                     </span>
                   </div>

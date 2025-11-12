@@ -51,12 +51,12 @@ const JOB_OPPORTUNITIES: JobOpportunity[] = [
     city: "Kajaani",
     language: "Finnish A2",
     type: "Internship",
-    description: "Paid 6-week internship covering prep work, service Finnish, and customer flow.",
+    description: "Paid 6-week internship covering prep work, service Finnish, and customer flow. 12 people applied this week.",
     requirements: ["Food Service track completed", "Motivation letter", "Basic Finnish"],
     xpReward: 70,
     deadline: "Apply by 20 Nov",
     link: "https://example.com/kitchen-internship",
-    tags: ["Inclusive Employer", "Internship"],
+    tags: ["Inclusive Employer", "Internship", "Popular"],
   },
   {
     id: "job-2",
@@ -379,21 +379,39 @@ export default function WorkOpportunitiesPage() {
             boxShadow: "0 34px 62px rgba(14,165,233,0.26)",
           }}
         >
-          <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: 1.4, textTransform: "uppercase", opacity: 0.85 }}>
-            Work Opportunities
-          </span>
-          <h1 style={{ margin: 0, fontSize: "2.2rem", lineHeight: 1.15, fontWeight: 800 }}>
-            {workNowFilter 
-              ? "Jobs That Welcome Newcomers - English-Friendly Opportunities"
-              : "Build your next step — job, internship, or training — all in one place."}
-          </h1>
-          <p style={{ margin: 0, fontSize: "1.05rem", maxWidth: 720, lineHeight: 1.7, opacity: 0.95 }}>
-            {workNowFilter
-              ? "Explore opportunities that don't require perfect Finnish. Many employers in Kajaani offer training, mentoring, and support. Find roles where you can learn the language naturally while building your career."
-              : "Knuut connects your skills, goals, and learning journey directly to real opportunities. Find roles that match your Finnish level, apply in seconds with your Smart CV, and grow your experience every time you act."}
-          </p>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, flexWrap: "wrap" }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: 1.4, textTransform: "uppercase", opacity: 0.85 }}>
+                Work Opportunities
+              </span>
+              <h1 style={{ margin: "8px 0", fontSize: "2.2rem", lineHeight: 1.15, fontWeight: 800 }}>
+                {workNowFilter 
+                  ? "Jobs That Welcome Newcomers - English-Friendly Opportunities"
+                  : "Build your next step — job, internship, or training — all in one place."}
+              </h1>
+              <p style={{ margin: 0, fontSize: "1.05rem", maxWidth: 720, lineHeight: 1.7, opacity: 0.95 }}>
+                {workNowFilter
+                  ? "Explore opportunities that don't require perfect Finnish. Many employers in Kajaani offer training, mentoring, and support. Find roles where you can learn the language naturally while building your career."
+                  : "Knuut connects your skills, goals, and learning journey directly to real opportunities. Find roles that match your Finnish level, apply in seconds with your Smart CV, and grow your experience every time you act."}
+              </p>
+            </div>
+            <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+              <div style={{ textAlign: "center", padding: "12px 16px", background: "rgba(255,255,255,0.2)", borderRadius: 12 }}>
+                <div style={{ fontSize: 20, fontWeight: 800 }}>23</div>
+                <div style={{ fontSize: 11, opacity: 0.9 }}>Active Jobs</div>
+              </div>
+              <div style={{ textAlign: "center", padding: "12px 16px", background: "rgba(255,255,255,0.2)", borderRadius: 12 }}>
+                <div style={{ fontSize: 20, fontWeight: 800 }}>47</div>
+                <div style={{ fontSize: 11, opacity: 0.9 }}>Applications This Week</div>
+              </div>
+              <div style={{ textAlign: "center", padding: "12px 16px", background: "rgba(255,255,255,0.2)", borderRadius: 12 }}>
+                <div style={{ fontSize: 20, fontWeight: 800 }}>12</div>
+                <div style={{ fontSize: 11, opacity: 0.9 }}>Hired via Knuut</div>
+              </div>
+            </div>
+          </div>
           {!workNowFilter && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
               <button
                 type="button"
                 onClick={() => {
@@ -413,47 +431,47 @@ export default function WorkOpportunitiesPage() {
               >
                 💼 Jobs for Newcomers (English OK)
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setFieldFilter("Food Service");
-                  setCityFilter("Kajaani");
-                  setLanguageFilter("Finnish A2");
-                  setTypeFilter("Internship");
-                }}
-                style={{
-                  padding: "8px 14px",
-                  borderRadius: 999,
-                  border: "1px solid rgba(248,250,252,0.35)",
-                  background: "rgba(248,250,252,0.16)",
-                  color: "#f8fafc",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Show internships near me
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setFieldFilter("Tech");
-                  setCityFilter("Kajaani");
-                  setLanguageFilter("English");
-                  setTypeFilter("Full-time");
-                }}
-                style={{
-                  padding: "8px 14px",
-                  borderRadius: 999,
-                  border: "1px solid rgba(248,250,252,0.35)",
-                  background: "rgba(248,250,252,0.16)",
-                  color: "#f8fafc",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Switch to tech roles
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setFieldFilter("Food Service");
+                setCityFilter("Kajaani");
+                setLanguageFilter("Finnish A2");
+                setTypeFilter("Internship");
+              }}
+              style={{
+                padding: "8px 14px",
+                borderRadius: 999,
+                border: "1px solid rgba(248,250,252,0.35)",
+                background: "rgba(248,250,252,0.16)",
+                color: "#f8fafc",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Show internships near me
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFieldFilter("Tech");
+                setCityFilter("Kajaani");
+                setLanguageFilter("English");
+                setTypeFilter("Full-time");
+              }}
+              style={{
+                padding: "8px 14px",
+                borderRadius: 999,
+                border: "1px solid rgba(248,250,252,0.35)",
+                background: "rgba(248,250,252,0.16)",
+                color: "#f8fafc",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Switch to tech roles
+            </button>
+          </div>
           )}
         </section>
 

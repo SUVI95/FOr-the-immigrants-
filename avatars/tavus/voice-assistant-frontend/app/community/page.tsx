@@ -43,7 +43,7 @@ const mockGroups: GroupDataLite[] = [
     name: "Kajaani Integration Circle",
     description: "Weekly check-ins, city tips, and a safe space to ask anything about Finnish life.",
     category: "Integration Support",
-    member_count: 45,
+    member_count: 67,
     location_name: "Kajaani Community Center",
     tags: ["Mentor Available", "Beginner Friendly"],
   },
@@ -52,7 +52,7 @@ const mockGroups: GroupDataLite[] = [
     name: "Finnish Language Practice",
     description: "Practice Finnish every week with locals and friendly volunteers.",
     category: "Language",
-    member_count: 38,
+    member_count: 89,
     location_name: "Kajaani Library",
     tags: ["Beginner Friendly"],
   },
@@ -61,7 +61,7 @@ const mockGroups: GroupDataLite[] = [
     name: "Mothers & Families Network",
     description: "Coffee chats, stroller walks, and support for Finnish family paperwork.",
     category: "Family & Community",
-    member_count: 52,
+    member_count: 74,
     location_name: "Family Center",
     tags: ["Child-Friendly"],
   },
@@ -70,8 +70,26 @@ const mockGroups: GroupDataLite[] = [
     name: "Professional Network Kajaani",
     description: "Workshops, CV reviews, and intros to inclusive employers.",
     category: "Career",
-    member_count: 28,
+    member_count: 56,
     location_name: "Kajaani Business Hub",
+    tags: ["Mentor Available"],
+  },
+  {
+    id: "5",
+    name: "Kajaani Cultural Exchange",
+    description: "Share food, music, and stories from across the globe.",
+    category: "Culture",
+    member_count: 48,
+    location_name: "Cultural Center",
+    tags: ["Social"],
+  },
+  {
+    id: "6",
+    name: "Tech & Entrepreneurs Kajaani",
+    description: "Build projects, learn Finnish tech slang, and meet employers.",
+    category: "Tech",
+    member_count: 34,
+    location_name: "Innovation Hub",
     tags: ["Mentor Available"],
   },
 ];
@@ -85,14 +103,14 @@ const mockEvents: ExtendedEventData[] = [
     location_name: "Kajaani Public Library",
     location_lat: 64.2271,
     location_lng: 27.7285,
-    rsvp_count: 12,
+    rsvp_count: 28,
     category: "Language Learning",
     tags: ["Finnish", "Conversation", "Beginner Friendly"],
     featured: true,
     organizer: "Kajaani Integration Center",
     max_capacity: 30,
-    feedback_count: 8,
-    avg_rating: 4.7,
+    feedback_count: 24,
+    avg_rating: 4.8,
   },
   {
     id: "2",
@@ -102,13 +120,13 @@ const mockEvents: ExtendedEventData[] = [
     location_name: "Kajaani Cultural Center",
     location_lat: 64.2271,
     location_lng: 27.7285,
-    rsvp_count: 8,
+    rsvp_count: 34,
     category: "Integration Support",
     tags: ["Newcomers", "Networking"],
     featured: true,
     organizer: "Kajaani Welcome Committee",
     max_capacity: 50,
-    feedback_count: 12,
+    feedback_count: 18,
     avg_rating: 4.9,
   },
   {
@@ -119,12 +137,60 @@ const mockEvents: ExtendedEventData[] = [
     location_name: "Kajaani Park",
     location_lat: 64.22,
     location_lng: 27.73,
-    rsvp_count: 15,
+    rsvp_count: 22,
     category: "Sports & Wellness",
     tags: ["Fitness", "Outdoor"],
     organizer: "Kajaani Sports Club",
     max_capacity: 25,
-    avg_rating: 4.5,
+    avg_rating: 4.7,
+  },
+  {
+    id: "4",
+    title: "Integration Workshop: Kela & DVV",
+    description: "Learn how to register with Kela and DVV, understand benefits, and ask questions to official advisors.",
+    event_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+    location_name: "Kajaani City Hall",
+    location_lat: 64.2271,
+    location_lng: 27.7285,
+    rsvp_count: 41,
+    category: "Workshop",
+    tags: ["Kela", "DVV", "Official"],
+    featured: true,
+    organizer: "Kajaani City Services",
+    max_capacity: 50,
+    feedback_count: 32,
+    avg_rating: 4.9,
+  },
+  {
+    id: "5",
+    title: "International Food Night",
+    description: "Share dishes from home, try new flavors, and celebrate cultures from across Kajaani.",
+    event_date: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000).toISOString(),
+    location_name: "Kajaani Community Center",
+    location_lat: 64.225,
+    location_lng: 27.725,
+    rsvp_count: 19,
+    category: "Cultural",
+    tags: ["Food", "Community"],
+    organizer: "Kajaani Cultural Exchange",
+    max_capacity: 60,
+    feedback_count: 15,
+    avg_rating: 4.9,
+  },
+  {
+    id: "6",
+    title: "Job Search Support Group",
+    description: "Get help with CVs, interviews, and job search strategies tailored for newcomers.",
+    event_date: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString(),
+    location_name: "TE Services Kajaani",
+    location_lat: 64.2271,
+    location_lng: 27.7285,
+    rsvp_count: 31,
+    category: "Professional Development",
+    tags: ["Jobs", "CV", "Career"],
+    organizer: "TE Services",
+    max_capacity: 40,
+    avg_rating: 4.8,
   },
 ];
 
@@ -310,9 +376,25 @@ export default function CommunityPage() {
               <div style={{ position: "relative", zIndex: 1, display: "grid", gap: 20 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <span style={{ fontSize: 48 }}>🤝</span>
-                  <h1 style={{ margin: 0, fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 900, lineHeight: 1.1 }}>
-                    Community
-                  </h1>
+                  <div>
+                    <h1 style={{ margin: 0, fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 900, lineHeight: 1.1 }}>
+                      Community
+                    </h1>
+                    <div style={{ display: "flex", gap: 16, marginTop: 8, flexWrap: "wrap" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: 12, color: "#22c55e" }}>🟢</span>
+                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>47 people online</span>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: 12 }}>📅</span>
+                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>6 events this week</span>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: 12 }}>👥</span>
+                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>368 active members</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <p style={{ margin: 0, fontSize: "1.2rem", lineHeight: 1.7, maxWidth: "800px", opacity: 0.95 }}>
                   Connect with groups, join events, and build your network in Kajaani. Find your people and grow together.

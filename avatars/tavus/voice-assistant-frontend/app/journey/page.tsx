@@ -1,14 +1,116 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
+import { motion } from "framer-motion";
 import Sidebar from "@/components/Sidebar";
 import { useUserProfile } from "@/context/UserProfileContext";
 import { MyPathwayMap } from "@/components/dashboard/MyPathwayMap";
 import { ProgressOverview } from "@/components/dashboard/ProgressOverview";
 import { SkillPassportSummary } from "@/components/dashboard/SkillPassportSummary";
 import { IntegrationHubMap } from "@/components/dashboard/IntegrationHubMap";
+
+type ActivityItem = {
+  id: string;
+  type: "achievement" | "event" | "learning" | "work" | "community";
+  title: string;
+  description: string;
+  timestamp: string;
+  icon: string;
+  xp?: number;
+};
+
+type SuccessStory = {
+  id: string;
+  name: string;
+  role: string;
+  quote: string;
+  achievement: string;
+  avatar?: string;
+};
+
+const LIVE_ACTIVITIES: ActivityItem[] = [
+  {
+    id: "act-1",
+    type: "achievement",
+    title: "🎉 Reached Connector Level!",
+    description: "You've helped 12 people this month and earned 450 XP",
+    timestamp: "2 hours ago",
+    icon: "🌟",
+    xp: 50,
+  },
+  {
+    id: "act-2",
+    type: "learning",
+    title: "📚 Completed A1 Lesson 8",
+    description: "Mastered Finnish greetings and basic introductions",
+    timestamp: "5 hours ago",
+    icon: "📖",
+    xp: 25,
+  },
+  {
+    id: "act-3",
+    type: "event",
+    title: "✅ RSVPed to Finnish Language Café",
+    description: "Event on Nov 16 at Kajaani Library - 12 people going",
+    timestamp: "Yesterday",
+    icon: "📅",
+    xp: 15,
+  },
+  {
+    id: "act-4",
+    type: "work",
+    title: "💼 Applied to Kitchen Internship",
+    description: "Kainuu Hospitality - Application sent with Smart CV",
+    timestamp: "2 days ago",
+    icon: "💼",
+    xp: 30,
+  },
+  {
+    id: "act-5",
+    type: "community",
+    title: "🤝 Joined Professional Network Kajaani",
+    description: "28 members - Workshops and CV reviews available",
+    timestamp: "3 days ago",
+    icon: "👥",
+    xp: 18,
+  },
+];
+
+const SUCCESS_STORIES: SuccessStory[] = [
+  {
+    id: "story-1",
+    name: "Amina",
+    role: "From Syria, arrived 6 months ago",
+    quote: "Knuut helped me find a job in 3 months. The voice practice made my Finnish good enough for interviews.",
+    achievement: "Now working at Kajaani Café",
+    avatar: "👩‍💼",
+  },
+  {
+    id: "story-2",
+    name: "Mohammed",
+    role: "From Iraq, arrived 4 months ago",
+    quote: "I was lost. Knuut connected me to mentors and I got my first job shadowing opportunity.",
+    achievement: "Started internship at Tech Hub",
+    avatar: "👨‍💻",
+  },
+  {
+    id: "story-3",
+    name: "Fatima",
+    role: "From Afghanistan, arrived 8 months ago",
+    quote: "The community groups helped me feel at home. Now I help other mothers navigate Finnish services.",
+    achievement: "Mentor at Mothers & Families Network",
+    avatar: "👩‍👧",
+  },
+];
+
+const COMMUNITY_LIVE_STATS = {
+  peopleOnline: 47,
+  eventsToday: 3,
+  newMembersThisWeek: 23,
+  activeLearners: 89,
+};
 
 export default function JourneyPage() {
   const { state, recordAction } = useUserProfile();
@@ -53,6 +155,19 @@ export default function JourneyPage() {
       reason: "Practice Finnish in a relaxed setting",
       xpReward: 25,
     };
+  }, []);
+
+  const [liveStats, setLiveStats] = useState(COMMUNITY_LIVE_STATS);
+
+  useEffect(() => {
+    // Simulate live updates
+    const interval = setInterval(() => {
+      setLiveStats((prev) => ({
+        ...prev,
+        peopleOnline: prev.peopleOnline + Math.floor(Math.random() * 3) - 1,
+      }));
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleLearnFinnishClick = () => {
@@ -140,8 +255,112 @@ export default function JourneyPage() {
               </div>
             </section>
 
+            {/* Live Community Activity */}
+            <section
+              style={{
+                borderRadius: 20,
+                padding: 24,
+                background: "linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05))",
+                border: "2px solid rgba(34,197,94,0.2)",
+                boxShadow: "0 16px 32px rgba(34,197,94,0.1)",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                <div>
+                  <h2 style={{ margin: "0 0 8px 0", fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
+                    🟢 Community is Active Right Now
+                  </h2>
+                  <p style={{ margin: 0, fontSize: 14, color: "#475569" }}>
+                    See what's happening in Kajaani right now
+                  </p>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 16,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 24, fontWeight: 800, color: "#16a34a" }}>{liveStats.peopleOnline}</div>
+                    <div style={{ fontSize: 12, color: "#64748b" }}>Online</div>
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 24, fontWeight: 800, color: "#16a34a" }}>{liveStats.eventsToday}</div>
+                    <div style={{ fontSize: 12, color: "#64748b" }}>Events Today</div>
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 24, fontWeight: 800, color: "#16a34a" }}>{liveStats.newMembersThisWeek}</div>
+                    <div style={{ fontSize: 12, color: "#64748b" }}>New This Week</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* Quick Stats */}
             <ProgressOverview />
+
+            {/* Recent Activity Feed */}
+            <section
+              style={{
+                borderRadius: 20,
+                padding: 24,
+                background: "#fff",
+                border: "1px solid #e2e8f0",
+                boxShadow: "0 16px 32px rgba(15,23,42,0.08)",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
+                  Your Recent Activity
+                </h2>
+                <span style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Live updates</span>
+              </div>
+              <div style={{ display: "grid", gap: 12 }}>
+                {LIVE_ACTIVITIES.map((activity, index) => (
+                  <motion.div
+                    key={activity.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    style={{
+                      padding: 16,
+                      borderRadius: 12,
+                      background: "#f8fafc",
+                      border: "1px solid #e2e8f0",
+                      display: "flex",
+                      gap: 12,
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <span style={{ fontSize: 24 }}>{activity.icon}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a", marginBottom: 4 }}>
+                        {activity.title}
+                      </div>
+                      <div style={{ fontSize: 13, color: "#475569", marginBottom: 6 }}>{activity.description}</div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 12, color: "#64748b" }}>{activity.timestamp}</span>
+                        {activity.xp && (
+                          <span
+                            style={{
+                              fontSize: 12,
+                              fontWeight: 700,
+                              color: "#16a34a",
+                              padding: "4px 10px",
+                              borderRadius: 6,
+                              background: "rgba(34,197,94,0.1)",
+                            }}
+                          >
+                            +{activity.xp} XP
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
 
             {/* Recently Verified Wins */}
             {recentWins.length > 0 && (
@@ -326,6 +545,68 @@ export default function JourneyPage() {
 
             {/* Skill Passport Summary */}
             <SkillPassportSummary />
+
+            {/* Success Stories */}
+            <section
+              style={{
+                borderRadius: 20,
+                padding: 32,
+                background: "linear-gradient(135deg, rgba(59,130,246,0.05), rgba(139,92,246,0.05))",
+                border: "1px solid rgba(99,102,241,0.2)",
+                boxShadow: "0 16px 32px rgba(99,102,241,0.1)",
+              }}
+            >
+              <div style={{ marginBottom: 24 }}>
+                <h2 style={{ margin: "0 0 8px 0", fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                  💫 Success Stories from Kajaani
+                </h2>
+                <p style={{ margin: 0, fontSize: 15, color: "#475569" }}>
+                  Real people building their lives in Finland with Knuut
+                </p>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+                {SUCCESS_STORIES.map((story) => (
+                  <motion.div
+                    key={story.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{
+                      padding: 24,
+                      borderRadius: 16,
+                      background: "#fff",
+                      border: "1px solid #e2e8f0",
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+                      display: "grid",
+                      gap: 12,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <span style={{ fontSize: 40 }}>{story.avatar}</span>
+                      <div>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>{story.name}</div>
+                        <div style={{ fontSize: 13, color: "#64748b" }}>{story.role}</div>
+                      </div>
+                    </div>
+                    <p style={{ margin: 0, fontSize: 14, color: "#475569", lineHeight: 1.6, fontStyle: "italic" }}>
+                      "{story.quote}"
+                    </p>
+                    <div
+                      style={{
+                        padding: "8px 12px",
+                        borderRadius: 8,
+                        background: "rgba(34,197,94,0.1)",
+                        border: "1px solid rgba(34,197,94,0.2)",
+                      }}
+                    >
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "#16a34a", marginBottom: 4 }}>
+                        Achievement
+                      </div>
+                      <div style={{ fontSize: 13, color: "#0f172a", fontWeight: 600 }}>{story.achievement}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
           </div>
         </main>
       </div>
