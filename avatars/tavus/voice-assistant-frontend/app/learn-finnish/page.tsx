@@ -259,6 +259,7 @@ function DateDisplay({ dateString }: { dateString: string }) {
 
 export default function LearnFinnishPage() {
   const [activeTab, setActiveTab] = useState("explore");
+  const [showAllPuhekieli, setShowAllPuhekieli] = useState(false);
   const [room] = useState(new Room());
   const practiceRef = useRef<HTMLDivElement | null>(null);
   const curriculumRef = useRef<HTMLDivElement | null>(null);
@@ -805,7 +806,7 @@ export default function LearnFinnishPage() {
                 gap: 20,
               }}
             >
-              {PUHEKIELI_CARDS.map((card) => (
+              {(showAllPuhekieli ? PUHEKIELI_CARDS : PUHEKIELI_CARDS.slice(0, 3)).map((card) => (
                 <motion.div
                   key={card.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -878,6 +879,40 @@ export default function LearnFinnishPage() {
                 </motion.div>
               ))}
             </div>
+            {PUHEKIELI_CARDS.length > 3 && (
+              <div style={{ display: "flex", justifyContent: "center", marginTop: 8 }}>
+                <button
+                  type="button"
+                  onClick={() => setShowAllPuhekieli(!showAllPuhekieli)}
+                  style={{
+                    padding: "12px 24px",
+                    borderRadius: 12,
+                    border: "2px solid #6366f1",
+                    background: showAllPuhekieli ? "#6366f1" : "transparent",
+                    color: showAllPuhekieli ? "#ffffff" : "#6366f1",
+                    fontWeight: 700,
+                    fontSize: 15,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  {showAllPuhekieli ? (
+                    <>
+                      <span>Show Less</span>
+                      <span>▲</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Show {PUHEKIELI_CARDS.length - 3} More Cards</span>
+                      <span>▼</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </section>
 
           <section style={{ display: "grid", gap: 20 }}>
