@@ -295,24 +295,23 @@ export default function LearnFinnishPage() {
                 transition={{ duration: 0.6 }}
                 style={{ display: "grid", gap: 16, flex: "1 1 400px", minWidth: 0 }}
               >
-                <div style={{ display: "grid", gap: 12 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                    <motion.span
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: 999,
-                        background: "rgba(255,255,255,0.25)",
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    style={{
+                      padding: "8px 16px",
+                      borderRadius: 999,
+                      background: "rgba(255,255,255,0.25)",
                       backdropFilter: "blur(10px)",
                       fontSize: 12,
                       fontWeight: 700,
                       letterSpacing: 1.2,
                       color: "#ffffff",
                       border: "1px solid rgba(255,255,255,0.3)",
-              }}
-            >
+                    }}
+                  >
                     🎓 COMPLETE FINNISH CURRICULUM
                   </motion.span>
                 </div>
