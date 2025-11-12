@@ -439,6 +439,46 @@ export default function LearnFinnishPage() {
                 ))}
               </motion.div>
             </div>
+            
+            {/* Live Learning Activity */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.1 }}
+              style={{
+                position: "relative",
+                zIndex: 1,
+                marginTop: 20,
+                padding: "16px 20px",
+                borderRadius: 16,
+                background: "rgba(255,255,255,0.2)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255,255,255,0.3)",
+                display: "flex",
+                gap: 20,
+                flexWrap: "wrap",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 16, color: "#22c55e" }}>🟢</span>
+                <span style={{ fontSize: 14, color: "#ffffff", fontWeight: 600 }}>
+                  {LEARNING_STATS.activeLearners} people learning right now
+                </span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 14 }}>📚</span>
+                <span style={{ fontSize: 14, color: "#ffffff", fontWeight: 600 }}>
+                  {LEARNING_STATS.lessonsCompletedToday} lessons completed today
+                </span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 14 }}>💬</span>
+                <span style={{ fontSize: 14, color: "#ffffff", fontWeight: 600 }}>
+                  {LEARNING_STATS.wordsLearnedThisWeek} words learned this week
+                </span>
+              </div>
+            </motion.div>
           </section>
 
           <section ref={practiceRef} style={{ display: "grid", gap: 28 }}>
