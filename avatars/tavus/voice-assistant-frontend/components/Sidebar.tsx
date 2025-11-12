@@ -171,6 +171,13 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
               <span>Journey</span>
             </button>
             <button
+              className={`nav-btn ${currentPath.startsWith("/learn-finnish") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/learn-finnish"; }}
+            >
+              <i className="fa-solid fa-language"></i>
+              <span>Learn Finnish</span>
+            </button>
+            <button
               className={`nav-btn ${currentPath.startsWith("/knuut-voice") ? "active" : ""}`}
               onClick={() => { window.location.href = "/knuut-voice"; }}
             >

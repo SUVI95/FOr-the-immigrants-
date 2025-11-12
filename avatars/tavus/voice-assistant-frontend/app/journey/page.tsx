@@ -8,6 +8,7 @@ import { useUserProfile } from "@/context/UserProfileContext";
 import { MyPathwayMap } from "@/components/dashboard/MyPathwayMap";
 import { ProgressOverview } from "@/components/dashboard/ProgressOverview";
 import { SkillPassportSummary } from "@/components/dashboard/SkillPassportSummary";
+import { IntegrationHubMap } from "@/components/dashboard/IntegrationHubMap";
 
 export default function JourneyPage() {
   const { state, recordAction } = useUserProfile();
@@ -185,6 +186,51 @@ export default function JourneyPage() {
 
             {/* Suggestions Grid */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+              {/* Learn Finnish - Prominent */}
+              <section
+                style={{
+                  borderRadius: 20,
+                  padding: 24,
+                  background: "linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1))",
+                  border: "2px solid rgba(99,102,241,0.3)",
+                  boxShadow: "0 16px 32px rgba(99,102,241,0.15)",
+                  display: "grid",
+                  gap: 16,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <span style={{ fontSize: 32 }}>📚</span>
+                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>Learn Finnish</h3>
+                </div>
+                <div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "#0f172a", marginBottom: 4 }}>
+                    Start your Finnish journey
+                  </div>
+                  <div style={{ fontSize: 13, color: "#475569" }}>
+                    Complete curriculum from A1 to C2. Practice with AI, track progress, and speak like a local.
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.location.href = "/learn-finnish";
+                  }}
+                  style={{
+                    padding: "12px 20px",
+                    borderRadius: 12,
+                    border: "none",
+                    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    cursor: "pointer",
+                    boxShadow: "0 8px 16px rgba(99,102,241,0.3)",
+                  }}
+                >
+                  Start Learning →
+                </button>
+              </section>
+
               {/* Suggested Work */}
               <section
                 style={{
@@ -271,6 +317,9 @@ export default function JourneyPage() {
                 </button>
               </section>
             </div>
+
+            {/* Integration Hub Map */}
+            <IntegrationHubMap />
 
             {/* Pathway Map */}
             <MyPathwayMap />
