@@ -112,6 +112,82 @@ const QUICK_CHALLENGES: QuickChallenge[] = [
   { id: "qc-numbers", label: "Master numbers 1-100", xp: 25, icon: "🔢", time: "6 min" },
 ];
 
+type PuhekieliCard = {
+  id: string;
+  formal: string;
+  colloquial: string;
+  meaning: string;
+  example: string;
+  category: string;
+};
+
+const PUHEKIELI_CARDS: PuhekieliCard[] = [
+  {
+    id: "puhe-1",
+    formal: "Minä olen",
+    colloquial: "Mä oon",
+    meaning: "I am",
+    example: "Mä oon Suomesta. (I'm from Finland.)",
+    category: "Pronouns",
+  },
+  {
+    id: "puhe-2",
+    formal: "Sinä olet",
+    colloquial: "Sä oot",
+    meaning: "You are",
+    example: "Sä oot kiva! (You're nice!)",
+    category: "Pronouns",
+  },
+  {
+    id: "puhe-3",
+    formal: "Minun",
+    colloquial: "Mun",
+    meaning: "My",
+    example: "Mun auto on siellä. (My car is there.)",
+    category: "Possessives",
+  },
+  {
+    id: "puhe-4",
+    formal: "Mitä sinä teet?",
+    colloquial: "Mitä sä teet?",
+    meaning: "What are you doing?",
+    example: "Mitä sä teet tänään? (What are you doing today?)",
+    category: "Questions",
+  },
+  {
+    id: "puhe-5",
+    formal: "En tiedä",
+    colloquial: "En tiiä",
+    meaning: "I don't know",
+    example: "En tiiä missä se on. (I don't know where it is.)",
+    category: "Common Phrases",
+  },
+  {
+    id: "puhe-6",
+    formal: "Minä menen",
+    colloquial: "Mä meen",
+    meaning: "I'm going",
+    example: "Mä meen kauppaan. (I'm going to the store.)",
+    category: "Verbs",
+  },
+  {
+    id: "puhe-7",
+    formal: "Ole hyvä",
+    colloquial: "Ole hyvä / Ota rennosti",
+    meaning: "You're welcome / Take it easy",
+    example: "Ota rennosti! (Take it easy!)",
+    category: "Common Phrases",
+  },
+  {
+    id: "puhe-8",
+    formal: "Minä en",
+    colloquial: "Mä en",
+    meaning: "I don't / I'm not",
+    example: "Mä en osaa. (I don't know how.)",
+    category: "Negatives",
+  },
+];
+
 const LEARNING_STATS = {
   activeLearners: 89,
   lessonsCompletedToday: 127,
@@ -480,6 +556,81 @@ export default function LearnFinnishPage() {
             </motion.div>
           </section>
 
+          {/* Voice Mode Callout */}
+          <section
+            style={{
+              borderRadius: 24,
+              padding: "32px 40px",
+              background: "linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1))",
+              border: "2px solid rgba(99,102,241,0.3)",
+              boxShadow: "0 16px 32px rgba(99,102,241,0.15)",
+              display: "grid",
+              gap: 20,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 16,
+                  background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 32,
+                  flexShrink: 0,
+                }}
+              >
+                🎤
+              </div>
+              <div style={{ flex: 1 }}>
+                <h2 style={{ margin: "0 0 8px 0", fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                  Learn Pronunciation with Voice Mode
+                </h2>
+                <p style={{ margin: 0, fontSize: 15, color: "#475569", lineHeight: 1.6 }}>
+                  Use <strong>Knuut AI Voice</strong> to hear how words are pronounced out loud! Practice speaking like a local by listening to native Finnish pronunciation. 
+                  Ask Knuut to spell words out loud and repeat them back to perfect your accent.
+                </p>
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <button
+                type="button"
+                onClick={() => window.location.href = "/knuut-voice"}
+                style={{
+                  padding: "12px 24px",
+                  borderRadius: 12,
+                  border: "none",
+                  background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: 15,
+                  cursor: "pointer",
+                  boxShadow: "0 8px 16px rgba(99,102,241,0.3)",
+                }}
+              >
+                🎤 Try Voice Mode Now →
+              </button>
+              <button
+                type="button"
+                onClick={() => alert("Example: Ask 'How do you pronounce 'kiitos'?' or 'Spell 'terve' out loud'")}
+                style={{
+                  padding: "12px 24px",
+                  borderRadius: 12,
+                  border: "2px solid rgba(99,102,241,0.3)",
+                  background: "rgba(255,255,255,0.8)",
+                  color: "#6366f1",
+                  fontWeight: 700,
+                  fontSize: 15,
+                  cursor: "pointer",
+                }}
+              >
+                💡 See Examples
+              </button>
+            </div>
+          </section>
+
           <section ref={practiceRef} style={{ display: "grid", gap: 28 }}>
             <FinnishLanguageBuddy />
           </section>
@@ -632,6 +783,99 @@ export default function LearnFinnishPage() {
                   </button>
                   </div>
                 </article>
+              ))}
+            </div>
+          </section>
+
+          {/* Puhekieli (Colloquial Finnish) Section */}
+          <section style={{ display: "grid", gap: 24 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 12 }}>
+              <div>
+                <h2 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "#0f172a" }}>💬 Puhekieli (Spoken Finnish)</h2>
+                <p style={{ margin: "8px 0 0 0", fontSize: 15, color: "#64748b" }}>
+                  Learn how Finns actually speak! Puhekieli is the everyday, casual Finnish you'll hear on the street, 
+                  not the formal language from textbooks. Use Voice Mode to hear the pronunciation!
+                </p>
+              </div>
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: 20,
+              }}
+            >
+              {PUHEKIELI_CARDS.map((card) => (
+                <motion.div
+                  key={card.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -4 }}
+                  style={{
+                    borderRadius: 20,
+                    padding: 24,
+                    background: "#ffffff",
+                    border: "2px solid #e2e8f0",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+                    display: "grid",
+                    gap: 16,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                  }}
+                  onClick={() => window.location.href = "/knuut-voice"}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+                    <div style={{ flex: 1 }}>
+                      <div
+                        style={{
+                          padding: "4px 10px",
+                          borderRadius: 6,
+                          background: "#f1f5f9",
+                          color: "#475569",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          display: "inline-block",
+                          marginBottom: 12,
+                        }}
+                      >
+                        {card.category}
+                      </div>
+                      <div style={{ display: "grid", gap: 8, marginBottom: 12 }}>
+                        <div>
+                          <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600, marginBottom: 4 }}>Formal</div>
+                          <div style={{ fontSize: 16, fontWeight: 600, color: "#64748b" }}>{card.formal}</div>
+                        </div>
+                        <div style={{ fontSize: 20, color: "#cbd5e1", textAlign: "center" }}>→</div>
+                        <div>
+                          <div style={{ fontSize: 12, color: "#6366f1", fontWeight: 600, marginBottom: 4 }}>Colloquial (Puhekieli)</div>
+                          <div style={{ fontSize: 18, fontWeight: 700, color: "#6366f1" }}>{card.colloquial}</div>
+                        </div>
+                      </div>
+                      <div style={{ padding: "12px 16px", borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+                        <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600, marginBottom: 6 }}>Meaning:</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: "#0f172a", marginBottom: 8 }}>{card.meaning}</div>
+                        <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600, marginBottom: 4 }}>Example:</div>
+                        <div style={{ fontSize: 13, color: "#475569", fontStyle: "italic" }}>"{card.example}"</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "10px 16px",
+                      borderRadius: 10,
+                      background: "rgba(99,102,241,0.1)",
+                      border: "1px solid rgba(99,102,241,0.2)",
+                    }}
+                  >
+                    <span style={{ fontSize: 16 }}>🎤</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "#6366f1" }}>
+                      Click to hear pronunciation in Voice Mode
+                    </span>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </section>
