@@ -257,8 +257,8 @@ export default function CommunityPage() {
   };
 
   const allCategories = useMemo(() => {
-    const groupCats = new Set(mockGroups.map((g) => g.category).filter(Boolean));
-    const eventCats = new Set(mockEvents.map((e) => e.category).filter(Boolean));
+    const groupCats = mockGroups.map((g) => g.category).filter(Boolean) as string[];
+    const eventCats = mockEvents.map((e) => e.category).filter(Boolean) as string[];
     return Array.from(new Set([...groupCats, ...eventCats]));
   }, []);
 
@@ -377,21 +377,21 @@ export default function CommunityPage() {
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <span style={{ fontSize: 48 }}>🤝</span>
                   <div>
-                    <h1 style={{ margin: 0, fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 900, lineHeight: 1.1 }}>
+                    <h1 style={{ margin: 0, fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 700, lineHeight: 1.1 }}>
                       Community
                     </h1>
                     <div style={{ display: "flex", gap: 16, marginTop: 8, flexWrap: "wrap" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <span style={{ fontSize: 12, color: "#22c55e" }}>🟢</span>
-                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>47 people online</span>
+                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>47 people online</span>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <span style={{ fontSize: 12 }}>📅</span>
-                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>6 events this week</span>
+                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>6 events this week</span>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <span style={{ fontSize: 12 }}>👥</span>
-                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>368 active members</span>
+                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>368 active members</span>
                       </div>
                     </div>
                   </div>
@@ -409,7 +409,7 @@ export default function CommunityPage() {
                       border: "none",
                       background: "rgba(255,255,255,0.95)",
                       color: "#8b5cf6",
-                      fontWeight: 700,
+                      fontWeight: 500,
                       fontSize: 15,
                       cursor: "pointer",
                       boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
@@ -436,10 +436,10 @@ export default function CommunityPage() {
                 }}
               >
                 <div>
-                  <p style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: 1.3, textTransform: "uppercase", color: "#8b5cf6" }}>
+                  <p style={{ margin: 0, fontSize: 12, fontWeight: 500, letterSpacing: 1.3, textTransform: "uppercase", color: "#8b5cf6" }}>
                     Live Map
                   </p>
-                  <h2 style={{ margin: "8px 0", fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                    <h2 style={{ margin: "8px 0", fontSize: 24, fontWeight: 600, color: "#0f172a" }}>
                     What&apos;s happening in Kajaani right now
                   </h2>
                   <p style={{ margin: 0, fontSize: 14, color: "#475569", lineHeight: 1.6 }}>
@@ -503,9 +503,9 @@ export default function CommunityPage() {
                             textAlign: "left",
                           }}
                         >
-                          <h3 style={{ margin: 0, fontSize: 14.5, fontWeight: 700, color: "#0f172a" }}>{event.title}</h3>
+                          <h3 style={{ margin: 0, fontSize: 14.5, fontWeight: 600, color: "#0f172a" }}>{event.title}</h3>
                           <p style={{ margin: "6px 0 4px 0", fontSize: 12, color: "#475569" }}>{event.location_name}</p>
-                          <p style={{ margin: 0, fontSize: 11.5, color: "#8b5cf6", fontWeight: 600 }}>👥 {event.rsvp_count} attending</p>
+                          <p style={{ margin: 0, fontSize: 11.5, color: "#8b5cf6", fontWeight: 500 }}>👥 {event.rsvp_count} attending</p>
                         </div>
                       </button>
                     );
@@ -529,12 +529,12 @@ export default function CommunityPage() {
                       <div style={{ display: "grid", gap: 6 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
                           <div>
-                            <h3 style={{ margin: 0, fontSize: 14.5, fontWeight: 700 }}>{selectedEvent.title}</h3>
+                            <h3 style={{ margin: 0, fontSize: 14.5, fontWeight: 600 }}>{selectedEvent.title}</h3>
                             <div style={{ fontSize: 11, opacity: 0.85 }}>
                               {formatEventDateTime(selectedEvent.event_date)} at {formatEventTime(selectedEvent.event_date)}
                             </div>
                           </div>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: "#38bdf8" }}>+{selectedEvent.rsvp_count}</span>
+                          <span style={{ fontSize: 11, fontWeight: 500, color: "#38bdf8" }}>+{selectedEvent.rsvp_count}</span>
                         </div>
                         <p style={{ margin: "0 0 6px 0", fontSize: 11.5, lineHeight: 1.45 }}>
                           {selectedEvent.description.slice(0, 90)}
@@ -553,7 +553,7 @@ export default function CommunityPage() {
                               background: "linear-gradient(135deg, #22c55e, #16a34a)",
                               color: "#fff",
                               fontSize: 11,
-                              fontWeight: 700,
+                              fontWeight: 500,
                               cursor: "pointer",
                             }}
                           >
@@ -574,7 +574,7 @@ export default function CommunityPage() {
                               background: "rgba(248,250,252,0.12)",
                               color: "#f8fafc",
                               fontSize: 11,
-                              fontWeight: 700,
+                              fontWeight: 500,
                               cursor: "pointer",
                             }}
                           >
@@ -594,25 +594,85 @@ export default function CommunityPage() {
                 borderRadius: 20,
                 padding: 24,
                 background: "#fff",
-                border: "1px solid #e2e8f0",
-                boxShadow: "0 16px 32px rgba(15,23,42,0.08)",
+                border: "1px solid rgba(226, 232, 240, 0.8)",
+                boxShadow: "0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.06)",
               }}
             >
-              <div style={{ display: "grid", gap: 16 }}>
+              <div style={{ display: "grid", gap: 20 }}>
+                {/* Search */}
+                <div style={{ position: "relative", maxWidth: "500px" }}>
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 14,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "#94a3b8",
+                      fontSize: 18,
+                    }}
+                  >
+                    🔍
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search groups and events..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    style={{
+                      padding: "12px 16px 12px 44px",
+                      borderRadius: 12,
+                      border: "1px solid rgba(203, 213, 225, 0.6)",
+                      fontSize: 15,
+                      width: "100%",
+                      background: "#f8fafc",
+                      transition: "all 0.2s ease",
+                      outline: "none",
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = "#8b5cf6";
+                      e.currentTarget.style.background = "#fff";
+                      e.currentTarget.style.boxShadow = "0 0 0 3px rgba(139, 92, 246, 0.1)";
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(203, 213, 225, 0.6)";
+                      e.currentTarget.style.background = "#f8fafc";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  />
+                </div>
+
                 {/* Type Filter */}
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <button
                     type="button"
                     onClick={() => setActiveFilter("all")}
                     style={{
                       padding: "10px 20px",
-                      borderRadius: 12,
-                      border: "1px solid #cbd5e1",
-                      background: activeFilter === "all" ? "linear-gradient(135deg, #8b5cf6, #6366f1)" : "#f8fafc",
+                      borderRadius: 10,
+                      border: activeFilter === "all" ? "none" : "1px solid rgba(203, 213, 225, 0.6)",
+                      background: activeFilter === "all" 
+                        ? "linear-gradient(135deg, #8b5cf6, #6366f1)" 
+                        : "rgba(248, 250, 252, 0.8)",
                       color: activeFilter === "all" ? "#fff" : "#475569",
-                      fontWeight: 700,
+                      fontWeight: 500,
                       fontSize: 14,
                       cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      boxShadow: activeFilter === "all" 
+                        ? "0 2px 8px rgba(139, 92, 246, 0.25)" 
+                        : "none",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (activeFilter !== "all") {
+                        e.currentTarget.style.background = "#f1f5f9";
+                        e.currentTarget.style.borderColor = "#cbd5e1";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (activeFilter !== "all") {
+                        e.currentTarget.style.background = "rgba(248, 250, 252, 0.8)";
+                        e.currentTarget.style.borderColor = "rgba(203, 213, 225, 0.6)";
+                      }
                     }}
                   >
                     All
@@ -622,13 +682,31 @@ export default function CommunityPage() {
                     onClick={() => setActiveFilter("groups")}
                     style={{
                       padding: "10px 20px",
-                      borderRadius: 12,
-                      border: "1px solid #cbd5e1",
-                      background: activeFilter === "groups" ? "linear-gradient(135deg, #8b5cf6, #6366f1)" : "#f8fafc",
+                      borderRadius: 10,
+                      border: activeFilter === "groups" ? "none" : "1px solid rgba(203, 213, 225, 0.6)",
+                      background: activeFilter === "groups" 
+                        ? "linear-gradient(135deg, #8b5cf6, #6366f1)" 
+                        : "rgba(248, 250, 252, 0.8)",
                       color: activeFilter === "groups" ? "#fff" : "#475569",
-                      fontWeight: 700,
+                      fontWeight: 600,
                       fontSize: 14,
                       cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      boxShadow: activeFilter === "groups" 
+                        ? "0 2px 8px rgba(139, 92, 246, 0.25)" 
+                        : "none",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (activeFilter !== "groups") {
+                        e.currentTarget.style.background = "#f1f5f9";
+                        e.currentTarget.style.borderColor = "#cbd5e1";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (activeFilter !== "groups") {
+                        e.currentTarget.style.background = "rgba(248, 250, 252, 0.8)";
+                        e.currentTarget.style.borderColor = "rgba(203, 213, 225, 0.6)";
+                      }
                     }}
                   >
                     Groups
@@ -638,13 +716,31 @@ export default function CommunityPage() {
                     onClick={() => setActiveFilter("events")}
                     style={{
                       padding: "10px 20px",
-                      borderRadius: 12,
-                      border: "1px solid #cbd5e1",
-                      background: activeFilter === "events" ? "linear-gradient(135deg, #8b5cf6, #6366f1)" : "#f8fafc",
+                      borderRadius: 10,
+                      border: activeFilter === "events" ? "none" : "1px solid rgba(203, 213, 225, 0.6)",
+                      background: activeFilter === "events" 
+                        ? "linear-gradient(135deg, #8b5cf6, #6366f1)" 
+                        : "rgba(248, 250, 252, 0.8)",
                       color: activeFilter === "events" ? "#fff" : "#475569",
-                      fontWeight: 700,
+                      fontWeight: 600,
                       fontSize: 14,
                       cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      boxShadow: activeFilter === "events" 
+                        ? "0 2px 8px rgba(139, 92, 246, 0.25)" 
+                        : "none",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (activeFilter !== "events") {
+                        e.currentTarget.style.background = "#f1f5f9";
+                        e.currentTarget.style.borderColor = "#cbd5e1";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (activeFilter !== "events") {
+                        e.currentTarget.style.background = "rgba(248, 250, 252, 0.8)";
+                        e.currentTarget.style.borderColor = "rgba(203, 213, 225, 0.6)";
+                      }
                     }}
                   >
                     Events
@@ -658,14 +754,27 @@ export default function CommunityPage() {
                       type="button"
                       onClick={() => setCategoryFilter("all")}
                       style={{
-                        padding: "8px 16px",
+                        padding: "6px 14px",
                         borderRadius: 8,
-                        border: "1px solid #cbd5e1",
-                        background: categoryFilter === "all" ? "#8b5cf6" : "#f8fafc",
-                        color: categoryFilter === "all" ? "#fff" : "#475569",
-                        fontWeight: 600,
+                        border: categoryFilter === "all" ? "none" : "1px solid rgba(203, 213, 225, 0.5)",
+                        background: categoryFilter === "all" 
+                          ? "rgba(139, 92, 246, 0.1)" 
+                          : "rgba(248, 250, 252, 0.6)",
+                        color: categoryFilter === "all" ? "#8b5cf6" : "#64748b",
+                        fontWeight: 500,
                         fontSize: 13,
                         cursor: "pointer",
+                        transition: "all 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (categoryFilter !== "all") {
+                          e.currentTarget.style.background = "#f1f5f9";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (categoryFilter !== "all") {
+                          e.currentTarget.style.background = "rgba(248, 250, 252, 0.6)";
+                        }
                       }}
                     >
                       All Categories
@@ -676,14 +785,27 @@ export default function CommunityPage() {
                         type="button"
                         onClick={() => setCategoryFilter(cat)}
                         style={{
-                          padding: "8px 16px",
+                          padding: "6px 14px",
                           borderRadius: 8,
-                          border: "1px solid #cbd5e1",
-                          background: categoryFilter === cat ? "#8b5cf6" : "#f8fafc",
-                          color: categoryFilter === cat ? "#fff" : "#475569",
+                          border: categoryFilter === cat ? "none" : "1px solid rgba(203, 213, 225, 0.5)",
+                          background: categoryFilter === cat 
+                            ? "rgba(139, 92, 246, 0.1)" 
+                            : "rgba(248, 250, 252, 0.6)",
+                          color: categoryFilter === cat ? "#8b5cf6" : "#64748b",
                           fontWeight: 600,
                           fontSize: 13,
                           cursor: "pointer",
+                          transition: "all 0.2s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (categoryFilter !== cat) {
+                            e.currentTarget.style.background = "#f1f5f9";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (categoryFilter !== cat) {
+                            e.currentTarget.style.background = "rgba(248, 250, 252, 0.6)";
+                          }
                         }}
                       >
                         {cat}
@@ -691,22 +813,6 @@ export default function CommunityPage() {
                     ))}
                   </div>
                 )}
-
-                {/* Search */}
-                <input
-                  type="text"
-                  placeholder="Search groups and events..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{
-                    padding: "12px 16px",
-                    borderRadius: 12,
-                    border: "1px solid #cbd5e1",
-                    fontSize: 15,
-                    width: "100%",
-                    maxWidth: "500px",
-                  }}
-                />
               </div>
             </section>
 
@@ -733,29 +839,33 @@ export default function CommunityPage() {
                       key={`${item.type}-${item.data.id}`}
                       onClick={() => setSelectedCardId(`${item.type}-${item.data.id}`)}
                       style={{
-                        borderRadius: 20,
+                        borderRadius: 16,
                         padding: 24,
                         background: "#fff",
-                        border: "1px solid #e2e8f0",
-                        boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+                        border: "1px solid rgba(226, 232, 240, 0.8)",
+                        boxShadow: "0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.06)",
                         display: "grid",
-                        gap: 12,
+                        gap: 14,
                         cursor: "pointer",
-                        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                        transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+                        position: "relative",
+                        overflow: "hidden",
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = "translateY(-4px)";
-                        e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.12)";
+                        e.currentTarget.style.transform = "translateY(-6px)";
+                        e.currentTarget.style.boxShadow = "0 4px 16px rgba(15, 23, 42, 0.1), 0 8px 24px rgba(139, 92, 246, 0.08)";
+                        e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.3)";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = "translateY(0)";
-                        e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.08)";
+                        e.currentTarget.style.boxShadow = "0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.06)";
+                        e.currentTarget.style.borderColor = "rgba(226, 232, 240, 0.8)";
                       }}
                     >
                       {item.type === "group" ? (
                         <>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>
+                            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: "#0f172a" }}>
                               {(item.data as GroupDataLite).name}
                             </h3>
                             <span style={{ fontSize: 24 }}>👥</span>
@@ -768,12 +878,24 @@ export default function CommunityPage() {
                               <span
                                 key={tag}
                                 style={{
-                                  padding: "4px 10px",
+                                  padding: "5px 12px",
                                   borderRadius: 6,
-                                  background: "#f1f5f9",
+                                  background: "rgba(241, 245, 249, 0.8)",
                                   color: "#475569",
                                   fontSize: 12,
-                                  fontWeight: 600,
+                                  fontWeight: 500,
+                                  border: "1px solid rgba(226, 232, 240, 0.5)",
+                                  transition: "all 0.2s ease",
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = "rgba(139, 92, 246, 0.08)";
+                                  e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.2)";
+                                  e.currentTarget.style.color = "#8b5cf6";
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = "rgba(241, 245, 249, 0.8)";
+                                  e.currentTarget.style.borderColor = "rgba(226, 232, 240, 0.5)";
+                                  e.currentTarget.style.color = "#475569";
                                 }}
                               >
                                 {tag}
@@ -786,16 +908,30 @@ export default function CommunityPage() {
                           </div>
                           <button
                             type="button"
-                            onClick={() => alert("Join group functionality - connect via Voice")}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              alert("Join group functionality - connect via Voice");
+                            }}
                             style={{
-                              padding: "10px 16px",
+                              padding: "10px 18px",
                               borderRadius: 10,
-                              border: "1px solid #8b5cf6",
-                              background: "rgba(139,92,246,0.1)",
+                              border: "1px solid rgba(139, 92, 246, 0.3)",
+                              background: "rgba(139, 92, 246, 0.08)",
                               color: "#8b5cf6",
-                              fontWeight: 700,
+                              fontWeight: 500,
                               fontSize: 14,
                               cursor: "pointer",
+                              transition: "all 0.2s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = "rgba(139, 92, 246, 0.15)";
+                              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.5)";
+                              e.currentTarget.style.transform = "translateY(-1px)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = "rgba(139, 92, 246, 0.08)";
+                              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.3)";
+                              e.currentTarget.style.transform = "translateY(0)";
                             }}
                           >
                             Join Group
@@ -804,7 +940,7 @@ export default function CommunityPage() {
                       ) : (
                         <>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>
+                            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: "#0f172a" }}>
                               {(item.data as ExtendedEventData).title}
                             </h3>
                             <span style={{ fontSize: 24 }}>📅</span>
@@ -817,12 +953,24 @@ export default function CommunityPage() {
                               <span
                                 key={tag}
                                 style={{
-                                  padding: "4px 10px",
+                                  padding: "5px 12px",
                                   borderRadius: 6,
-                                  background: "#f1f5f9",
+                                  background: "rgba(241, 245, 249, 0.8)",
                                   color: "#475569",
                                   fontSize: 12,
-                                  fontWeight: 600,
+                                  fontWeight: 500,
+                                  border: "1px solid rgba(226, 232, 240, 0.5)",
+                                  transition: "all 0.2s ease",
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = "rgba(139, 92, 246, 0.08)";
+                                  e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.2)";
+                                  e.currentTarget.style.color = "#8b5cf6";
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = "rgba(241, 245, 249, 0.8)";
+                                  e.currentTarget.style.borderColor = "rgba(226, 232, 240, 0.5)";
+                                  e.currentTarget.style.color = "#475569";
                                 }}
                               >
                                 {tag}
@@ -840,16 +988,30 @@ export default function CommunityPage() {
                           </div>
                           <button
                             type="button"
-                            onClick={() => alert("RSVP functionality - connect via Voice")}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              alert("RSVP functionality - connect via Voice");
+                            }}
                             style={{
-                              padding: "10px 16px",
+                              padding: "10px 18px",
                               borderRadius: 10,
-                              border: "1px solid #8b5cf6",
-                              background: "rgba(139,92,246,0.1)",
+                              border: "1px solid rgba(139, 92, 246, 0.3)",
+                              background: "rgba(139, 92, 246, 0.08)",
                               color: "#8b5cf6",
-                              fontWeight: 700,
+                              fontWeight: 500,
                               fontSize: 14,
                               cursor: "pointer",
+                              transition: "all 0.2s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = "rgba(139, 92, 246, 0.15)";
+                              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.5)";
+                              e.currentTarget.style.transform = "translateY(-1px)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = "rgba(139, 92, 246, 0.08)";
+                              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.3)";
+                              e.currentTarget.style.transform = "translateY(0)";
                             }}
                           >
                             RSVP
@@ -874,7 +1036,8 @@ export default function CommunityPage() {
               style={{
                 position: "fixed",
                 inset: 0,
-                background: "rgba(0,0,0,0.5)",
+                background: "rgba(15, 23, 42, 0.6)",
+                backdropFilter: "blur(8px)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -884,26 +1047,28 @@ export default function CommunityPage() {
               onClick={() => setSelectedCardId(null)}
             >
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
+                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
                 onClick={(e) => e.stopPropagation()}
                 style={{
                   background: "#fff",
-                  borderRadius: 24,
+                  borderRadius: 20,
                   padding: 32,
-                  maxWidth: 500,
+                  maxWidth: 520,
                   width: "100%",
                   maxHeight: "90vh",
                   overflowY: "auto",
-                  boxShadow: "0 24px 48px rgba(0,0,0,0.3)",
+                  boxShadow: "0 20px 60px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(15, 23, 42, 0.05)",
+                  border: "1px solid rgba(226, 232, 240, 0.8)",
                 }}
               >
                 {selectedCard && "event_date" in selectedCard ? (
                   // Event details
                   <>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
-                      <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                      <h2 style={{ margin: 0, fontSize: 24, fontWeight: 600, color: "#0f172a" }}>
                         {(selectedCard as ExtendedEventData).title}
                       </h2>
                       <button
@@ -927,24 +1092,24 @@ export default function CommunityPage() {
                     </div>
                     <div style={{ display: "grid", gap: 16 }}>
                       <div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase", marginBottom: 8 }}>
+                        <div style={{ fontSize: 12, fontWeight: 500, color: "#64748b", textTransform: "uppercase", marginBottom: 8 }}>
                           📅 Date & Time
                         </div>
-                        <div style={{ fontSize: 16, fontWeight: 600, color: "#0f172a" }}>
+                        <div style={{ fontSize: 16, fontWeight: 400, color: "#0f172a" }}>
                           {formatEventDateTime((selectedCard as ExtendedEventData).event_date)} at{" "}
                           {formatEventTime((selectedCard as ExtendedEventData).event_date)}
                         </div>
                       </div>
                       <div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase", marginBottom: 8 }}>
+                        <div style={{ fontSize: 12, fontWeight: 500, color: "#64748b", textTransform: "uppercase", marginBottom: 8 }}>
                           📍 Location
                         </div>
-                        <div style={{ fontSize: 16, fontWeight: 600, color: "#0f172a" }}>
+                        <div style={{ fontSize: 16, fontWeight: 400, color: "#0f172a" }}>
                           {(selectedCard as ExtendedEventData).location_name}
                         </div>
                       </div>
                       <div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase", marginBottom: 8 }}>
+                        <div style={{ fontSize: 12, fontWeight: 500, color: "#64748b", textTransform: "uppercase", marginBottom: 8 }}>
                           Description
                         </div>
                         <p style={{ margin: 0, fontSize: 15, color: "#475569", lineHeight: 1.6 }}>
@@ -956,12 +1121,13 @@ export default function CommunityPage() {
                           <span
                             key={tag}
                             style={{
-                              padding: "6px 12px",
+                              padding: "6px 14px",
                               borderRadius: 8,
-                              background: "#f1f5f9",
-                              color: "#475569",
+                              background: "rgba(139, 92, 246, 0.08)",
+                              color: "#8b5cf6",
                               fontSize: 13,
-                              fontWeight: 600,
+                              fontWeight: 500,
+                              border: "1px solid rgba(139, 92, 246, 0.2)",
                             }}
                           >
                             {tag}
@@ -979,9 +1145,19 @@ export default function CommunityPage() {
                             border: "none",
                             background: "linear-gradient(135deg, #8b5cf6, #6366f1)",
                             color: "#fff",
-                            fontWeight: 700,
+                            fontWeight: 500,
                             fontSize: 15,
                             cursor: "pointer",
+                            transition: "all 0.2s ease",
+                            boxShadow: "0 2px 8px rgba(139, 92, 246, 0.25)",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "translateY(-1px)";
+                            e.currentTarget.style.boxShadow = "0 4px 12px rgba(139, 92, 246, 0.35)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "translateY(0)";
+                            e.currentTarget.style.boxShadow = "0 2px 8px rgba(139, 92, 246, 0.25)";
                           }}
                         >
                           RSVP ({((selectedCard as ExtendedEventData).rsvp_count || 0) + 1} going)
@@ -998,12 +1174,23 @@ export default function CommunityPage() {
                             style={{
                               padding: "14px 20px",
                               borderRadius: 12,
-                              border: "1px solid #e2e8f0",
-                              background: "#f8fafc",
+                              border: "1px solid rgba(226, 232, 240, 0.8)",
+                              background: "rgba(248, 250, 252, 0.8)",
                               color: "#475569",
-                              fontWeight: 700,
+                              fontWeight: 500,
                               fontSize: 15,
                               cursor: "pointer",
+                              transition: "all 0.2s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = "#f1f5f9";
+                              e.currentTarget.style.borderColor = "#cbd5e1";
+                              e.currentTarget.style.transform = "translateY(-1px)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = "rgba(248, 250, 252, 0.8)";
+                              e.currentTarget.style.borderColor = "rgba(226, 232, 240, 0.8)";
+                              e.currentTarget.style.transform = "translateY(0)";
                             }}
                           >
                             Map
@@ -1016,7 +1203,7 @@ export default function CommunityPage() {
                   // Group details
                   <>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
-                      <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                      <h2 style={{ margin: 0, fontSize: 24, fontWeight: 600, color: "#0f172a" }}>
                         {(selectedCard as GroupDataLite).name}
                       </h2>
                       <button
@@ -1040,7 +1227,7 @@ export default function CommunityPage() {
                     </div>
                     <div style={{ display: "grid", gap: 16 }}>
                       <div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase", marginBottom: 8 }}>
+                        <div style={{ fontSize: 12, fontWeight: 500, color: "#64748b", textTransform: "uppercase", marginBottom: 8 }}>
                           📍 Location
                         </div>
                         <div style={{ fontSize: 16, fontWeight: 600, color: "#0f172a" }}>
@@ -1048,7 +1235,7 @@ export default function CommunityPage() {
                         </div>
                       </div>
                       <div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase", marginBottom: 8 }}>
+                        <div style={{ fontSize: 12, fontWeight: 500, color: "#64748b", textTransform: "uppercase", marginBottom: 8 }}>
                           Description
                         </div>
                         <p style={{ margin: 0, fontSize: 15, color: "#475569", lineHeight: 1.6 }}>
@@ -1060,12 +1247,13 @@ export default function CommunityPage() {
                           <span
                             key={tag}
                             style={{
-                              padding: "6px 12px",
+                              padding: "6px 14px",
                               borderRadius: 8,
-                              background: "#f1f5f9",
-                              color: "#475569",
+                              background: "rgba(139, 92, 246, 0.08)",
+                              color: "#8b5cf6",
                               fontSize: 13,
-                              fontWeight: 600,
+                              fontWeight: 500,
+                              border: "1px solid rgba(139, 92, 246, 0.2)",
                             }}
                           >
                             {tag}
@@ -1095,9 +1283,19 @@ export default function CommunityPage() {
                           border: "none",
                           background: "linear-gradient(135deg, #8b5cf6, #6366f1)",
                           color: "#fff",
-                          fontWeight: 700,
+                          fontWeight: 600,
                           fontSize: 15,
                           cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          boxShadow: "0 2px 8px rgba(139, 92, 246, 0.25)",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = "translateY(-1px)";
+                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(139, 92, 246, 0.35)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow = "0 2px 8px rgba(139, 92, 246, 0.25)";
                         }}
                       >
                         Join Group
