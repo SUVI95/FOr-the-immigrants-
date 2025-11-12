@@ -579,11 +579,15 @@ export default function LearnFinnishPage() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 32,
                   flexShrink: 0,
                 }}
               >
-                🎤
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <line x1="12" y1="19" x2="12" y2="23" />
+                  <line x1="8" y1="23" x2="16" y2="23" />
+                </svg>
               </div>
               <div style={{ flex: 1 }}>
                 <h2 style={{ margin: "0 0 8px 0", fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
@@ -611,7 +615,15 @@ export default function LearnFinnishPage() {
                   boxShadow: "0 8px 16px rgba(99,102,241,0.3)",
                 }}
               >
-                🎤 Try Voice Mode Now →
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" y1="19" x2="12" y2="23" />
+                    <line x1="8" y1="23" x2="16" y2="23" />
+                  </svg>
+                  Try Voice Mode Now →
+                </span>
               </button>
               <button
                 type="button"
@@ -871,7 +883,12 @@ export default function LearnFinnishPage() {
                       border: "1px solid rgba(99,102,241,0.2)",
                     }}
                   >
-                    <span style={{ fontSize: 16 }}>🎤</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                      <line x1="12" y1="19" x2="12" y2="23" />
+                      <line x1="8" y1="23" x2="16" y2="23" />
+                    </svg>
                     <span style={{ fontSize: 13, fontWeight: 600, color: "#6366f1" }}>
                       Click to hear pronunciation in Voice Mode
                     </span>
@@ -994,118 +1011,118 @@ export default function LearnFinnishPage() {
             </div>
           </section>
 
-          <section id="finnish-progress-panel" style={{ display: "grid", gap: 24 }}>
+          <section id="finnish-progress-panel" style={{ display: "grid", gap: 20 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 12 }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: 32, fontWeight: 900, color: "#0f172a" }}>Your Progress</h2>
-                <p style={{ margin: "8px 0 0 0", fontSize: 15, color: "#64748b" }}>
+                <h2 style={{ margin: 0, fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 700, color: "#0f172a" }}>Your Progress</h2>
+                <p style={{ margin: "6px 0 0 0", fontSize: 14, color: "#64748b" }}>
                   See how much you've learned. Get certificates.
                 </p>
               </div>
             </div>
             <div
               style={{
-                borderRadius: 32,
-                border: "2px solid #e2e8f0",
-                background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
-                boxShadow: "0 32px 64px rgba(15,23,42,0.16)",
-                padding: 40,
+                borderRadius: 20,
+                border: "1px solid #e2e8f0",
+                background: "#ffffff",
+                boxShadow: "0 4px 12px rgba(15,23,42,0.08)",
+                padding: 24,
                 display: "grid",
-                gap: 32,
+                gap: 20,
               }}
             >
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                  gap: 24,
+                  gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                  gap: 16,
                 }}
               >
                 <div
                   style={{
-                    borderRadius: 16,
-                    padding: 24,
-                    background: "#ffffff",
+                    borderRadius: 12,
+                    padding: 16,
+                    background: "#f8fafc",
                     border: "1px solid #e5e7eb",
                     display: "grid",
-                    gap: 8,
+                    gap: 6,
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>{totalXP}</div>
-                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Total XP</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a" }}>{totalXP}</div>
+                  <div style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>Total XP</div>
                 </div>
                 <div
                   style={{
-                    borderRadius: 16,
-                    padding: 24,
-                    background: "#ffffff",
+                    borderRadius: 12,
+                    padding: 16,
+                    background: "#f8fafc",
                     border: "1px solid #e5e7eb",
                     display: "grid",
-                    gap: 8,
+                    gap: 6,
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>{lessonsCompleted}</div>
-                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Lessons Done</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a" }}>{lessonsCompleted}</div>
+                  <div style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>Lessons Done</div>
                 </div>
                 <div
                   style={{
-                    borderRadius: 16,
-                    padding: 24,
-                    background: "#ffffff",
+                    borderRadius: 12,
+                    padding: 16,
+                    background: "#f8fafc",
                     border: "1px solid #e5e7eb",
                     display: "grid",
-                    gap: 8,
+                    gap: 6,
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>{totalConversations}</div>
-                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Conversations</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a" }}>{totalConversations}</div>
+                  <div style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>Conversations</div>
                 </div>
                 <div
                   style={{
-                    borderRadius: 16,
-                    padding: 24,
-                    background: "#ffffff",
+                    borderRadius: 12,
+                    padding: 16,
+                    background: "#f8fafc",
                     border: "1px solid #e5e7eb",
                     display: "grid",
-                    gap: 8,
+                    gap: 6,
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>{certificatesEarned}</div>
-                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Certificates</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a" }}>{certificatesEarned}</div>
+                  <div style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>Certificates</div>
                 </div>
                 <div
                   style={{
-                    borderRadius: 16,
-                    padding: 24,
-                    background: "#ffffff",
+                    borderRadius: 12,
+                    padding: 16,
+                    background: "#f8fafc",
                     border: "1px solid #e5e7eb",
                     display: "grid",
-                    gap: 8,
+                    gap: 6,
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>🔥 {streakDays}</div>
-                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Day Streak</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a" }}>🔥 {streakDays}</div>
+                  <div style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>Day Streak</div>
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
               <button
                 type="button"
                 onClick={() => (window.location.href = "/my-journey")}
                 style={{
-                    padding: "14px 24px",
-                    borderRadius: 18,
+                    padding: "12px 20px",
+                    borderRadius: 12,
                   border: "none",
                   background: "linear-gradient(135deg, #22c55e, #16a34a)",
                   color: "#fff",
-                  fontWeight: 700,
-                    fontSize: 15,
+                  fontWeight: 600,
+                    fontSize: 14,
                     cursor: "pointer",
-                    boxShadow: "0 16px 32px rgba(34,197,94,0.3)",
+                    boxShadow: "0 4px 12px rgba(34,197,94,0.25)",
                   }}
                 >
                   View Full Skill Passport →
@@ -1114,13 +1131,13 @@ export default function LearnFinnishPage() {
                   type="button"
                   onClick={() => alert("Certificate download coming soon.")}
                   style={{
-                    padding: "14px 24px",
-                    borderRadius: 18,
-                    border: "2px solid #cbd5f5",
-                    background: "#f8fafc",
+                    padding: "12px 20px",
+                    borderRadius: 12,
+                    border: "1px solid #cbd5e1",
+                    background: "#ffffff",
                     color: "#1d4ed8",
-                    fontWeight: 700,
-                    fontSize: 15,
+                    fontWeight: 600,
+                    fontSize: 14,
                   cursor: "pointer",
                 }}
               >

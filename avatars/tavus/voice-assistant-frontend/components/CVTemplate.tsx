@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import jsPDF from "jspdf";
 
 type CommunityEntry = {
   role: string;
@@ -23,6 +24,207 @@ type CVData = {
   languages: Array<{ language: string; level: string }>;
   community: CommunityEntry[];
 };
+
+// Harvard-style CV PDF Generator
+function generateHarvardCVPDF(data: CVData) {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 20;
+  const contentWidth = pageWidth - 2 * margin;
+  let yPosition = margin;
+
+  // Helper function to add text with word wrap
+  const addText = (text: string, x: number, y: number, options: { fontSize?: number; fontStyle?: string; maxWidth?: number; align?: "left" | "center" | "right" } = {}) => {
+    const fontSize = options.fontSize || 11;
+    const fontStyle = options.fontStyle || "normal";
+    const maxWidth = options.maxWidth || contentWidth;
+    const align = options.align || "left";
+
+    doc.setFontSize(fontSize);
+    doc.setFont("helvetica", fontStyle);
+    
+    const lines = doc.splitTextToSize(text, maxWidth);
+    doc.text(lines, x, y, { align });
+    return lines.length * (fontSize * 0.4) + 2;
+  };
+
+  // Helper function to check if we need a new page
+  const checkNewPage = (requiredSpace: number) => {
+    if (yPosition + requiredSpace > doc.internal.pageSize.getHeight() - margin) {
+      doc.addPage();
+      yPosition = margin;
+      return true;
+    }
+    return false;
+  };
+
+  // Header: Name (centered, large, bold)
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  const nameLines = doc.splitTextToSize(data.name, contentWidth);
+  doc.text(nameLines, pageWidth / 2, yPosition, { align: "center" });
+  yPosition += nameLines.length * 7 + 8;
+
+  // Contact Information (centered, smaller)
+  const contactInfo = [data.email, data.phone, data.address].filter(Boolean).join(" | ");
+  if (contactInfo) {
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    const contactLines = doc.splitTextToSize(contactInfo, contentWidth);
+    doc.text(contactLines, pageWidth / 2, yPosition, { align: "center" });
+    yPosition += contactLines.length * 4 + 10;
+  }
+
+  // Professional Summary
+  if (data.summary && data.summary.trim() && data.summary !== "Brief professional summary...") {
+    checkNewPage(30);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("PROFESSIONAL SUMMARY", margin, yPosition);
+    yPosition += 8;
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    const summaryLines = doc.splitTextToSize(data.summary, contentWidth);
+    doc.text(summaryLines, margin, yPosition);
+    yPosition += summaryLines.length * 5 + 12;
+  }
+
+  // Education Section (Harvard style: Education first)
+  if (data.education && data.education.length > 0 && data.education[0].degree !== "Degree") {
+    checkNewPage(40);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("EDUCATION", margin, yPosition);
+    yPosition += 8;
+
+    // Reverse chronological order
+    const sortedEducation = [...data.education].reverse();
+    sortedEducation.forEach((edu) => {
+      checkNewPage(25);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text(edu.degree || "", margin, yPosition);
+      
+      const institutionX = margin + 80;
+      doc.setFont("helvetica", "normal");
+      doc.text(edu.institution || "", institutionX, yPosition);
+      
+      const periodX = pageWidth - margin - 30;
+      doc.text(edu.period || "", periodX, yPosition, { align: "right" });
+      yPosition += 6;
+    });
+    yPosition += 8;
+  }
+
+  // Work Experience
+  if (data.experience && data.experience.length > 0 && data.experience[0].title !== "Job Title") {
+    checkNewPage(40);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("PROFESSIONAL EXPERIENCE", margin, yPosition);
+    yPosition += 8;
+
+    // Reverse chronological order
+    const sortedExperience = [...data.experience].reverse();
+    sortedExperience.forEach((exp) => {
+      checkNewPage(35);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text(exp.title || "", margin, yPosition);
+      
+      const companyX = margin + 80;
+      doc.setFont("helvetica", "normal");
+      doc.text(exp.company || "", companyX, yPosition);
+      
+      const periodX = pageWidth - margin - 30;
+      doc.text(exp.period || "", periodX, yPosition, { align: "right" });
+      yPosition += 6;
+
+      if (exp.description && exp.description.trim() && exp.description !== "Job responsibilities and achievements...") {
+        doc.setFontSize(10);
+        const descLines = doc.splitTextToSize(exp.description, contentWidth);
+        doc.text(descLines, margin + 5, yPosition);
+        yPosition += descLines.length * 5;
+      }
+      yPosition += 4;
+    });
+    yPosition += 4;
+  }
+
+  // Community Experience
+  if (data.community && data.community.length > 0) {
+    checkNewPage(40);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("COMMUNITY EXPERIENCE", margin, yPosition);
+    yPosition += 8;
+
+    data.community.forEach((comm) => {
+      checkNewPage(30);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text(comm.role || "", margin, yPosition);
+      
+      const orgX = margin + 80;
+      doc.setFont("helvetica", "normal");
+      doc.text(comm.organization || "", orgX, yPosition);
+      
+      const periodX = pageWidth - margin - 30;
+      doc.text(comm.period || "", periodX, yPosition, { align: "right" });
+      yPosition += 6;
+
+      if (comm.impact) {
+        doc.setFontSize(10);
+        const impactLines = doc.splitTextToSize(comm.impact, contentWidth);
+        doc.text(impactLines, margin + 5, yPosition);
+        yPosition += impactLines.length * 5;
+      }
+      yPosition += 4;
+    });
+    yPosition += 4;
+  }
+
+  // Skills
+  if (data.skills && data.skills.length > 0 && data.skills[0] !== "Skill 1") {
+    checkNewPage(30);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("SKILLS", margin, yPosition);
+    yPosition += 8;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    const skillsText = data.skills.filter(s => s && s !== "New Skill").join(" • ");
+    if (skillsText) {
+      const skillsLines = doc.splitTextToSize(skillsText, contentWidth);
+      doc.text(skillsLines, margin, yPosition);
+      yPosition += skillsLines.length * 5 + 8;
+    }
+  }
+
+  // Languages
+  if (data.languages && data.languages.length > 0) {
+    checkNewPage(25);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("LANGUAGES", margin, yPosition);
+    yPosition += 8;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    data.languages.forEach((lang) => {
+      if (lang.language && lang.language !== "Language") {
+        const langText = `${lang.language}: ${lang.level}`;
+        doc.text(langText, margin, yPosition);
+        yPosition += 5;
+      }
+    });
+  }
+
+  // Save the PDF
+  doc.save(`${data.name.replace(/\s+/g, "_")}_CV.pdf`);
+}
 
 export default function CVTemplate({
   language = "en",
@@ -507,7 +709,7 @@ export default function CVTemplate({
         </button>
         <button
           className="btn primary"
-          onClick={() => window.print()}
+          onClick={() => generateHarvardCVPDF(cvData)}
         >
           {t("print")}
         </button>

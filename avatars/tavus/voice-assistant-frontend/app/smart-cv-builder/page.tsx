@@ -41,6 +41,10 @@ export default function SmartCVBuilderPage() {
       })) || [];
 
   const initialCvData = {
+    name: userState.name || "Your Name",
+    email: userState.email || "your.email@example.com",
+    phone: userState.phone || "+358 50 123 4567",
+    address: userState.address || "Helsinki, Finland",
     summary: `Community Connector (${userState.level}) with ${userState.impactWallet.volunteeringHours.toFixed(
       1,
     )} volunteering hours and ${userState.impactWallet.points} impact points on Knuut AI. Builds welcoming spaces, translates bureaucracy, and mentors newcomers.`,
@@ -106,7 +110,13 @@ export default function SmartCVBuilderPage() {
                 <option value="fi">Suomi</option>
               </select>
               <button
-                onClick={() => window.print()}
+                onClick={() => {
+                  // Trigger the PDF download from CVTemplate
+                  const downloadBtn = document.querySelector('.btn.primary') as HTMLButtonElement;
+                  if (downloadBtn) {
+                    downloadBtn.click();
+                  }
+                }}
                 style={{
                   padding: "10px 14px",
                   background: "#111827",
