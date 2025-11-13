@@ -229,6 +229,8 @@ export default function WorkOpportunitiesPage() {
   const [typeFilter, setTypeFilter] = useState<OpportunityType | "All">("All");
   const [focusJobId, setFocusJobId] = useState<string | null>(null);
   const [workNowFilter, setWorkNowFilter] = useState(false);
+  const [recommendedExpanded, setRecommendedExpanded] = useState(false);
+  const [companyVisitsExpanded, setCompanyVisitsExpanded] = useState(false);
   const [userSkills, setUserSkills] = useState<string[]>([]);
   
   // Check URL for work-now filter
