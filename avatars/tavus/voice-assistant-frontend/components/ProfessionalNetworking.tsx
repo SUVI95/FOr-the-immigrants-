@@ -30,6 +30,7 @@ interface SpeedMeeting {
 
 export function ProfessionalNetworking() {
   const { state, recordAction } = useUserProfile();
+  const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<"mentors" | "speed-meetings">("mentors");
   const [selectedSector, setSelectedSector] = useState<string>("All");
 
@@ -160,15 +161,42 @@ export function ProfessionalNetworking() {
         marginBottom: 24,
       }}
     >
-      <div style={{ marginBottom: 20 }}>
-        <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
-          Professional Networking & Mentoring
-        </h2>
-        <p style={{ margin: "6px 0 0 0", fontSize: 14, color: "#475569" }}>
-          Connect with mentors and employers in your field. Build professional relationships to overcome discrimination and break into Finnish labor markets.
-        </p>
+      <div style={{ marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
+        <div style={{ flex: 1 }}>
+          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
+            Professional Networking & Mentoring
+          </h2>
+          <p style={{ margin: "6px 0 0 0", fontSize: 14, color: "#475569" }}>
+            Connect with mentors and employers in your field. Build professional relationships to overcome discrimination and break into Finnish labor markets.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsExpanded(!isExpanded)}
+          style={{
+            padding: "8px 16px",
+            borderRadius: 8,
+            border: "1px solid #cbd5f5",
+            background: "#fff",
+            color: "#2563eb",
+            fontWeight: 600,
+            cursor: "pointer",
+            fontSize: 13,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {isExpanded ? "▼ Collapse" : "▶ Expand"}
+        </button>
       </div>
 
+      {!isExpanded && (
+        <div style={{ padding: 16, background: "#f8fafc", borderRadius: 12, textAlign: "center", color: "#64748b", fontSize: 14 }}>
+          Click "Expand" to view mentors and speed meetings
+        </div>
+      )}
+
+      {isExpanded && (
+        <>
       {/* Tabs */}
       <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
         <button
@@ -410,6 +438,8 @@ export function ProfessionalNetworking() {
             </article>
           ))}
         </div>
+      )}
+        </>
       )}
     </div>
   );

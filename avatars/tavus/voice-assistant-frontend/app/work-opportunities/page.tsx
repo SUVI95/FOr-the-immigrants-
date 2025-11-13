@@ -534,15 +534,39 @@ export default function WorkOpportunitiesPage() {
             gap: 20,
           }}
         >
-          <header style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
-            <div>
+          <header style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+            <div style={{ flex: 1 }}>
               <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Recommended for You</h2>
               <p style={{ margin: "6px 0 0 0", fontSize: 14.5, color: "#475569" }}>
                 Handpicked by Knuut AI — based on your Smart CV, Skill Passport, and Journey progress.
               </p>
             </div>
-            <span style={{ fontSize: 12, fontWeight: 600, color: "#2563eb" }}>Updated a few minutes ago</span>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: "#2563eb" }}>Updated a few minutes ago</span>
+              <button
+                type="button"
+                onClick={() => setRecommendedExpanded(!recommendedExpanded)}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: 8,
+                  border: "1px solid #cbd5f5",
+                  background: "#fff",
+                  color: "#2563eb",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  fontSize: 13,
+                }}
+              >
+                {recommendedExpanded ? "▼ Collapse" : "▶ Expand"}
+              </button>
+            </div>
           </header>
+          {!recommendedExpanded && (
+            <div style={{ padding: 16, background: "#f8fafc", borderRadius: 12, textAlign: "center", color: "#64748b", fontSize: 14 }}>
+              Click "Expand" to view recommended opportunities
+            </div>
+          )}
+          {recommendedExpanded && (
           <div style={{ display: "grid", gap: 16 }}>
             {RECOMMENDED_OPPORTUNITIES.map((item) => (
               <article
@@ -678,20 +702,44 @@ export default function WorkOpportunitiesPage() {
             gap: 18,
           }}
         >
-          <header style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
-            <div>
+          <header style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+            <div style={{ flex: 1 }}>
               <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Company Visits & Training</h2>
               <p style={{ margin: "6px 0 0 0", fontSize: 14.5, color: "#475569" }}>
                 See companies in Kajaani that are open for visits, mentoring, or internships. Every action logs XP and grows your verified experience.
               </p>
             </div>
-            <a
-              href="/companies"
-              style={{ fontSize: 13, fontWeight: 600, color: "#b45309", textDecoration: "none" }}
-            >
-              View all partner companies →
-            </a>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <a
+                href="/companies"
+                style={{ fontSize: 13, fontWeight: 600, color: "#2563eb", textDecoration: "none" }}
+              >
+                View all →
+              </a>
+              <button
+                type="button"
+                onClick={() => setCompanyVisitsExpanded(!companyVisitsExpanded)}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: 8,
+                  border: "1px solid #cbd5f5",
+                  background: "#fff",
+                  color: "#2563eb",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  fontSize: 13,
+                }}
+              >
+                {companyVisitsExpanded ? "▼ Collapse" : "▶ Expand"}
+              </button>
+            </div>
           </header>
+          {!companyVisitsExpanded && (
+            <div style={{ padding: 16, background: "#f8fafc", borderRadius: 12, textAlign: "center", color: "#64748b", fontSize: 14 }}>
+              Click "Expand" to view company visits and training opportunities
+            </div>
+          )}
+          {companyVisitsExpanded && (
           <div style={{ display: "grid", gap: 16 }}>
             {VISIT_AND_TRAINING_OPPORTUNITIES.map((visit) => (
               <article
@@ -786,6 +834,7 @@ export default function WorkOpportunitiesPage() {
               </article>
             ))}
           </div>
+          )}
         </section>
 
 
