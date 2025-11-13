@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import { useUserProfile } from "@/context/UserProfileContext";
 import { SkillsDiscoveryPanel } from "@/components/SkillsDiscoveryPanel";
+import { SkillsJobMatching } from "@/components/SkillsJobMatching";
 
 type OpportunityType = "Training" | "Internship" | "Full-time" | "Part-time";
 
@@ -512,6 +513,9 @@ export default function WorkOpportunitiesPage() {
 
         {/* Skills Discovery Research Module */}
         <SkillsDiscoveryPanel />
+
+        {/* Skills-to-Jobs Matching (Rule-Based + Optional AI Suggestions) */}
+        <SkillsJobMatching />
 
         <section
           aria-label="Recommended opportunities"
