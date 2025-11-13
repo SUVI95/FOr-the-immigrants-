@@ -699,36 +699,36 @@ export default function WorkOpportunitiesPage() {
                 style={{
                   padding: "20px",
                   borderRadius: 18,
-                  background: "rgba(254,243,199,0.75)",
-                  border: "1px solid rgba(251,191,36,0.4)",
+                  background: "rgba(239,246,255,0.75)",
+                  border: "1px solid rgba(59,130,246,0.4)",
                   display: "grid",
                   gap: 10,
                 }}
               >
                 <header style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
                   <div>
-                    <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#9a3412" }}>{visit.quote}</h3>
-                    <p style={{ margin: "6px 0 0 0", fontSize: 13.5, color: "#b45309" }}>{visit.name} · {visit.location}</p>
+                    <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#1e40af" }}>{visit.quote}</h3>
+                    <p style={{ margin: "6px 0 0 0", fontSize: 13.5, color: "#2563eb" }}>{visit.name} · {visit.location}</p>
                   </div>
                   <div style={{ textAlign: "right", display: "grid", gap: 6 }}>
                     <span
                       style={{
                         padding: "6px 12px",
                         borderRadius: 999,
-                        background: "rgba(250,204,21,0.25)",
-                        border: "1px solid rgba(202,138,4,0.35)",
-                        color: "#b45309",
+                        background: "rgba(59,130,246,0.25)",
+                        border: "1px solid rgba(37,99,235,0.35)",
+                        color: "#1e40af",
                         fontSize: 12,
                         fontWeight: 700,
                       }}
                     >
                       {visit.status}
                     </span>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#d97706" }}>+{visit.xpReward} XP</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#2563eb" }}>+{visit.xpReward} XP</span>
                   </div>
                 </header>
-                <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: "#78350f" }}>{visit.description}</p>
-                <div style={{ fontSize: 12.5, color: "#92400e" }}>Languages: {visit.languages}</div>
+                <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: "#1e293b" }}>{visit.description}</p>
+                <div style={{ fontSize: 12.5, color: "#475569" }}>Languages: {visit.languages}</div>
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                   <button
                     type="button"
@@ -747,7 +747,7 @@ export default function WorkOpportunitiesPage() {
                       padding: "10px 16px",
                       borderRadius: 12,
                       border: "none",
-                      background: "linear-gradient(135deg, #fbbf24, #f97316)",
+                      background: "linear-gradient(135deg, #2563eb, #7c3aed)",
                       color: "#fff",
                       fontWeight: 700,
                       cursor: "pointer",
@@ -772,9 +772,9 @@ export default function WorkOpportunitiesPage() {
                     style={{
                       padding: "10px 16px",
                       borderRadius: 12,
-                      border: "1px solid rgba(234,179,8,0.45)",
-                      background: "rgba(234,179,8,0.15)",
-                      color: "#92400e",
+                      border: "1px solid rgba(59,130,246,0.45)",
+                      background: "rgba(59,130,246,0.15)",
+                      color: "#2563eb",
                       fontWeight: 600,
                       cursor: "pointer",
                       flex: "0 0 auto",
