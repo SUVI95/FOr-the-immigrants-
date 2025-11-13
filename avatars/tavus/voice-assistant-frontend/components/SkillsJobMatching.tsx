@@ -122,21 +122,7 @@ export function SkillsJobMatching() {
   }
 
   if (matches.length === 0) {
-    return (
-      <div
-        style={{
-          padding: 24,
-          borderRadius: 20,
-          background: "#ffffff",
-          border: "1px solid #e2e8f0",
-          textAlign: "center",
-        }}
-      >
-        <p style={{ margin: 0, color: "#64748b" }}>
-          No job matches found. Complete your skills analysis first to see matching opportunities.
-        </p>
-      </div>
-    );
+    return null; // Don't show anything if no matches
   }
 
   return (

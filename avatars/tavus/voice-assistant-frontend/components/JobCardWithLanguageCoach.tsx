@@ -125,9 +125,6 @@ export function JobCardWithLanguageCoach({ job, matchScore, onApply }: JobCardWi
           </div>
         )}
 
-        <div style={{ marginTop: 12, padding: 8, background: "#fef3c7", borderRadius: 6, fontSize: 11, color: "#92400e" }}>
-          <strong>💡 Tip:</strong> Research shows learning language while working is more effective than classroom-only training.
-        </div>
       </div>
 
       {/* Requirements */}
