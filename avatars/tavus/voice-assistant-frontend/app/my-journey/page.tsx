@@ -11,6 +11,7 @@ import { MyPathwayMap } from "@/components/dashboard/MyPathwayMap";
 import { SkillPassportSummary } from "@/components/dashboard/SkillPassportSummary";
 import { RetentionTracker } from "@/components/RetentionTracker";
 import { ImpactDashboard } from "@/components/ImpactDashboard";
+import { RetentionSupport } from "@/components/RetentionSupport";
 
 type CoachSuggestion = {
   id: string;
@@ -166,6 +167,7 @@ export default function MyJourneyPage() {
           <SkillPassportSummary />
           <ImpactDashboard />
           <RetentionTracker />
+          <RetentionSupport />
           <section
             style={{
               borderRadius: 20,

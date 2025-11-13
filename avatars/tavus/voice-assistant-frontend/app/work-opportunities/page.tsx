@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import { useUserProfile } from "@/context/UserProfileContext";
 import { SkillsDiscoveryPanel } from "@/components/SkillsDiscoveryPanel";
 import { SkillsJobMatching } from "@/components/SkillsJobMatching";
+import { ProfessionalNetworking } from "@/components/ProfessionalNetworking";
 
 type OpportunityType = "Training" | "Internship" | "Full-time" | "Part-time";
 
@@ -514,8 +515,52 @@ export default function WorkOpportunitiesPage() {
         {/* Skills Discovery Research Module */}
         <SkillsDiscoveryPanel />
 
+        {/* Prompt to complete skills profile if not done */}
+        {userSkills.length === 0 && (
+          <section
+            style={{
+              marginBottom: 24,
+              padding: "24px 28px",
+              borderRadius: 20,
+              background: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)",
+              border: "2px solid #fcd34d",
+              boxShadow: "0 12px 24px rgba(251,191,36,0.2)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ margin: "0 0 8px 0", fontSize: 18, fontWeight: 800, color: "#92400e" }}>
+                  ⚠️ Complete Your Skills Profile First
+                </h3>
+                <p style={{ margin: 0, fontSize: 14, color: "#78350f", lineHeight: 1.6 }}>
+                  To see job matches based on your skills, complete your skills profile. Add your qualifications, work experience, and let AI analyze your skills.
+                </p>
+              </div>
+              <a
+                href="/my-skills"
+                style={{
+                  padding: "12px 24px",
+                  borderRadius: 12,
+                  border: "none",
+                  background: "linear-gradient(135deg, #f59e0b, #d97706)",
+                  color: "#fff",
+                  fontWeight: 700,
+                  textDecoration: "none",
+                  fontSize: 14,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Go to My Skills →
+              </a>
+            </div>
+          </section>
+        )}
+
         {/* Skills-to-Jobs Matching (Rule-Based + Optional AI Suggestions) */}
-        <SkillsJobMatching />
+        {userSkills.length > 0 && <SkillsJobMatching />}
+
+        {/* Professional Networking & Mentoring */}
+        <ProfessionalNetworking />
 
         <section
           aria-label="Recommended opportunities"

@@ -74,6 +74,30 @@ export default function RecognitionFastTrackPage() {
 
             {consented && (
               <div style={{ display: "grid", gap: 24 }}>
+                {/* Info Box */}
+                <div
+                  style={{
+                    padding: 20,
+                    borderRadius: 16,
+                    background: "linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%)",
+                    border: "2px solid #bfdbfe",
+                  }}
+                >
+                  <h3 style={{ margin: "0 0 12px 0", fontSize: 18, fontWeight: 800, color: "#1e40af" }}>
+                    📜 Recognition Fast-Track Overview
+                  </h3>
+                  <p style={{ margin: "0 0 12px 0", fontSize: 14, color: "#1e293b", lineHeight: 1.6 }}>
+                    <strong>Why this matters:</strong> Long delays in recognizing foreign qualifications block entry to regulated professions. 
+                    The traditional process takes 6-12 months. Our fast-track aims to reduce this to 3-4 months.
+                  </p>
+                  <div style={{ fontSize: 13, color: "#475569" }}>
+                    <div><strong>Expected processing time:</strong> 3-4 months (vs 6-12 months traditional)</div>
+                    <div style={{ marginTop: 8 }}>
+                      <strong>What you can do:</strong> Upload documents, track status, get guidance on regulated professions
+                    </div>
+                  </div>
+                </div>
+
                 {/* OPH Recognition Tracker */}
                 <OPHRecognitionTracker />
 

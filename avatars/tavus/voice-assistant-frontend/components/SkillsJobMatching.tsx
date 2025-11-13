@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useUserProfile } from "@/context/UserProfileContext";
+import { JobCardWithLanguageCoach } from "./JobCardWithLanguageCoach";
 
 interface MatchResult {
   jobId: string;
@@ -42,7 +43,7 @@ interface AISuggestion {
 }
 
 export function SkillsJobMatching() {
-  const { state } = useUserProfile();
+  const { state, recordAction } = useUserProfile();
   const [matches, setMatches] = useState<MatchResult[]>([]);
   const [aiSuggestions, setAiSuggestions] = useState<Record<string, AISuggestion>>({});
   const [loading, setLoading] = useState(false);
@@ -200,73 +201,26 @@ export function SkillsJobMatching() {
           const job = matchResult.job;
 
           return (
-            <article
-              key={matchResult.jobId}
-              style={{
-                padding: 24,
-                borderRadius: 20,
-                background: "#ffffff",
-                border: `2px solid ${
-                  match.matchScore >= 80
-                    ? "#86efac"
-                    : match.matchScore >= 60
-                    ? "#fcd34d"
-                    : "#fca5a5"
-                }`,
-                boxShadow: "0 12px 24px rgba(15,23,42,0.08)",
-                display: "grid",
-                gap: 16,
-              }}
-            >
-              {/* Header with match score */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#0f172a" }}>
-                    {job.title}
-                  </h3>
-                  <p style={{ margin: "6px 0 0 0", fontSize: 14, color: "#475569" }}>
-                    {job.company} · {job.city}
-                  </p>
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <div
-                    style={{
-                      padding: "8px 16px",
-                      borderRadius: 999,
-                      background:
-                        match.matchScore >= 80
-                          ? "#dcfce7"
-                          : match.matchScore >= 60
-                          ? "#fef3c7"
-                          : "#fee2e2",
-                      border: `1px solid ${
-                        match.matchScore >= 80
-                          ? "#86efac"
-                          : match.matchScore >= 60
-                          ? "#fcd34d"
-                          : "#fca5a5"
-                      }`,
-                      color:
-                        match.matchScore >= 80
-                          ? "#166534"
-                          : match.matchScore >= 60
-                          ? "#92400e"
-                          : "#991b1b",
-                      fontSize: 14,
-                      fontWeight: 700,
-                    }}
-                  >
-                    {match.matchScore}% Match
-                  </div>
-                  <p style={{ margin: "4px 0 0 0", fontSize: 11, color: "#64748b" }}>
-                    Rule-based (non-AI)
-                  </p>
-                </div>
-              </div>
-
-              {/* Match breakdown */}
+            <div key={matchResult.jobId}>
+              <JobCardWithLanguageCoach
+                job={job}
+                matchScore={match.matchScore}
+                onApply={() => {
+                  window.open(job.link, "_blank");
+                  recordAction({
+                    id: `job-apply-${job.id}-${Date.now()}`,
+                    label: `Applied for ${job.title}`,
+                    category: "jobs",
+                    xp: job.xpReward,
+                    impactPoints: Math.round(job.xpReward * 0.75),
+                  });
+                }}
+              />
+              
+              {/* Match breakdown and AI suggestion below the card */}
               <div
                 style={{
+                  marginTop: 12,
                   padding: 16,
                   background: "#f8fafc",
                   borderRadius: 12,
@@ -360,6 +314,7 @@ export function SkillsJobMatching() {
               {showAiSuggestions && aiSuggestion && (
                 <div
                   style={{
+                    marginTop: 12,
                     padding: 16,
                     background: "linear-gradient(135deg, #e0f2fe 0%, #eef2ff 100%)",
                     borderRadius: 12,
@@ -379,95 +334,8 @@ export function SkillsJobMatching() {
                   )}
                 </div>
               )}
-
-              {/* Job details */}
-              <div>
-                <p style={{ margin: "0 0 8px 0", fontSize: 13, color: "#1e293b", lineHeight: 1.6 }}>
-                  {job.description}
-                </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
-                  <span
-                    style={{
-                      padding: "6px 12px",
-                      borderRadius: 999,
-                      background: "#f1f5f9",
-                      border: "1px solid #cbd5f5",
-                      color: "#1d4ed8",
-                      fontSize: 12,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {job.field}
-                  </span>
-                  <span
-                    style={{
-                      padding: "6px 12px",
-                      borderRadius: 999,
-                      background: "#f1f5f9",
-                      border: "1px solid #cbd5f5",
-                      color: "#1d4ed8",
-                      fontSize: 12,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {job.language}
-                  </span>
-                  <span
-                    style={{
-                      padding: "6px 12px",
-                      borderRadius: 999,
-                      background: "#f1f5f9",
-                      border: "1px solid #cbd5f5",
-                      color: "#1d4ed8",
-                      fontSize: 12,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {job.type}
-                  </span>
-                </div>
               </div>
-
-              {/* Actions */}
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <a
-                  href={job.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    padding: "10px 20px",
-                    borderRadius: 12,
-                    border: "none",
-                    background: "linear-gradient(135deg, #22c55e, #16a34a)",
-                    color: "#fff",
-                    fontWeight: 700,
-                    textDecoration: "none",
-                    cursor: "pointer",
-                    flex: "1 1 200px",
-                    textAlign: "center",
-                  }}
-                >
-                  Apply Now
-                </a>
-                <button
-                  type="button"
-                  onClick={() => {
-                    // Save for later
-                  }}
-                  style={{
-                    padding: "10px 16px",
-                    borderRadius: 12,
-                    border: "1px solid #cbd5f5",
-                    background: "#fff",
-                    color: "#1e293b",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
-                >
-                  Save for Later
-                </button>
-              </div>
-            </article>
+            </div>
           );
         })}
       </div>
