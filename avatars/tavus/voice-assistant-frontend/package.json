@@ -13,11 +13,13 @@
   "dependencies": {
     "@livekit/components-react": "^2.9.3",
     "@livekit/components-styles": "^1.1.4",
+    "@types/pg": "^8.15.6",
     "framer-motion": "^11.18.0",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^3.0.3",
     "livekit-client": "^2.8.0",
     "livekit-server-sdk": "^2.9.7",
+    "pg": "^8.16.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

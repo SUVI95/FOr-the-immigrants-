@@ -3,6 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import { useUserProfile } from "@/context/UserProfileContext";
+import { SkillsDiscoveryPanel } from "@/components/SkillsDiscoveryPanel";
 
 type OpportunityType = "Training" | "Internship" | "Full-time" | "Part-time";
 
@@ -226,6 +227,7 @@ export default function WorkOpportunitiesPage() {
   const [typeFilter, setTypeFilter] = useState<OpportunityType | "All">("All");
   const [focusJobId, setFocusJobId] = useState<string | null>(null);
   const [workNowFilter, setWorkNowFilter] = useState(false);
+  const [userSkills, setUserSkills] = useState<string[]>([]);
   
   // Check URL for work-now filter
   useEffect(() => {
@@ -238,6 +240,39 @@ export default function WorkOpportunitiesPage() {
       }
     }
   }, []);
+
+  // Load user skills for matching
+  useEffect(() => {
+    const loadUserSkills = async () => {
+      try {
+        const userId = state.name || "anonymous";
+        const response = await fetch(`/api/skills/get?userId=${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.skills) {
+            setUserSkills(data.skills);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load user skills:", error);
+      }
+    };
+    loadUserSkills();
+  }, [state.name]);
+
+  // Calculate skills match score
+  const calculateSkillsMatch = (job: JobOpportunity): number => {
+    if (userSkills.length === 0) return 0;
+    
+    // Simple matching: check if job requirements mention any user skills
+    const jobText = `${job.title} ${job.description} ${job.requirements.join(" ")}`.toLowerCase();
+    const matchedSkills = userSkills.filter(skill => 
+      jobText.includes(skill.toLowerCase())
+    );
+    
+    // Calculate match percentage (simple heuristic)
+    return Math.min(100, Math.round((matchedSkills.length / userSkills.length) * 100));
+  };
 
   const fields = useMemo(() => ["All", ...Array.from(new Set(JOB_OPPORTUNITIES.map((job) => job.field)))], []);
   const cities = useMemo(() => ["All", ...Array.from(new Set(JOB_OPPORTUNITIES.map((job) => job.city)))], []);
@@ -474,6 +509,9 @@ export default function WorkOpportunitiesPage() {
           </div>
           )}
         </section>
+
+        {/* Skills Discovery Research Module */}
+        <SkillsDiscoveryPanel />
 
         <section
           aria-label="Recommended opportunities"
@@ -749,7 +787,11 @@ export default function WorkOpportunitiesPage() {
               Sourced directly from Duunijobs — filtered for inclusive and newcomer-friendly employers.
             </p>
           </header>
-          {filteredJobs.map((job) => (
+          {filteredJobs.map((job) => {
+            // Calculate skills match score (if skills analysis available)
+            const matchScore = calculateSkillsMatch(job);
+            
+            return (
             <article
               key={job.id}
               style={{
@@ -772,6 +814,26 @@ export default function WorkOpportunitiesPage() {
                   <p style={{ margin: "6px 0 0 0", fontSize: 14.5, color: "#475569" }}>
                     {job.company} · {job.city}
                   </p>
+                  {matchScore > 0 && (
+                    <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 8 }}>
+                      <span
+                        style={{
+                          padding: "4px 10px",
+                          borderRadius: 999,
+                          background: matchScore >= 70 ? "#dcfce7" : matchScore >= 50 ? "#fef3c7" : "#fee2e2",
+                          border: `1px solid ${matchScore >= 70 ? "#86efac" : matchScore >= 50 ? "#fcd34d" : "#fca5a5"}`,
+                          color: matchScore >= 70 ? "#166534" : matchScore >= 50 ? "#92400e" : "#991b1b",
+                          fontSize: 12,
+                          fontWeight: 700,
+                        }}
+                      >
+                        Skills Match: {matchScore}%
+                      </span>
+                      <span style={{ fontSize: 11, color: "#64748b" }}>
+                        (Research: Skills-based matching)
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div style={{ display: "grid", gap: 6, textAlign: "right" }}>
                   <span
@@ -927,7 +989,8 @@ export default function WorkOpportunitiesPage() {
                 </button>
               </div>
             </article>
-          ))}
+            );
+          })}
         </section>
 
         <section

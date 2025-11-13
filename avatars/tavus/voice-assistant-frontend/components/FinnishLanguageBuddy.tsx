@@ -93,12 +93,15 @@ export function FinnishLanguageBuddy() {
     setError(null);
 
     try {
+      // Get user ID from context if available
+      const userId = userState.name || "anonymous"; // Using name as temporary ID - replace with actual user ID
+      
       const response = await fetch("/api/language-buddy", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ topic, message: messageToSend }),
+        body: JSON.stringify({ topic, message: messageToSend, userId }),
       });
 
       if (!response.ok) {

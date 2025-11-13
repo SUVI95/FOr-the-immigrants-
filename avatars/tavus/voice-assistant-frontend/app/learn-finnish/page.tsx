@@ -8,6 +8,7 @@ import Sidebar from "@/components/Sidebar";
 import FinnishLanguageBuddy from "@/components/FinnishLanguageBuddy";
 import FinnishTextbookContent from "@/components/FinnishTextbookContent";
 import { useUserProfile } from "@/context/UserProfileContext";
+import { WorkplaceLanguageCoach } from "@/components/WorkplaceLanguageCoach";
 
 type SkillTrack = {
   id: string;
@@ -1010,6 +1011,9 @@ export default function LearnFinnishPage() {
           <FinnishTextbookContent />
             </div>
           </section>
+
+          {/* Workplace Language Coach Pilot */}
+          <WorkplaceLanguageCoach />
 
           <section id="finnish-progress-panel" style={{ display: "grid", gap: 20 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 12 }}>

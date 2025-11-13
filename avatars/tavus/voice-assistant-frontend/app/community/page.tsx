@@ -6,6 +6,7 @@ import { RoomContext } from "@livekit/components-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Sidebar from "@/components/Sidebar";
 import { useUserProfile } from "@/context/UserProfileContext";
+import { ProfessionalNetworkPanel } from "@/components/ProfessionalNetworkPanel";
 
 interface ExtendedEventData {
   id: string;
@@ -420,6 +421,9 @@ export default function CommunityPage() {
                 </div>
               </div>
             </section>
+
+            {/* Professional Network Pilot */}
+            <ProfessionalNetworkPanel />
 
             {/* Live City Map */}
             {mappedEvents.length > 0 && (

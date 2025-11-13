@@ -105,8 +105,11 @@ type SafetyState = {
   verifiedEmail: boolean;
   verifiedPhone: boolean;
   gdprConsent: boolean;
+  aiProcessingConsent: boolean; // New: Explicit AI processing consent
   moderationEnabled: boolean;
   lastReviewAt: string;
+  dataDeletionRequested: boolean; // New: Track deletion requests
+  dataDeletionRequestedAt: string | null; // New: When deletion was requested
 };
 
 type UserContributionCategory =
@@ -362,8 +365,11 @@ const INITIAL_STATE: UserProfileState = {
     verifiedEmail: true,
     verifiedPhone: true,
     gdprConsent: true,
+    aiProcessingConsent: true,
     moderationEnabled: true,
     lastReviewAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    dataDeletionRequested: false,
+    dataDeletionRequestedAt: null,
   },
   settings: {
     plainLanguage: false,
