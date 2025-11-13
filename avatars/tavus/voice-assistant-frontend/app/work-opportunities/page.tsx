@@ -645,6 +645,7 @@ export default function WorkOpportunitiesPage() {
               </article>
             ))}
           </div>
+          )}
         </section>
 
         <section
