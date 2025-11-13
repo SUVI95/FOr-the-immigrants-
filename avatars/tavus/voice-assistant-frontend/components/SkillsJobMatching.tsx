@@ -155,8 +155,22 @@ export function SkillsJobMatching() {
             Jobs Matching Your Skills
           </h2>
           <p style={{ margin: "6px 0 0 0", fontSize: 14, color: "#475569" }}>
-            Matched using rule-based algorithm (non-AI). {matches.length} opportunities found.
+            <strong>How matching works:</strong> Jobs are matched using a <strong>rule-based algorithm (non-AI)</strong> that compares your skills to job requirements. 
+            AI suggestions are optional and for informational purposes only. {matches.length} opportunities found.
           </p>
+          <div
+            style={{
+              marginTop: 12,
+              padding: 12,
+              background: "#f0fdf4",
+              borderRadius: 8,
+              border: "1px solid #86efac",
+              fontSize: 12,
+              color: "#166534",
+            }}
+          >
+            <strong>🔍 Matching Process:</strong> Skills Match (60%) + Language Level (30%) + Qualifications (10%) = Overall Score
+          </div>
         </div>
         <label
           style={{

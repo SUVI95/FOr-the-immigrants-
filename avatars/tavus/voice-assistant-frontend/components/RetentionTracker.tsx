@@ -58,6 +58,36 @@ export function RetentionTracker() {
     return { status: "due", color: "#fef3c7" };
   };
 
+  // Mockup data for investors/demo
+  const mockupRecords: RetentionRecord[] = [
+    {
+      id: "mock-1",
+      companyName: "Kainuu Hospitality",
+      startDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      checkIn1Month: { completed: true, date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(), satisfactionScore: 8 },
+      checkIn3Month: { completed: true, date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), satisfactionScore: 9 },
+      checkIn12Month: { completed: false },
+      retentionStatus: "active",
+    },
+    {
+      id: "mock-2",
+      companyName: "NorthCare Cooperative",
+      startDate: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      checkIn1Month: { completed: false },
+      checkIn3Month: { completed: false },
+      checkIn12Month: { completed: false },
+      retentionStatus: "active",
+    },
+  ];
+
+  const displayRecords = records.length > 0 ? records : mockupRecords;
+
+  if (loading && records.length === 0 && displayRecords.length === 0) {
+    return (
+      <div style={{ padding: 24, textAlign: "center", color: "#64748b" }}>Loading retention records...</div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -76,17 +106,30 @@ export function RetentionTracker() {
         <p style={{ margin: "6px 0 0 0", fontSize: 14, color: "#475569" }}>
           Track your job retention and integration progress. Check-ins help us support you and measure program impact.
         </p>
+        {records.length === 0 && displayRecords.length > 0 && (
+          <div
+            style={{
+              marginTop: 12,
+              padding: 12,
+              background: "#fef3c7",
+              borderRadius: 8,
+              border: "1px solid #fcd34d",
+              fontSize: 12,
+              color: "#92400e",
+            }}
+          >
+            <strong>Demo Data:</strong> Showing example retention tracking for investors and government partners. Real data will appear when users start jobs.
+          </div>
+        )}
       </div>
 
-      {loading && records.length === 0 ? (
-        <div style={{ padding: 24, textAlign: "center", color: "#64748b" }}>Loading retention records...</div>
-      ) : records.length === 0 ? (
+      {displayRecords.length === 0 ? (
         <div style={{ padding: 24, textAlign: "center", color: "#64748b" }}>
           No retention records yet. When you start a job, it will appear here for tracking.
         </div>
       ) : (
         <div style={{ display: "grid", gap: 16 }}>
-          {records.map((record) => {
+          {displayRecords.map((record) => {
             const statusColors = getStatusColor(record.retentionStatus);
             const checkIn1 = getCheckInStatus(record.checkIn1Month);
             const checkIn3 = getCheckInStatus(record.checkIn3Month);
