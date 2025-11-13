@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useUserProfile } from "@/context/UserProfileContext";
-import { PilotDisclosure } from "./PilotDisclosure";
 
 interface Mentor {
   id: string;
@@ -71,13 +70,6 @@ export function ProfessionalNetworkPanel() {
         marginBottom: 24,
       }}
     >
-      <PilotDisclosure
-        pilotName="Professional Network Builder"
-        duration="6 months (Jan 2025 - Jun 2025)"
-        purpose="Test AI-assisted mentor matching and professional network building to measure impact on job search success"
-        riskLevel="Limited Risk AI (Recommendations only)"
-      />
-
       <div style={{ marginBottom: 24 }}>
         <h3 style={{ margin: "0 0 12px 0", fontSize: "1.25rem", fontWeight: 700, color: "#0f172a" }}>
           Mentor Matching (Pilot)

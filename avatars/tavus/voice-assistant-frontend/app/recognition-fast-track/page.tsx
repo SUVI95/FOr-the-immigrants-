@@ -5,7 +5,6 @@ import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import { useUserProfile } from "@/context/UserProfileContext";
-import { ResearchConsentForm } from "@/components/ResearchConsentForm";
 import { OPHRecognitionTracker } from "@/components/OPHRecognitionTracker";
 
 export default function RecognitionFastTrackPage() {
@@ -63,17 +62,7 @@ export default function RecognitionFastTrackPage() {
               Research project to test faster qualification recognition workflows. Help us measure if streamlined processes reduce time-to-employment.
             </p>
 
-            {!consented && (
-              <ResearchConsentForm
-                researchName="Recognition Fast-Track"
-                researchPurpose="Research faster qualification recognition pathways for immigrants. Measure if streamlined recognition processes reduce time-to-employment."
-                duration="6 months (Jan 2025 - Jun 2025)"
-                onConsent={(value) => setConsented(value)}
-              />
-            )}
-
-            {consented && (
-              <div style={{ display: "grid", gap: 24 }}>
+            <div style={{ display: "grid", gap: 24 }}>
                 {/* Info Box */}
                 <div
                   style={{

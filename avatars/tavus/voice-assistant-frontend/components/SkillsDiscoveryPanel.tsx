@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useUserProfile } from "@/context/UserProfileContext";
-import { ResearchConsentForm } from "./ResearchConsentForm";
 
 interface SkillsAnalysis {
   skills: string[];
@@ -12,16 +11,10 @@ interface SkillsAnalysis {
 
 export function SkillsDiscoveryPanel() {
   const { state } = useUserProfile();
-  const [consented, setConsented] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<SkillsAnalysis | null>(null);
-  const [showConsent, setShowConsent] = useState(true);
 
   const analyzeSkills = async () => {
-    if (!consented) {
-      alert("Please consent to research participation first");
-      return;
-    }
 
     setAnalyzing(true);
     try {
@@ -40,7 +33,6 @@ export function SkillsDiscoveryPanel() {
 
       const data = await response.json();
       setAnalysis(data);
-      setShowConsent(false);
     } catch (error) {
       console.error("Skills analysis error:", error);
       alert("Failed to analyze skills. Please try again.");
@@ -48,22 +40,6 @@ export function SkillsDiscoveryPanel() {
       setAnalyzing(false);
     }
   };
-
-  if (showConsent) {
-    return (
-      <ResearchConsentForm
-        researchName="Skills Discovery"
-        researchPurpose="Research how skills-based job discovery improves immigrant employment outcomes"
-        duration="6 months (Jan 2025 - Jun 2025)"
-        onConsent={(value) => {
-          setConsented(value);
-          if (value) {
-            setTimeout(() => setShowConsent(false), 2000);
-          }
-        }}
-      />
-    );
-  }
 
   return (
     <div
@@ -110,7 +86,7 @@ export function SkillsDiscoveryPanel() {
           </p>
           <button
             onClick={analyzeSkills}
-            disabled={analyzing || !consented}
+            disabled={analyzing}
             style={{
               padding: "12px 20px",
               borderRadius: 12,

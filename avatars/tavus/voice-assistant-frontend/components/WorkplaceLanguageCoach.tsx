@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { PilotDisclosure } from "./PilotDisclosure";
 
 export function WorkplaceLanguageCoach() {
   const [enabled, setEnabled] = useState(false);
@@ -81,13 +80,6 @@ export function WorkplaceLanguageCoach() {
         marginBottom: 24,
       }}
     >
-      <PilotDisclosure
-        pilotName="Workplace Language Coach"
-        duration="3 months (Jan 2025 - Mar 2025)"
-        purpose="Test real-time language support in workplace settings to measure if language-in-work accelerates learning"
-        riskLevel="Limited Risk AI (Educational)"
-      />
-
       <div style={{ marginBottom: 20 }}>
         <label style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
           <input
