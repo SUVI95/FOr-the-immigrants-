@@ -6,6 +6,7 @@ import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import { useUserProfile } from "@/context/UserProfileContext";
 import { ResearchConsentForm } from "@/components/ResearchConsentForm";
+import { OPHRecognitionTracker } from "@/components/OPHRecognitionTracker";
 
 export default function RecognitionFastTrackPage() {
   const { state } = useUserProfile();
@@ -73,6 +74,9 @@ export default function RecognitionFastTrackPage() {
 
             {consented && (
               <div style={{ display: "grid", gap: 24 }}>
+                {/* OPH Recognition Tracker */}
+                <OPHRecognitionTracker />
+
                 {/* Document Upload */}
                 <section
                   style={{

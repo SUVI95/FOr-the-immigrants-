@@ -9,6 +9,8 @@ import DataProtectionPanel from "@/components/DataProtectionPanel";
 import { useUserProfile } from "@/context/UserProfileContext";
 import { MyPathwayMap } from "@/components/dashboard/MyPathwayMap";
 import { SkillPassportSummary } from "@/components/dashboard/SkillPassportSummary";
+import { RetentionTracker } from "@/components/RetentionTracker";
+import { ImpactDashboard } from "@/components/ImpactDashboard";
 
 type CoachSuggestion = {
   id: string;
@@ -162,6 +164,8 @@ export default function MyJourneyPage() {
           <MyPathwayMap />
           <ImpactWalletSummary />
           <SkillPassportSummary />
+          <ImpactDashboard />
+          <RetentionTracker />
           <section
             style={{
               borderRadius: 20,
