@@ -11,7 +11,6 @@ export default function RecognitionFastTrackPage() {
   const { state } = useUserProfile();
   const [room] = useState(new Room());
   const [activeTab, setActiveTab] = useState("recognition");
-  const [consented, setConsented] = useState(false);
   const [documents, setDocuments] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState<"not_started" | "uploading" | "submitted" | "in_review" | "approved">("not_started");
