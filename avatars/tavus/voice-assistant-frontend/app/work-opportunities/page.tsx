@@ -218,7 +218,7 @@ const EXTERNAL_PARTNERS = [
 ];
 
 export default function WorkOpportunitiesPage() {
-  const { recordAction } = useUserProfile();
+  const { state, recordAction } = useUserProfile();
   const [activeTab, setActiveTab] = useState("programs");
   const [searchQuery, setSearchQuery] = useState("");
   const [fieldFilter, setFieldFilter] = useState("All");
