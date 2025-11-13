@@ -192,6 +192,13 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
               <span>Work</span>
             </button>
             <button
+              className={`nav-btn ${currentPath.startsWith("/my-skills") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/my-skills"; }}
+            >
+              <i className="fa-solid fa-user-graduate"></i>
+              <span>My Skills</span>
+            </button>
+            <button
               className={`nav-btn ${currentPath.startsWith("/community") ? "active" : ""}`}
               onClick={() => { window.location.href = "/community"; }}
             >
@@ -204,6 +211,16 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
             >
               <i className="fa-solid fa-file-lines"></i>
               <span>CV</span>
+            </button>
+          </div>
+          <div className="nav-section">
+            <div className="nav-section-title">Settings</div>
+            <button
+              className={`nav-btn ${currentPath.startsWith("/consent-hub") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/consent-hub"; }}
+            >
+              <i className="fa-solid fa-shield-halved"></i>
+              <span>Consent Hub</span>
             </button>
           </div>
         </div>
