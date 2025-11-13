@@ -334,7 +334,6 @@ export function SkillsJobMatching() {
                   )}
                 </div>
               )}
-              </div>
             </div>
           );
         })}
