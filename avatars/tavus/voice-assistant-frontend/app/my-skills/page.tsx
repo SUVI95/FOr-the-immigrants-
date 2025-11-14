@@ -84,7 +84,13 @@ export default function MySkillsPage() {
       if (response.ok) {
         const data = await response.json();
         setSkills(data.skills || []);
-        alert("Skills analyzed! Check your profile and job matches.");
+        
+        // Show friendly summary
+        const skillNames = (data.skills || []).slice(0, 3).map((s: any) => typeof s === "string" ? s : s.skill || s.name || "skills").join(", ");
+        const summary = skillNames 
+          ? `Great! We found you are strong in ${skillNames}. Jobs like Retail Assistant, Customer Service, or Warehouse Worker might fit your skills.`
+          : "Skills analyzed! Check your profile and job matches.";
+        alert(summary);
       }
     } catch (error) {
       console.error("Failed to analyze skills:", error);

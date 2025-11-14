@@ -733,8 +733,23 @@ export default function LearnFinnishPage() {
                       {track.icon}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 4 }}>
+                      <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 4, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                         {track.title}
+                        {track.levelCode && (
+                          <span
+                            style={{
+                              fontSize: 10,
+                              padding: "2px 6px",
+                              borderRadius: 4,
+                              background: "#f1f5f9",
+                              color: "#64748b",
+                              fontWeight: 600,
+                            }}
+                            title={`CEFR Level ${track.levelCode}: ${track.levelCode === "A1" ? "Beginner" : track.levelCode === "A2" ? "Elementary" : track.levelCode === "B1" ? "Intermediate" : track.levelCode === "B2" ? "Upper Intermediate" : track.levelCode === "C1" ? "Advanced" : "Expert"}`}
+                          >
+                            {track.levelCode}
+                          </span>
+                        )}
                       </h3>
                       <p style={{ margin: 0, fontSize: 14, color: "#64748b", lineHeight: 1.4 }}>{track.description}</p>
                     </div>
