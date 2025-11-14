@@ -19,6 +19,16 @@ export default function MySkillsPage() {
   const [newSkill, setNewSkill] = useState("");
   const [newQualification, setNewQualification] = useState("");
   const [newExperience, setNewExperience] = useState("");
+  
+  // Calculate progress
+  const calculateProgress = () => {
+    let completed = 0;
+    if (qualifications.length > 0) completed++;
+    if (workExperience.length > 0) completed++;
+    if (jobPreferences.fields.length > 0 || jobPreferences.jobTypes.length > 0) completed++;
+    if (skills.length > 0) completed++;
+    return Math.round((completed / 4) * 100);
+  };
 
   // Load existing skills
   useEffect(() => {
@@ -110,8 +120,30 @@ export default function MySkillsPage() {
             My Skills Profile
           </h1>
           <p style={{ margin: 0, fontSize: "1.1rem", opacity: 0.95, lineHeight: 1.6 }}>
-            Build your skills profile to discover matching job opportunities. Add your qualifications, work experience, and job preferences.
+            Tell us about your education and work experience. We'll help you find jobs that match your skills.
           </p>
+          
+          {/* Progress Bar */}
+          <div style={{ marginTop: 20, padding: "16px 20px", background: "rgba(255,255,255,0.2)", borderRadius: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <span style={{ fontSize: 14, fontWeight: 600 }}>Your Progress</span>
+              <span style={{ fontSize: 16, fontWeight: 700 }}>{calculateProgress()}% Complete</span>
+            </div>
+            <div style={{ width: "100%", height: 8, background: "rgba(255,255,255,0.3)", borderRadius: 999, overflow: "hidden" }}>
+              <div
+                style={{
+                  width: `${calculateProgress()}%`,
+                  height: "100%",
+                  background: "#fff",
+                  borderRadius: 999,
+                  transition: "width 0.3s ease",
+                }}
+              />
+            </div>
+            <div style={{ marginTop: 8, fontSize: 12, opacity: 0.9 }}>
+              {calculateProgress() < 100 ? "Complete all 4 steps to find your perfect job match!" : "Great! You're ready to find jobs."}
+            </div>
+          </div>
         </section>
 
         {/* Step 1: Add Qualifications */}
@@ -156,7 +188,7 @@ export default function MySkillsPage() {
               value={newQualification}
               onChange={(e) => setNewQualification(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleAddQualification()}
-              placeholder="e.g., Bachelor of Science in Computer Science"
+              placeholder="Example: High School Diploma, Bachelor's Degree, Driver's License"
               style={{
                 flex: 1,
                 padding: "12px 16px",
@@ -180,6 +212,9 @@ export default function MySkillsPage() {
             >
               Add
             </button>
+          </div>
+          <div style={{ marginBottom: 16, fontSize: 12, color: "#64748b", fontStyle: "italic" }}>
+            💡 Tip: Add any certificates or diplomas you have, even from your home country
           </div>
 
           {qualifications.length > 0 && (
@@ -265,7 +300,7 @@ export default function MySkillsPage() {
               value={newExperience}
               onChange={(e) => setNewExperience(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleAddExperience()}
-              placeholder="e.g., Software Developer at Tech Company (2020-2023)"
+              placeholder="Example: Waiter at Restaurant (2020-2022), or Part-time Babysitting (2021-2023)"
               style={{
                 flex: 1,
                 padding: "12px 16px",
@@ -289,6 +324,9 @@ export default function MySkillsPage() {
             >
               Add
             </button>
+          </div>
+          <div style={{ marginBottom: 16, fontSize: 12, color: "#64748b", fontStyle: "italic" }}>
+            💡 Tip: Include any work you did, even part-time or volunteer work
           </div>
 
           {workExperience.length > 0 && (
@@ -482,10 +520,10 @@ export default function MySkillsPage() {
             </h2>
           </div>
           <p style={{ margin: "0 0 20px 0", fontSize: 14, color: "#166534", lineHeight: 1.6 }}>
-            <strong>How it works:</strong> Our AI analyzes your qualifications and experience to extract your skills and map them to the European Skills Framework (ESCO). This helps match you with relevant job opportunities.
+            <strong>How it works:</strong> We look at your education and work experience to find your skills. Then we show you jobs that match your skills.
           </p>
           <p style={{ margin: "0 0 20px 0", fontSize: 13, color: "#166534", lineHeight: 1.6 }}>
-            <strong>EU AI Act Compliance:</strong> AI is used only for skills analysis (Low-Risk). Job matching uses a rule-based algorithm (No Risk). You always decide which jobs to apply for.
+            <strong>Your choice:</strong> You always decide which jobs to apply for. We only help you find opportunities.
           </p>
 
           <button

@@ -21,6 +21,7 @@ type SkillTrack = {
   cta: string;
   color: string;
   icon: string;
+  levelCode?: string;
 };
 
 type QuickChallenge = {
@@ -34,7 +35,7 @@ type QuickChallenge = {
 const SKILL_TRACKS: SkillTrack[] = [
   {
     id: "track-a1",
-    title: "A1 • Everyday Finnish",
+    title: "Beginner • Everyday Finnish",
     description: "Learn hello, thanks, and daily words. Start here!",
     progressPercent: 40,
     lessons: 12,
@@ -43,10 +44,11 @@ const SKILL_TRACKS: SkillTrack[] = [
     cta: "Continue",
     color: "#6366f1",
     icon: "👋",
+    levelCode: "A1",
   },
   {
     id: "track-a2",
-    title: "A2 • Work & Study",
+    title: "Elementary • Work & Study",
     description: "Job interviews and emails. Get ready for work!",
     progressPercent: 60,
     lessons: 15,
@@ -55,10 +57,11 @@ const SKILL_TRACKS: SkillTrack[] = [
     cta: "Continue",
     color: "#22c55e",
     icon: "💼",
+    levelCode: "A2",
   },
   {
     id: "track-b1",
-    title: "B1 • Community Life",
+    title: "Intermediate • Community Life",
     description: "Talk about family and hobbies. Make friends!",
     progressPercent: 15,
     lessons: 18,
@@ -67,10 +70,11 @@ const SKILL_TRACKS: SkillTrack[] = [
     cta: "Start",
     color: "#f59e0b",
     icon: "🗣️",
+    levelCode: "B1",
   },
   {
     id: "track-b2",
-    title: "B2 • Workplaces",
+    title: "Upper Intermediate • Workplaces",
     description: "Lead meetings and solve problems. Be confident!",
     progressPercent: 5,
     lessons: 20,
@@ -79,10 +83,11 @@ const SKILL_TRACKS: SkillTrack[] = [
     cta: "Preview",
     color: "#ec4899",
     icon: "🏢",
+    levelCode: "B2",
   },
   {
     id: "track-c1",
-    title: "C1 • Advanced",
+    title: "Advanced",
     description: "Speak like a native. Almost there!",
     progressPercent: 0,
     lessons: 25,
@@ -91,10 +96,11 @@ const SKILL_TRACKS: SkillTrack[] = [
     cta: "View",
     color: "#8b5cf6",
     icon: "🎓",
+    levelCode: "C1",
   },
   {
     id: "track-c2",
-    title: "C2 • Master",
+    title: "Expert",
     description: "Teach others Finnish. You're a pro!",
     progressPercent: 0,
     lessons: 30,
@@ -103,6 +109,7 @@ const SKILL_TRACKS: SkillTrack[] = [
     cta: "View",
     color: "#06b6d4",
     icon: "🌟",
+    levelCode: "C2",
   },
 ];
 

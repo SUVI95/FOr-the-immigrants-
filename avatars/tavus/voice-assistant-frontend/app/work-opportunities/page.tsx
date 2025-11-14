@@ -229,8 +229,21 @@ export default function WorkOpportunitiesPage() {
   const [typeFilter, setTypeFilter] = useState<OpportunityType | "All">("All");
   const [focusJobId, setFocusJobId] = useState<string | null>(null);
   const [workNowFilter, setWorkNowFilter] = useState(false);
-  const [recommendedExpanded, setRecommendedExpanded] = useState(false);
-  const [companyVisitsExpanded, setCompanyVisitsExpanded] = useState(false);
+  const [recommendedExpanded, setRecommendedExpanded] = useState(() => {
+    // Auto-expand for first-time users
+    if (typeof window !== "undefined") {
+      const hasSeenBefore = localStorage.getItem("has_seen_recommended_jobs");
+      return !hasSeenBefore;
+    }
+    return true; // Default to expanded
+  });
+  const [companyVisitsExpanded, setCompanyVisitsExpanded] = useState(() => {
+    if (typeof window !== "undefined") {
+      const hasSeenBefore = localStorage.getItem("has_seen_company_visits");
+      return !hasSeenBefore;
+    }
+    return true;
+  });
   const [userSkills, setUserSkills] = useState<string[]>([]);
   
   // Check URL for work-now filter
@@ -547,7 +560,13 @@ export default function WorkOpportunitiesPage() {
               <span style={{ fontSize: 12, fontWeight: 600, color: "#2563eb" }}>Updated a few minutes ago</span>
               <button
                 type="button"
-                onClick={() => setRecommendedExpanded(!recommendedExpanded)}
+                onClick={() => {
+                  const newState = !recommendedExpanded;
+                  setRecommendedExpanded(newState);
+                  if (newState && typeof window !== "undefined") {
+                    localStorage.setItem("has_seen_recommended_jobs", "true");
+                  }
+                }}
                 style={{
                   padding: "8px 16px",
                   borderRadius: 8,
@@ -559,13 +578,14 @@ export default function WorkOpportunitiesPage() {
                   fontSize: 13,
                 }}
               >
-                {recommendedExpanded ? "▼ Collapse" : "▶ Expand"}
+                {recommendedExpanded ? "▼ Hide" : "▶ Show Jobs"}
               </button>
             </div>
           </header>
           {!recommendedExpanded && (
             <div style={{ padding: 16, background: "#f8fafc", borderRadius: 12, textAlign: "center", color: "#64748b", fontSize: 14 }}>
-              Click "Expand" to view recommended opportunities
+              <div style={{ marginBottom: 8 }}>💡 Click "Expand" to see jobs that match your skills</div>
+              <div style={{ fontSize: 12, color: "#94a3b8" }}>We found jobs just for you!</div>
             </div>
           )}
           {recommendedExpanded && (
@@ -721,7 +741,13 @@ export default function WorkOpportunitiesPage() {
               </a>
               <button
                 type="button"
-                onClick={() => setCompanyVisitsExpanded(!companyVisitsExpanded)}
+                onClick={() => {
+                  const newState = !companyVisitsExpanded;
+                  setCompanyVisitsExpanded(newState);
+                  if (newState && typeof window !== "undefined") {
+                    localStorage.setItem("has_seen_company_visits", "true");
+                  }
+                }}
                 style={{
                   padding: "8px 16px",
                   borderRadius: 8,
@@ -733,13 +759,14 @@ export default function WorkOpportunitiesPage() {
                   fontSize: 13,
                 }}
               >
-                {companyVisitsExpanded ? "▼ Collapse" : "▶ Expand"}
+                {companyVisitsExpanded ? "▼ Hide" : "▶ Show Visits"}
               </button>
             </div>
           </header>
           {!companyVisitsExpanded && (
             <div style={{ padding: 16, background: "#f8fafc", borderRadius: 12, textAlign: "center", color: "#64748b", fontSize: 14 }}>
-              Click "Expand" to view company visits and training opportunities
+              <div style={{ marginBottom: 8 }}>💡 Click "Expand" to see companies you can visit</div>
+              <div style={{ fontSize: 12, color: "#94a3b8" }}>Learn new skills by visiting local companies!</div>
             </div>
           )}
           {companyVisitsExpanded && (

@@ -30,7 +30,14 @@ interface SpeedMeeting {
 
 export function ProfessionalNetworking() {
   const { state, recordAction } = useUserProfile();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(() => {
+    // Auto-expand for first-time users
+    if (typeof window !== "undefined") {
+      const hasSeenBefore = localStorage.getItem("has_seen_professional_networking");
+      return !hasSeenBefore;
+    }
+    return true; // Default to expanded
+  });
   const [activeTab, setActiveTab] = useState<"mentors" | "speed-meetings">("mentors");
   const [selectedSector, setSelectedSector] = useState<string>("All");
 
@@ -164,15 +171,21 @@ export function ProfessionalNetworking() {
       <div style={{ marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
         <div style={{ flex: 1 }}>
           <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
-            Professional Networking & Mentoring
+            Find Mentors & Networking Events
           </h2>
           <p style={{ margin: "6px 0 0 0", fontSize: 14, color: "#475569" }}>
-            Connect with mentors and employers in your field. Build professional relationships to overcome discrimination and break into Finnish labor markets.
+            Connect with experienced people who can help you find a job. Meet employers and learn about work in Finland.
           </p>
         </div>
         <button
           type="button"
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={() => {
+            const newState = !isExpanded;
+            setIsExpanded(newState);
+            if (newState && typeof window !== "undefined") {
+              localStorage.setItem("has_seen_professional_networking", "true");
+            }
+          }}
           style={{
             padding: "8px 16px",
             borderRadius: 8,
@@ -185,13 +198,14 @@ export function ProfessionalNetworking() {
             whiteSpace: "nowrap",
           }}
         >
-          {isExpanded ? "▼ Collapse" : "▶ Expand"}
+          {isExpanded ? "▼ Hide" : "▶ Show"}
         </button>
       </div>
 
       {!isExpanded && (
         <div style={{ padding: 16, background: "#f8fafc", borderRadius: 12, textAlign: "center", color: "#64748b", fontSize: 14 }}>
-          Click "Expand" to view mentors and speed meetings
+          <div style={{ marginBottom: 8 }}>💡 Click "Show" to find mentors and networking events</div>
+          <div style={{ fontSize: 12, color: "#94a3b8" }}>Connect with people who can help you find a job!</div>
         </div>
       )}
 
