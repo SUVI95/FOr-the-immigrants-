@@ -22,8 +22,10 @@ export const dynamic = "force-dynamic";
  */
 export async function POST(request: Request) {
   try {
-    // Try to parse as FormData first (for file uploads)
-    try {
+    const contentType = request.headers.get("content-type") || "";
+    
+    // Handle file upload (FormData)
+    if (contentType.includes("multipart/form-data") || contentType.includes("form-data")) {
       const formData = await request.formData();
       const userId = formData.get("userId") as string;
       const documents = formData.getAll("documents") as File[];
@@ -83,10 +85,10 @@ export async function POST(request: Request) {
           "You'll receive updates on recognition status",
         ],
       });
-    } catch (formDataError) {
-      // Not FormData, try JSON
-      const jsonData = await request.json();
-      const { userId, qualificationTitle, qualificationType, issuingCountry, issuingInstitution, documentUrl } = jsonData;
+    }
+
+    // Handle JSON request (existing format)
+    const { userId, qualificationTitle, qualificationType, issuingCountry, issuingInstitution, documentUrl } = await request.json();
 
     if (!userId || !qualificationTitle) {
       return NextResponse.json({ error: "User ID and qualification title required" }, { status: 400 });
