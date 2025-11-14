@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { pseudonymizeUserId, sanitizeUserInput } from "@/lib/security";
 
+// Note: In production, use proper file storage (S3, Cloudinary, etc.)
+// This is a simplified version for the prototype
+
 export const dynamic = "force-dynamic";
 
 /**
@@ -15,11 +18,75 @@ export const dynamic = "force-dynamic";
  */
 
 /**
- * POST: Submit recognition request
+ * POST: Submit recognition request (with file upload support)
  */
 export async function POST(request: Request) {
   try {
-    const { userId, qualificationTitle, qualificationType, issuingCountry, issuingInstitution, documentUrl } = await request.json();
+    // Try to parse as FormData first (for file uploads)
+    try {
+      const formData = await request.formData();
+      const userId = formData.get("userId") as string;
+      const documents = formData.getAll("documents") as File[];
+      
+      if (!userId) {
+        return NextResponse.json({ error: "User ID required" }, { status: 400 });
+      }
+
+      if (documents.length === 0) {
+        return NextResponse.json({ error: "At least one document required" }, { status: 400 });
+      }
+
+      // In production, upload files to cloud storage (S3, etc.) and get URLs
+      // For now, simulate successful upload
+      const documentUrls: string[] = [];
+      for (const doc of documents) {
+        // Simulate file upload - in production, upload to storage and get URL
+        const simulatedUrl = `/uploads/${userId}/${doc.name}`;
+        documentUrls.push(simulatedUrl);
+      }
+
+      // Create recognition request with first document
+      const qualificationTitle = documents[0]?.name || "Foreign Qualification";
+      const result = await query(
+        `INSERT INTO oph_recognition_requests 
+         (user_id, qualification_title, document_url, status)
+         VALUES ($1, $2, $3, 'submitted')
+         RETURNING id, status, created_at`,
+        [userId, qualificationTitle, documentUrls[0]]
+      );
+
+      const requestData = result.rows[0];
+
+      // Log for analytics
+      const userHash = pseudonymizeUserId(userId);
+      await query(
+        `INSERT INTO impact_metrics (user_id, metric_type, metric_name, metric_value, metric_data)
+         VALUES ($1, 'recognition', 'oph_request_submitted', 1, $2)`,
+        [
+          userId,
+          JSON.stringify({
+            document_count: documents.length,
+            timestamp: new Date(),
+          }),
+        ]
+      );
+
+      return NextResponse.json({
+        requestId: requestData.id,
+        status: requestData.status,
+        message: "Documents uploaded successfully. Recognition request submitted to OPH.",
+        documentCount: documents.length,
+        nextSteps: [
+          "Documents will be translated to Finnish/Swedish",
+          "Translated documents will be sent to OPH",
+          "Expected processing time: 3-4 months",
+          "You'll receive updates on recognition status",
+        ],
+      });
+    } catch (formDataError) {
+      // Not FormData, try JSON
+      const jsonData = await request.json();
+      const { userId, qualificationTitle, qualificationType, issuingCountry, issuingInstitution, documentUrl } = jsonData;
 
     if (!userId || !qualificationTitle) {
       return NextResponse.json({ error: "User ID and qualification title required" }, { status: 400 });

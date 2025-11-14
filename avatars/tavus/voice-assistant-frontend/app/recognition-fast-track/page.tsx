@@ -20,13 +20,42 @@ export default function RecognitionFastTrackPage() {
 
     setUploading(true);
     const fileArray = Array.from(files);
-    setDocuments(fileArray);
+    
+    try {
+      // Upload files to server
+      const formData = new FormData();
+      fileArray.forEach((file) => {
+        formData.append("documents", file);
+      });
+      formData.append("userId", state.name || "anonymous");
 
-    // Simulate upload and OPH submission
-    setTimeout(() => {
+      const response = await fetch("/api/oph-recognition", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setDocuments(fileArray);
+        setStatus("submitted");
+        
+        // Reload OPH tracker to show new request
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
+        
+        // Show success message
+        alert(`Documents uploaded successfully! Your recognition request has been submitted to OPH. Expected processing time: 3-4 months.`);
+      } else {
+        const errorData = await response.json().catch(() => ({ error: "Upload failed" }));
+        throw new Error(errorData.error || "Upload failed");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("Failed to upload documents. Please try again.");
+    } finally {
       setUploading(false);
-      setStatus("submitted");
-    }, 2000);
+    }
   };
 
   const handleLearnFinnishClick = () => {

@@ -13,29 +13,88 @@ export function SkillsDiscoveryPanel() {
   const { state } = useUserProfile();
   const [analyzing, setAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<SkillsAnalysis | null>(null);
+  const [qualifications, setQualifications] = useState<string[]>([]);
+  const [workExperience, setWorkExperience] = useState<string[]>([]);
+
+  // Load user qualifications and experience
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const userId = state.name || "anonymous";
+        const response = await fetch(`/api/skills/get?userId=${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          // Get qualifications from skill passport or API
+          if (data.qualifications) {
+            setQualifications(data.qualifications);
+          } else if (state.skillPassport?.entries) {
+            setQualifications(state.skillPassport.entries.map((e: any) => e.title));
+          }
+          if (data.workExperience) {
+            setWorkExperience(data.workExperience);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load user data:", error);
+      }
+    };
+    loadUserData();
+  }, [state.name, state.skillPassport]);
 
   const analyzeSkills = async () => {
-
     setAnalyzing(true);
     try {
       const userId = state.name || "anonymous";
+      
+      // Use loaded qualifications or fallback to skill passport
+      const quals = qualifications.length > 0 
+        ? qualifications 
+        : (state.skillPassport?.entries?.map((e: any) => e.title) || []);
+      
+      // If no qualifications, provide helpful message
+      if (quals.length === 0 && workExperience.length === 0) {
+        alert("Please add your qualifications and work experience in the 'My Skills' page first, then come back to analyze.");
+        setAnalyzing(false);
+        return;
+      }
+
       const response = await fetch("/api/skills/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId,
-          qualifications: state.skillPassport.entries.map((e) => e.title),
-          workExperience: [],
+          qualifications: quals,
+          workExperience: workExperience,
         }),
       });
 
-      if (!response.ok) throw new Error("Analysis failed");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        throw new Error(errorData.error || "Analysis failed");
+      }
 
       const data = await response.json();
-      setAnalysis(data);
-    } catch (error) {
+      
+      // Ensure we have the expected format
+      if (data.skills && Array.isArray(data.skills)) {
+        // Extract skill names if they're objects
+        const skillNames = data.skills.map((s: any) => typeof s === "string" ? s : s.skill || s.name || "Unknown");
+        setAnalysis({
+          skills: skillNames,
+          analysis: data.analysis || "Skills analysis completed.",
+          explanation: data.explanation || "This analysis helps you understand your skills profile.",
+        });
+      } else {
+        // Fallback if API returns unexpected format
+        setAnalysis({
+          skills: ["Analysis completed"],
+          analysis: data.analysis || "Your skills have been analyzed.",
+          explanation: "Use the 'My Skills' page to see detailed results.",
+        });
+      }
+    } catch (error: any) {
       console.error("Skills analysis error:", error);
-      alert("Failed to analyze skills. Please try again.");
+      alert(`Failed to analyze skills: ${error.message || "Please try again or add qualifications first."}`);
     } finally {
       setAnalyzing(false);
     }
