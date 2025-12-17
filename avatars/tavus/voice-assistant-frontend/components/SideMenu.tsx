@@ -42,9 +42,9 @@ export default function SideMenu({ isOpen, onToggle }: SideMenuProps) {
       category: "Government"
     },
     {
-      title: "TE Services (Employment)",
-      description: "Job search and unemployment services",
-      link: "https://www.te-palvelut.fi/te/en/",
+      title: "Duunijobs",
+      description: "Connect with job advisors and find work",
+      link: "/work-opportunities",
       category: "Employment"
     },
     {

@@ -105,14 +105,14 @@ const FIRST_MONTH_CHECKLIST: ChecklistItem[] = [
   },
   {
     id: "month1-2",
-    title: "Register with TE Services",
-    description: "Get help finding work and access job training programs",
+    title: "Connect with Duunijobs",
+    description: "Get help finding work and connect with job advisors",
     urgency: "important",
     timeframe: "Within 30 days",
     completed: false,
     resources: [
-      { label: "TE Services Registration", href: "https://www.te-palvelut.fi/te/en/" },
-      { label: "Kajaani TE Office", href: "https://www.te-palvelut.fi/te/en/contact_information/offices/" },
+      { label: "Contact Duunijobs", href: "/work-opportunities" },
+      { label: "Find Work", href: "/work-opportunities" },
     ],
   },
   {

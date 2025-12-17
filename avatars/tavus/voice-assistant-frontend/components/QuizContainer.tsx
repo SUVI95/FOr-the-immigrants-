@@ -1,6 +1,9 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRoomContext, useVoiceAssistant } from "@livekit/components-react";
+import { useUserProfile } from "@/context/UserProfileContext";
 import Quiz, { QuizQuestion } from "./Quiz";
 
 export interface SubmittedQuiz {
@@ -17,6 +20,9 @@ export default function QuizContainer() {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
   const room = useRoomContext();
   const { agent } = useVoiceAssistant();
+  
+  // Get useUserProfile - hook must be called unconditionally
+  // The context should always be available since it's provided in layout.tsx
   const { saveQuiz } = useUserProfile();
 
   useEffect(() => {
@@ -49,21 +55,23 @@ export default function QuizContainer() {
           setIsVisible(true);
           
           // Save to learning history
-          saveQuiz({
-            id: payload.id,
-            title: payload.title || "Finnish Quiz",
-            questions: payload.questions.map((q: any) => ({
-              id: q.id,
-              text: q.text,
-              answers: q.answers.map((a: any) => ({
-                id: a.id,
-                text: a.text,
-                isCorrect: a.is_correct || a.isCorrect,
+          if (saveQuiz) {
+            saveQuiz({
+              id: payload.id,
+              title: payload.title || "Finnish Quiz",
+              questions: payload.questions.map((q: any) => ({
+                id: q.id,
+                text: q.text,
+                answers: q.answers.map((a: any) => ({
+                  id: a.id,
+                  text: a.text,
+                  isCorrect: a.is_correct || a.isCorrect,
+                })),
               })),
-            })),
-            createdAt: new Date().toISOString(),
-            topic: payload.topic || "Finnish Learning",
-          });
+              createdAt: new Date().toISOString(),
+              topic: payload.topic || "Finnish Learning",
+            });
+          }
         } else if (payload.action === "hide") {
           setIsVisible(false);
         }

@@ -162,13 +162,26 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
 
         <div className="nav" ref={navRef}>
           <div className="nav-section">
-            <div className="nav-section-title">Core</div>
             <button
-              className={`nav-btn ${currentPath === "/" || currentPath.startsWith("/journey") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/journey"; }}
+              className={`nav-btn ${currentPath === "/" ? "active" : ""}`}
+              onClick={() => { window.location.href = "/"; }}
             >
-              <i className="fa-solid fa-route"></i>
-              <span>Journey</span>
+              <i className="fa-solid fa-home"></i>
+              <span>Home</span>
+            </button>
+            <button
+              className={`nav-btn ${currentPath.startsWith("/first-30-days") || currentPath.startsWith("/start-here") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/first-30-days"; }}
+            >
+              <i className="fa-solid fa-rocket"></i>
+              <span>Start Here</span>
+            </button>
+            <button
+              className={`nav-btn ${currentPath.startsWith("/work-opportunities") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/work-opportunities"; }}
+            >
+              <i className="fa-solid fa-briefcase"></i>
+              <span>Find Work</span>
             </button>
             <button
               className={`nav-btn ${currentPath.startsWith("/learn-finnish") ? "active" : ""}`}
@@ -178,49 +191,32 @@ export default function Sidebar({ activeTab, onTabChange, onLearnFinnishClick }:
               <span>Learn Finnish</span>
             </button>
             <button
-              className={`nav-btn ${currentPath.startsWith("/knuut-voice") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/knuut-voice"; }}
+              className={`nav-btn ${currentPath.startsWith("/start-business") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/start-business"; }}
             >
-              <i className="fa-solid fa-microphone-lines"></i>
-              <span>Voice</span>
+              <i className="fa-solid fa-store"></i>
+              <span>Start a Business</span>
             </button>
             <button
-              className={`nav-btn ${currentPath.startsWith("/work-opportunities") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/work-opportunities"; }}
+              className={`nav-btn ${currentPath.startsWith("/resources") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/resources"; }}
             >
-              <i className="fa-solid fa-briefcase"></i>
-              <span>Work</span>
+              <i className="fa-solid fa-heart"></i>
+              <span>Life in Finland</span>
             </button>
             <button
-              className={`nav-btn ${currentPath.startsWith("/my-skills") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/my-skills"; }}
+              className={`nav-btn ${currentPath.startsWith("/events") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/events"; }}
             >
-              <i className="fa-solid fa-user-graduate"></i>
-              <span>My Skills</span>
+              <i className="fa-solid fa-calendar"></i>
+              <span>Events</span>
             </button>
             <button
-              className={`nav-btn ${currentPath.startsWith("/community") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/community"; }}
+              className={`nav-btn ${currentPath.startsWith("/journey") || currentPath.startsWith("/my-journey") ? "active" : ""}`}
+              onClick={() => { window.location.href = "/journey"; }}
             >
-              <i className="fa-solid fa-people-group"></i>
-              <span>Community</span>
-            </button>
-            <button
-              className={`nav-btn ${currentPath.startsWith("/smart-cv-builder") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/smart-cv-builder"; }}
-            >
-              <i className="fa-solid fa-file-lines"></i>
-              <span>CV</span>
-            </button>
-          </div>
-          <div className="nav-section">
-            <div className="nav-section-title">Settings</div>
-            <button
-              className={`nav-btn ${currentPath.startsWith("/consent-hub") ? "active" : ""}`}
-              onClick={() => { window.location.href = "/consent-hub"; }}
-            >
-              <i className="fa-solid fa-shield-halved"></i>
-              <span>Consent Hub</span>
+              <i className="fa-solid fa-chart-line"></i>
+              <span>My Progress</span>
             </button>
           </div>
         </div>
