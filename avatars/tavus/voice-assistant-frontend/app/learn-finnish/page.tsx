@@ -5,6 +5,7 @@ import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import { motion } from "framer-motion";
+import InlineVoiceInterface from "@/components/InlineVoiceInterface";
 
 type GuideCard = {
   id: string;
@@ -153,6 +154,7 @@ export default function LearnFinnishPage() {
   const [room] = useState(new Room());
   const [focusWorkFinnish, setFocusWorkFinnish] = useState(false);
   const [skipBeginner, setSkipBeginner] = useState(false);
+  const [showVoiceInterface, setShowVoiceInterface] = useState(false);
 
   // Check URL parameters
   useEffect(() => {
@@ -253,15 +255,71 @@ export default function LearnFinnishPage() {
                       </div>
                 ))}
             </div>
+                  <div style={{ textAlign: "center", marginTop: 8 }}>
+                    <button
+                      onClick={() => {
+                        setShowVoiceInterface(true);
+                        // Scroll to voice interface section
+                        setTimeout(() => {
+                          document.getElementById("knuut-voice-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }, 100);
+                      }}
+                      style={{
+                        fontSize: 13,
+                        color: "#667eea",
+                        fontWeight: 600,
+                        textDecoration: "none",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: 0,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.textDecoration = "underline";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.textDecoration = "none";
+                      }}
+                    >
+                      Practice work conversations with Knuut AI →
+                    </button>
+                  </div>
                   {!isWorkReady && (
                     <div style={{ padding: "16px", borderRadius: 12, background: "#fef3c7", border: "1px solid #fbbf24" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                         <span style={{ fontSize: 24 }}>📚</span>
                         <span style={{ fontSize: 15, color: "#92400e", fontWeight: 600 }}>
                           Keep learning → {workReadyLevel} level needed for most jobs
-                </span>
-              </div>
-              </div>
+                        </span>
+                        <button
+                          onClick={() => {
+                            setShowVoiceInterface(true);
+                            setTimeout(() => {
+                              document.getElementById("knuut-voice-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                            }, 100);
+                          }}
+                          style={{
+                            fontSize: 14,
+                            color: "#667eea",
+                            fontWeight: 600,
+                            textDecoration: "none",
+                            marginLeft: "auto",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: 0,
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.textDecoration = "underline";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.textDecoration = "none";
+                          }}
+                        >
+                          Practice work conversations with Knuut AI →
+                        </button>
+                      </div>
+                    </div>
                   )}
           </section>
               );
@@ -502,6 +560,55 @@ export default function LearnFinnishPage() {
                   </motion.div>
                 ))}
             </div>
+          </section>
+
+            {/* Practice with Knuut AI */}
+          <section id="knuut-voice-section" style={{ display: "grid", gap: 24 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              style={{
+                borderRadius: 24,
+                padding: "40px 32px",
+                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                color: "#ffffff",
+                boxShadow: "0 12px 32px rgba(102,126,234,0.25)",
+              }}
+            >
+              <div style={{ display: "grid", gap: 20 }}>
+                <div>
+                  <h2 style={{ margin: 0, fontSize: 28, fontWeight: 800, color: "#ffffff" }}>
+                    Practice with Knuut AI
+                  </h2>
+                  <p style={{ margin: "12px 0 0 0", fontSize: 16, opacity: 0.95, lineHeight: 1.6 }}>
+                    Speak Finnish, ask questions, and practice real situations — anytime, in your language.
+                  </p>
+                </div>
+                
+                <div style={{ display: "grid", gap: 12 }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                    <span style={{ fontSize: 20, flexShrink: 0 }}>🗣️</span>
+                    <span style={{ fontSize: 15, opacity: 0.95 }}>Practice Finnish by speaking</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                    <span style={{ fontSize: 20, flexShrink: 0 }}>💼</span>
+                    <span style={{ fontSize: 15, opacity: 0.95 }}>Learn Finnish culture and work communication</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                    <span style={{ fontSize: 20, flexShrink: 0 }}>🌍</span>
+                    <span style={{ fontSize: 15, opacity: 0.95 }}>Start in any language, switch to Finnish when ready</span>
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gap: 12 }}>
+                  <InlineVoiceInterface defaultOpen={showVoiceInterface} />
+                  <p style={{ margin: 0, fontSize: 13, opacity: 0.85, textAlign: "center" }}>
+                    Voice or text • Any language • No pressure
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           </section>
 
             {/* Finnish at Work */}

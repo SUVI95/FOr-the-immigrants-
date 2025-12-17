@@ -47,19 +47,20 @@ export default function OnboardingModal() {
   const [step, setStep] = useState<"stage" | "city">("stage");
   const [showModal, setShowModal] = useState(false);
 
-  // Check if user has already completed onboarding
+  // Check if user has already completed onboarding - run only once on mount
   useEffect(() => {
     if (typeof window === "undefined") return;
     
     const hasCompletedOnboarding = localStorage.getItem(ONBOARDING_STORAGE_KEY);
     
-    // If already completed in localStorage, load it into state
-    if (hasCompletedOnboarding) {
+    // If already completed in localStorage, load it into state (only if state doesn't have it)
+    if (hasCompletedOnboarding && state.userStage === null) {
       try {
         const saved = JSON.parse(hasCompletedOnboarding);
         if (saved.userStage && saved.city) {
           setUserStage(saved.userStage);
           setCity(saved.city);
+          return; // Exit early after loading
         }
       } catch (e) {
         // Invalid data, clear it
@@ -73,7 +74,15 @@ export default function OnboardingModal() {
     } else {
       setShowModal(false);
     }
-  }, [state.userStage, setUserStage, setCity]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
+
+  // Separate effect to update modal visibility when state changes
+  useEffect(() => {
+    if (state.userStage !== null) {
+      setShowModal(false);
+    }
+  }, [state.userStage]);
 
   // Don't show if already onboarded
   if (!showModal || state.userStage !== null) {
