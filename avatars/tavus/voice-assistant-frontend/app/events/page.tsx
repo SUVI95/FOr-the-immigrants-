@@ -545,6 +545,83 @@ export default function EventsPage() {
           gap: 32,
         }}
       >
+        {/* Visual Answer: "Where can I show up this week?" */}
+        {(() => {
+          const thisWeekEvents = upcomingEvents.filter((event) => {
+            const eventDate = new Date(event.event_date);
+            const today = new Date();
+            const weekAway = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+            return eventDate >= today && eventDate <= weekAway;
+          });
+          
+          return (
+            <section
+              style={{
+                borderRadius: 24,
+                padding: "32px",
+                background: "#ffffff",
+                border: "2px solid #e2e8f0",
+                boxShadow: "0 12px 24px rgba(15,23,42,0.08)",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+                <div style={{ fontSize: 48 }}>📅</div>
+                <div style={{ flex: 1 }}>
+                  <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                    Where can I show up this week?
+                  </h2>
+                  <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
+                    {thisWeekEvents.length === 0 ? "No events this week" : `${thisWeekEvents.length} events this week`}
+                  </p>
+                </div>
+              </div>
+              {thisWeekEvents.length > 0 ? (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+                  {thisWeekEvents.slice(0, 4).map((event) => (
+                    <div
+                      key={event.id}
+                      style={{
+                        padding: "16px",
+                        borderRadius: 16,
+                        background: "#f8fafc",
+                        border: "2px solid #e2e8f0",
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "#667eea";
+                        e.currentTarget.style.transform = "translateY(-2px)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "#e2e8f0";
+                        e.currentTarget.style.transform = "translateY(0)";
+                      }}
+                      onClick={() => setSelectedEventId(event.id)}
+                    >
+                      <div style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>
+                        {formatEventDateTime(event.event_date)}
+                      </div>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: "#475569", marginBottom: 4 }}>
+                        {event.title}
+                      </div>
+                      <div style={{ fontSize: 13, color: "#64748b" }}>
+                        {event.location_name}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ padding: "24px", borderRadius: 12, background: "#f1f5f9", textAlign: "center" }}>
+                  <div style={{ fontSize: 32, marginBottom: 8 }}>📭</div>
+                  <div style={{ fontSize: 15, color: "#64748b", fontWeight: 600 }}>
+                    Check back soon for upcoming events
+                  </div>
+                </div>
+              )}
+            </section>
+          );
+        })()}
+
         <section
           style={{
             position: "relative",

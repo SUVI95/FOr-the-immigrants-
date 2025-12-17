@@ -151,6 +151,8 @@ type ContributionPayload = {
   metadata?: Record<string, string | number | boolean>;
 };
 
+type UserStage = "newcomer" | "seeking-work" | "long-term" | null; // null = not set yet
+
 type UserProfileState = {
   name: string;
   level: ExperienceLevel;
@@ -163,6 +165,8 @@ type UserProfileState = {
   mentorsUnlocked: number;
   motivationalMessage: string;
   goals: string[];
+  userStage: UserStage; // New: User's life stage
+  city: string; // New: User's city (default: Kajaani)
   impactWallet: ImpactWalletState;
   skillPassport: {
     entries: SkillPassportEntry[];
@@ -197,6 +201,8 @@ type UserProfileState = {
 type UserProfileAction =
   | { type: "RECORD_ACTION"; payload: ContributionPayload }
   | { type: "TOGGLE_PLAIN_LANGUAGE" }
+  | { type: "SET_USER_STAGE"; payload: UserStage }
+  | { type: "SET_CITY"; payload: string }
   | { type: "TOGGLE_AUDIO_ASSIST" }
   | { type: "MARK_VERIFIED"; payload: Partial<SafetyState> }
   | { type: "UPDATE_GOALS"; payload: string[] }
@@ -210,6 +216,8 @@ type UserProfileAction =
 type UserProfileContextValue = {
   state: UserProfileState;
   recordAction: (payload: ContributionPayload) => void;
+  setUserStage: (stage: UserStage) => void;
+  setCity: (city: string) => void;
   togglePlainLanguage: () => void;
   toggleAudioAssist: () => void;
   markVerified: (payload: Partial<SafetyState>) => void;
@@ -245,6 +253,8 @@ const INITIAL_STATE: UserProfileState = {
   mentorsUnlocked: 1,
   motivationalMessage: defaultMotivation,
   goals: ["Find a hospitality job", "Reach Finnish level A2", "Meet local mentors"],
+  userStage: null, // Will be set during onboarding
+  city: "Kajaani", // Default city
   impactWallet: {
     points: 320,
     volunteeringHours: 12,
@@ -578,6 +588,42 @@ function userProfileReducer(state: UserProfileState, action: UserProfileAction):
           plainLanguage: !state.settings.plainLanguage,
         },
       };
+    case "SET_USER_STAGE":
+      // Persist to localStorage
+      if (typeof window !== "undefined") {
+        const existing = localStorage.getItem("knuut_onboarding_completed");
+        const saved = existing ? JSON.parse(existing) : {};
+        localStorage.setItem(
+          "knuut_onboarding_completed",
+          JSON.stringify({
+            ...saved,
+            userStage: action.payload,
+            completedAt: saved.completedAt || new Date().toISOString(),
+          })
+        );
+      }
+      return {
+        ...state,
+        userStage: action.payload,
+      };
+    case "SET_CITY":
+      // Persist to localStorage
+      if (typeof window !== "undefined") {
+        const existing = localStorage.getItem("knuut_onboarding_completed");
+        const saved = existing ? JSON.parse(existing) : {};
+        localStorage.setItem(
+          "knuut_onboarding_completed",
+          JSON.stringify({
+            ...saved,
+            city: action.payload,
+            completedAt: saved.completedAt || new Date().toISOString(),
+          })
+        );
+      }
+      return {
+        ...state,
+        city: action.payload,
+      };
     case "TOGGLE_AUDIO_ASSIST":
       return {
         ...state,
@@ -703,9 +749,33 @@ function userProfileReducer(state: UserProfileState, action: UserProfileAction):
 export type { LearningFlashCard, LearningQuiz, LearningLesson, LearningHistory };
 
 export function UserProfileProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(userProfileReducer, INITIAL_STATE);
+  // Load onboarding data from localStorage on mount
+  const loadInitialState = () => {
+    if (typeof window === "undefined") return INITIAL_STATE;
+    
+    const savedOnboarding = localStorage.getItem("knuut_onboarding_completed");
+    if (savedOnboarding) {
+      try {
+        const parsed = JSON.parse(savedOnboarding);
+        return {
+          ...INITIAL_STATE,
+          userStage: parsed.userStage || null,
+          city: parsed.city || "Kajaani",
+        };
+      } catch (e) {
+        // Invalid data, use default
+        return INITIAL_STATE;
+      }
+    }
+    
+    return INITIAL_STATE;
+  };
+
+  const [state, dispatch] = useReducer(userProfileReducer, loadInitialState());
 
   const recordAction = (payload: ContributionPayload) => dispatch({ type: "RECORD_ACTION", payload });
+  const setUserStage = (stage: UserStage) => dispatch({ type: "SET_USER_STAGE", payload: stage });
+  const setCity = (city: string) => dispatch({ type: "SET_CITY", payload: city });
   const togglePlainLanguage = () => dispatch({ type: "TOGGLE_PLAIN_LANGUAGE" });
   const toggleAudioAssist = () => dispatch({ type: "TOGGLE_AUDIO_ASSIST" });
   const markVerified = (payload: Partial<SafetyState>) => dispatch({ type: "MARK_VERIFIED", payload });
@@ -722,6 +792,8 @@ export function UserProfileProvider({ children }: { children: React.ReactNode })
     () => ({
       state,
       recordAction,
+      setUserStage,
+      setCity,
       togglePlainLanguage,
       toggleAudioAssist,
       markVerified,

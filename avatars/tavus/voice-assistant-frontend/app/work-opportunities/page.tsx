@@ -200,12 +200,6 @@ const VISIT_AND_TRAINING_OPPORTUNITIES: VisitOpportunity[] = [
 
 const EXTERNAL_PARTNERS = [
   {
-    name: "Job Market Finland (TE-palvelut)",
-    description: "Official national listings for public sector and regulated roles.",
-    action: "Browse TE-palvelut",
-    url: "https://www.tyomarkkinatori.fi",
-  },
-  {
     name: "LinkedIn",
     description: "Keep your professional network updated and share your Smart CV in one click.",
     action: "Export to LinkedIn",
@@ -246,7 +240,10 @@ export default function WorkOpportunitiesPage() {
   });
   const [userSkills, setUserSkills] = useState<string[]>([]);
   
-  // Check URL for work-now filter
+  const [focusSection, setFocusSection] = useState<string | null>(null);
+  const [fromGettingUnstuck, setFromGettingUnstuck] = useState(false);
+
+  // Check URL for filters and focus
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -254,6 +251,13 @@ export default function WorkOpportunitiesPage() {
         setWorkNowFilter(true);
         setLanguageFilter("English");
         setTypeFilter("All");
+      }
+      if (params.get("focus") === "cv-mentors-meetups") {
+        setFocusSection("cv-mentors-meetups");
+        setActiveTab("programs"); // Switch to programs tab where CV/mentors are
+      }
+      if (params.get("from") === "getting-unstuck") {
+        setFromGettingUnstuck(true);
       }
     }
   }, []);
@@ -357,7 +361,79 @@ export default function WorkOpportunitiesPage() {
           minHeight: "100vh",
         }}
       >
-        {workNowFilter && (
+        {/* Visual Answer: "Am I getting closer to work?" */}
+        {(() => {
+          const steps = [
+            { id: 1, label: "Skills", icon: "✅", completed: userSkills.length > 0 },
+            { id: 2, label: "Applications", icon: "📝", completed: false },
+            { id: 3, label: "Interviews", icon: "💬", completed: false },
+            { id: 4, label: "Job", icon: "💼", completed: false },
+          ];
+          const completedSteps = steps.filter(s => s.completed).length;
+          const progressPercent = (completedSteps / steps.length) * 100;
+          
+          return (
+            <section
+              style={{
+                borderRadius: 24,
+                padding: "32px",
+                background: "#ffffff",
+                border: "2px solid #e2e8f0",
+                boxShadow: "0 12px 24px rgba(15,23,42,0.08)",
+                marginBottom: 24,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+                <div style={{ fontSize: 48 }}>💼</div>
+                <div style={{ flex: 1 }}>
+                  <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                    Am I getting closer to work?
+                  </h2>
+                  <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
+                    {completedSteps === 0 ? "Start by adding your skills" : `Step ${completedSteps} of ${steps.length} completed`}
+                  </p>
+                </div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                {steps.map((step, i) => (
+                  <div key={step.id} style={{ display: "flex", alignItems: "center", gap: 8, flex: "1 1 120px", minWidth: 0 }}>
+                    <div style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: "50%",
+                      background: step.completed ? "linear-gradient(135deg, #22c55e, #16a34a)" : "#e2e8f0",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 20,
+                      flexShrink: 0,
+                    }}>
+                      {step.completed ? "✓" : step.icon}
+                    </div>
+                    <div style={{ fontSize: 14, fontWeight: step.completed ? 700 : 600, color: step.completed ? "#22c55e" : "#64748b" }}>
+                      {step.label}
+                    </div>
+                    {i < steps.length - 1 && (
+                      <div style={{ flex: 1, height: 2, background: step.completed ? "#22c55e" : "#e2e8f0", marginLeft: 8 }} />
+                    )}
+                  </div>
+                ))}
+              </div>
+              {completedSteps === 0 && (
+                <div style={{ marginTop: 20, padding: "16px", borderRadius: 12, background: "#dbeafe", border: "1px solid #3b82f6" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ fontSize: 24 }}>👉</span>
+                    <a href="/my-skills" style={{ fontSize: 15, color: "#1e40af", fontWeight: 600, textDecoration: "none" }}>
+                      Add your skills first → Build your profile
+                    </a>
+                  </div>
+                </div>
+              )}
+            </section>
+          );
+        })()}
+
+        {(workNowFilter || fromGettingUnstuck) && (
           <section
             style={{
               marginBottom: 24,
@@ -371,19 +447,42 @@ export default function WorkOpportunitiesPage() {
           >
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
               <span style={{ fontSize: 32 }}>💼</span>
-              <h2 style={{ margin: 0, fontSize: 28, fontWeight: 800 }}>Jobs That Welcome Newcomers</h2>
+              <h2 style={{ margin: 0, fontSize: 28, fontWeight: 800 }}>
+                {fromGettingUnstuck ? "You're Already Here - Let's Get You Unstuck" : "Jobs That Welcome Newcomers"}
+              </h2>
             </div>
             <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7, maxWidth: "800px", opacity: 0.95, marginBottom: 20 }}>
-              <strong>You don't need perfect Finnish to start your job search!</strong> These opportunities are English-friendly, 
-              offer on-the-job training, or help you learn Finnish while you work. Many employers in Kajaani are 
-              welcoming and supportive of newcomers. Explore opportunities that match your situation and start building your career in Finland.
+              {fromGettingUnstuck 
+                ? "You've been in Finland but can't find work. Focus on CV help, mentors, and meeting employers. Many people in your situation succeed with the right support."
+                : "You don't need perfect Finnish to start your job search! These opportunities are English-friendly, offer on-the-job training, or help you learn Finnish while you work. Many employers in Kajaani are welcoming and supportive of newcomers. Explore opportunities that match your situation and start building your career in Finland."}
             </p>
+            {focusSection === "cv-mentors-meetups" && (
+              <div style={{ marginBottom: 20, padding: "20px", borderRadius: 16, background: "rgba(255,255,255,0.15)", backdropFilter: "blur(10px)" }}>
+                <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 12 }}>Focus Areas:</div>
+                <div style={{ display: "grid", gap: 12 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ fontSize: 24 }}>📝</span>
+                    <span>CV Help - Build a strong CV that works in Finland</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ fontSize: 24 }}>🤝</span>
+                    <span>Mentors - Connect with people who've been where you are</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ fontSize: 24 }}>🏢</span>
+                    <span>Employer Meetups - Meet employers directly, skip the application queue</span>
+                  </div>
+                </div>
+              </div>
+            )}
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
               <button
                 type="button"
                 onClick={() => {
                   setWorkNowFilter(false);
                   setLanguageFilter("All");
+                  setFromGettingUnstuck(false);
+                  setFocusSection(null);
                 }}
                 style={{
                   padding: "12px 20px",
@@ -398,22 +497,6 @@ export default function WorkOpportunitiesPage() {
                 }}
               >
                 Show All Jobs
-              </button>
-              <button
-                type="button"
-                onClick={() => window.location.href = "/first-30-days"}
-                style={{
-                  padding: "12px 20px",
-                  borderRadius: 12,
-                  border: "none",
-                  background: "rgba(255,255,255,0.95)",
-                  color: "#2563eb",
-                  fontWeight: 700,
-                  fontSize: 14,
-                  cursor: "pointer",
-                }}
-              >
-                I'm New Here - Help Me
               </button>
             </div>
           </section>
@@ -528,13 +611,15 @@ export default function WorkOpportunitiesPage() {
         </section>
 
         {/* Skills Discovery Research Module */}
-        <SkillsDiscoveryPanel />
-
-        {/* Skills-to-Jobs Matching (Rule-Based + Optional AI Suggestions) */}
-        <SkillsJobMatching />
-
-        {/* Professional Networking & Mentoring */}
-        <ProfessionalNetworking />
+        {(!focusSection || focusSection === "cv-mentors-meetups") && (
+          <>
+            <SkillsDiscoveryPanel />
+            {/* Skills-to-Jobs Matching (Rule-Based + Optional AI Suggestions) */}
+            <SkillsJobMatching />
+            {/* Professional Networking & Mentoring */}
+            <ProfessionalNetworking />
+          </>
+        )}
 
         <section
           aria-label="Recommended opportunities"

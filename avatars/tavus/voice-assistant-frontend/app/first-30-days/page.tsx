@@ -6,8 +6,9 @@ import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import { useUserProfile } from "@/context/UserProfileContext";
 import { motion } from "framer-motion";
+import VideoPlaceholder from "@/components/VideoPlaceholder";
 
-type ChecklistItem = {
+export type ChecklistItem = {
   id: string;
   title: string;
   description: string;
@@ -17,7 +18,7 @@ type ChecklistItem = {
   resources?: Array<{ label: string; href: string }>;
 };
 
-const FIRST_WEEK_CHECKLIST: ChecklistItem[] = [
+export const FIRST_WEEK_CHECKLIST: ChecklistItem[] = [
   {
     id: "week1-1",
     title: "Register your address with DVV",
@@ -91,7 +92,7 @@ const FIRST_WEEK_CHECKLIST: ChecklistItem[] = [
   },
 ];
 
-const FIRST_MONTH_CHECKLIST: ChecklistItem[] = [
+export const FIRST_MONTH_CHECKLIST: ChecklistItem[] = [
   {
     id: "month1-1",
     title: "Get a Finnish ID card",
@@ -164,67 +165,100 @@ const FIRST_MONTH_CHECKLIST: ChecklistItem[] = [
   },
 ];
 
+// City-specific office locations and contacts
+const CITY_SPECIFIC_INFO: Record<string, {
+  dvvOffice: { name: string; address: string; phone: string; link: string };
+  kelaOffice: { name: string; address: string; phone: string; link: string };
+  cityServices: { name: string; address: string; phone: string; link: string };
+  emergencyContacts: Array<{ name: string; phone: string; description: string }>;
+}> = {
+  Kajaani: {
+    dvvOffice: {
+      name: "DVV Kajaani Service Point",
+      address: "Kauppakatu 18, 87100 Kajaani",
+      phone: "+358 295 536 000",
+      link: "https://dvv.fi/en/contact-information",
+    },
+    kelaOffice: {
+      name: "Kela Kajaani",
+      address: "Kauppakatu 18, 87100 Kajaani",
+      phone: "+358 20 634 0200",
+      link: "https://www.kela.fi/web/en/contact-information",
+    },
+    cityServices: {
+      name: "Kajaani City Services",
+      address: "Kauppakatu 25, 87100 Kajaani",
+      phone: "+358 8 615 611",
+      link: "https://www.kajaani.fi/en/",
+    },
+    emergencyContacts: [
+      { name: "Emergency", phone: "112", description: "Police, fire, ambulance" },
+      { name: "Kajaani Hospital", phone: "+358 8 615 611", description: "24/7 emergency care" },
+      { name: "Non-emergency Police", phone: "+358 295 419 200", description: "General inquiries" },
+    ],
+  },
+  Helsinki: {
+    dvvOffice: {
+      name: "DVV Helsinki Service Point",
+      address: "Mannerheimintie 15, 00100 Helsinki",
+      phone: "+358 295 536 000",
+      link: "https://dvv.fi/en/contact-information",
+    },
+    kelaOffice: {
+      name: "Kela Helsinki",
+      address: "Nordenskiöldinkatu 12, 00250 Helsinki",
+      phone: "+358 20 634 0200",
+      link: "https://www.kela.fi/web/en/contact-information",
+    },
+    cityServices: {
+      name: "Helsinki City Services",
+      address: "Pohjoisesplanadi 11-13, 00170 Helsinki",
+      phone: "+358 9 310 1691",
+      link: "https://www.hel.fi/en",
+    },
+    emergencyContacts: [
+      { name: "Emergency", phone: "112", description: "Police, fire, ambulance" },
+      { name: "Helsinki Hospital", phone: "+358 9 4711", description: "24/7 emergency care" },
+      { name: "Non-emergency Police", phone: "+358 295 419 200", description: "General inquiries" },
+    ],
+  },
+  Tampere: {
+    dvvOffice: {
+      name: "DVV Tampere Service Point",
+      address: "Hämeenkatu 13, 33100 Tampere",
+      phone: "+358 295 536 000",
+      link: "https://dvv.fi/en/contact-information",
+    },
+    kelaOffice: {
+      name: "Kela Tampere",
+      address: "Hämeenkatu 13, 33100 Tampere",
+      phone: "+358 20 634 0200",
+      link: "https://www.kela.fi/web/en/contact-information",
+    },
+    cityServices: {
+      name: "Tampere City Services",
+      address: "Keskustori 10, 33100 Tampere",
+      phone: "+358 3 5656 0000",
+      link: "https://www.tampere.fi/en/",
+    },
+    emergencyContacts: [
+      { name: "Emergency", phone: "112", description: "Police, fire, ambulance" },
+      { name: "Tampere Hospital", phone: "+358 3 311 611", description: "24/7 emergency care" },
+      { name: "Non-emergency Police", phone: "+358 295 419 200", description: "General inquiries" },
+    ],
+  },
+};
+
 export default function First30DaysPage() {
-  const { recordAction } = useUserProfile();
+  const { state } = useUserProfile();
   const [room] = useState(new Room());
-  const [activeTab, setActiveTab] = useState("week1");
-  const [checklist, setChecklist] = useState<ChecklistItem[]>(FIRST_WEEK_CHECKLIST);
   
-  useEffect(() => {
-    setChecklist(activeTab === "week1" ? FIRST_WEEK_CHECKLIST : FIRST_MONTH_CHECKLIST);
-  }, [activeTab]);
-
-  const handleLearnFinnishClick = () => {
-    window.location.href = "/learn-finnish";
-  };
-
-  const toggleItem = (id: string) => {
-    setChecklist((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, completed: !item.completed } : item))
-    );
-    recordAction({
-      id: `checklist-${id}-${Date.now()}`,
-      label: `Completed: ${checklist.find((i) => i.id === id)?.title}`,
-      category: "integration",
-      xp: 10,
-      impactPoints: 8,
-    });
-  };
-
-  const completedCount = checklist.filter((item) => item.completed).length;
-  const totalCount = checklist.length;
-  const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-
-  const getUrgencyColor = (urgency: string) => {
-    switch (urgency) {
-      case "critical":
-        return "#ef4444";
-      case "important":
-        return "#f59e0b";
-      case "helpful":
-        return "#3b82f6";
-      default:
-        return "#64748b";
-    }
-  };
-
-  const getUrgencyLabel = (urgency: string) => {
-    switch (urgency) {
-      case "critical":
-        return "Do this first";
-      case "important":
-        return "Important";
-      case "helpful":
-        return "Helpful";
-      default:
-        return "";
-    }
-  };
+  const userCity = state.city || "Kajaani";
 
   return (
     <RoomContext.Provider value={room}>
       <div className="app">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onLearnFinnishClick={handleLearnFinnishClick} />
+        <Sidebar activeTab="start-here" onTabChange={() => {}} />
 
         <main
           style={{
@@ -236,88 +270,7 @@ export default function First30DaysPage() {
           }}
         >
           <div style={{ display: "grid", gap: 24 }}>
-            {/* Hero Section */}
-            <section
-              style={{
-                position: "relative",
-                borderRadius: 32,
-                padding: "48px 40px",
-                background: "linear-gradient(135deg, #dc2626 0%, #ea580c 50%, #f59e0b 100%)",
-                color: "#ffffff",
-                overflow: "hidden",
-                boxShadow: "0 20px 40px rgba(220,38,38,0.3)",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  backgroundImage:
-                    "url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  opacity: 0.15,
-                }}
-              />
-              
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                style={{ position: "relative", zIndex: 1, display: "grid", gap: 20 }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <span style={{ fontSize: 48 }}>🆘</span>
-                  <h1 style={{ margin: 0, fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 900, lineHeight: 1.1 }}>
-                    Your First 30 Days in Kajaani
-                  </h1>
-                </div>
-                <p style={{ margin: 0, fontSize: "1.2rem", lineHeight: 1.7, maxWidth: "800px", opacity: 0.95 }}>
-                  <strong>Welcome to Kajaani!</strong> We know this can feel overwhelming. This guide will help you 
-                  take the most important steps first. You're not alone — many people have been where you are and succeeded. 
-                  Let's take it one step at a time.
-                </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 8 }}>
-                  <button
-                    type="button"
-                    onClick={() => window.location.href = "/knuut-voice?prompt=I need help right now"}
-                    style={{
-                      padding: "14px 24px",
-                      borderRadius: 16,
-                      border: "2px solid rgba(255,255,255,0.5)",
-                      background: "rgba(255,255,255,0.2)",
-                      backdropFilter: "blur(10px)",
-                      color: "#ffffff",
-                      fontWeight: 700,
-                      fontSize: 15,
-                      cursor: "pointer",
-                      boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
-                    }}
-                  >
-                    🆘 I Need Help Now
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => window.location.href = "/work-opportunities?filter=work-now"}
-                    style={{
-                      padding: "14px 24px",
-                      borderRadius: 16,
-                      border: "none",
-                      background: "rgba(255,255,255,0.95)",
-                      color: "#dc2626",
-                      fontWeight: 700,
-                      fontSize: 15,
-                      cursor: "pointer",
-                      boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
-                    }}
-                  >
-                    💼 Explore Work Opportunities
-                  </button>
-                </div>
-              </motion.div>
-            </section>
-
-            {/* Progress Overview */}
+            {/* Entry Path Selection */}
             <section
               style={{
                 borderRadius: 24,
@@ -325,336 +278,195 @@ export default function First30DaysPage() {
                 background: "#ffffff",
                 border: "2px solid #e2e8f0",
                 boxShadow: "0 12px 24px rgba(15,23,42,0.08)",
+                marginBottom: 24,
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a" }}>Your Progress</h2>
-                <div style={{ display: "flex", gap: 16 }}>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("week1")}
-                    style={{
-                      padding: "10px 20px",
-                      borderRadius: 12,
-                      border: activeTab === "week1" ? "2px solid #dc2626" : "1px solid #e2e8f0",
-                      background: activeTab === "week1" ? "rgba(220,38,38,0.1)" : "#ffffff",
-                      color: activeTab === "week1" ? "#dc2626" : "#64748b",
-                      fontWeight: activeTab === "week1" ? 700 : 600,
-                      cursor: "pointer",
-                    }}
-                  >
-                    First Week
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("month1")}
-                    style={{
-                      padding: "10px 20px",
-                      borderRadius: 12,
-                      border: activeTab === "month1" ? "2px solid #dc2626" : "1px solid #e2e8f0",
-                      background: activeTab === "month1" ? "rgba(220,38,38,0.1)" : "#ffffff",
-                      color: activeTab === "month1" ? "#dc2626" : "#64748b",
-                      fontWeight: activeTab === "month1" ? 700 : 600,
-                      cursor: "pointer",
-                    }}
-                  >
-                    First Month
-                  </button>
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
+                <div style={{ fontSize: 48 }}>📍</div>
+                <div style={{ flex: 1 }}>
+                  <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                    Where do I begin?
+                  </h2>
+                  <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
+                    Choose the path that fits your situation
+                  </p>
                 </div>
               </div>
-              <div style={{ display: "grid", gap: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 14, color: "#64748b", fontWeight: 600 }}>
-                    {completedCount} of {totalCount} completed
-                  </span>
-                  <span style={{ fontSize: 18, fontWeight: 800, color: "#dc2626" }}>
-                    {Math.round(progressPercent)}%
-                  </span>
-                </div>
-                <div
-                  style={{
-                    height: 12,
-                    borderRadius: 999,
-                    background: "#e5e7eb",
-                    overflow: "hidden",
-                  }}
-                >
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progressPercent}%` }}
-                    transition={{ duration: 0.5 }}
-                    style={{
-                      height: "100%",
-                      background: "linear-gradient(90deg, #dc2626, #ea580c)",
-                    }}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Checklist */}
-            <section style={{ display: "grid", gap: 16 }}>
-              <h2 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "#0f172a" }}>
-                {activeTab === "week1" ? "First Week Checklist" : "First Month Checklist"}
-              </h2>
-              <div style={{ display: "grid", gap: 16 }}>
-                {checklist.map((item, idx) => (
-                  <motion.article
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: idx * 0.1 }}
-                    style={{
-                      borderRadius: 20,
-                      padding: 24,
-                      background: item.completed ? "#f0fdf4" : "#ffffff",
-                      border: item.completed
-                        ? "2px solid #22c55e"
-                        : `2px solid ${getUrgencyColor(item.urgency)}40`,
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
-                      display: "grid",
-                      gap: 12,
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
-                      <button
-                        type="button"
-                        onClick={() => toggleItem(item.id)}
-                        style={{
-                          width: 24,
-                          height: 24,
-                          borderRadius: 6,
-                          border: item.completed ? "none" : `2px solid ${getUrgencyColor(item.urgency)}`,
-                          background: item.completed
-                            ? "linear-gradient(135deg, #22c55e, #16a34a)"
-                            : "transparent",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                          marginTop: 2,
-                        }}
-                      >
-                        {item.completed && (
-                          <span style={{ color: "#ffffff", fontSize: 16, fontWeight: 700 }}>✓</span>
-                        )}
-                      </button>
-                      <div style={{ flex: 1, display: "grid", gap: 8 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                          <h3
-                            style={{
-                              margin: 0,
-                              fontSize: 18,
-                              fontWeight: 700,
-                              color: item.completed ? "#166534" : "#0f172a",
-                              textDecoration: item.completed ? "line-through" : "none",
-                            }}
-                          >
-                            {item.title}
-                          </h3>
-                          <span
-                            style={{
-                              padding: "4px 10px",
-                              borderRadius: 6,
-                              background: `${getUrgencyColor(item.urgency)}20`,
-                              color: getUrgencyColor(item.urgency),
-                              fontSize: 11,
-                              fontWeight: 700,
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            {getUrgencyLabel(item.urgency)}
-                          </span>
-                          <span
-                            style={{
-                              fontSize: 12,
-                              color: "#64748b",
-                              fontWeight: 600,
-                            }}
-                          >
-                            {item.timeframe}
-                          </span>
-                        </div>
-                        <p style={{ margin: 0, fontSize: 14, color: "#475569", lineHeight: 1.6 }}>
-                          {item.description}
-                        </p>
-                        {item.resources && item.resources.length > 0 && (
-                          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 4 }}>
-                            {item.resources.map((resource, ridx) => (
-                              <a
-                                key={ridx}
-                                href={resource.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                  padding: "6px 12px",
-                                  borderRadius: 8,
-                                  border: "1px solid #cbd5e1",
-                                  background: "#f8fafc",
-                                  color: "#1d4ed8",
-                                  fontSize: 12,
-                                  fontWeight: 600,
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                {resource.label} →
-                              </a>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </motion.article>
-                ))}
-              </div>
-            </section>
-
-            {/* Hope & Support Section */}
-            <section
-              style={{
-                borderRadius: 24,
-                padding: "32px",
-                background: "linear-gradient(135deg, #e0f2fe 0%, #eef2ff 100%)",
-                border: "2px solid #bfdbfe",
-                boxShadow: "0 12px 24px rgba(59,130,246,0.15)",
-              }}
-            >
-              <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a", marginBottom: 16 }}>
-                💙 Remember: You're Not Alone
-              </h2>
-              <p style={{ margin: 0, fontSize: 16, color: "#475569", lineHeight: 1.7, marginBottom: 20 }}>
-                Many people have been where you are right now. They felt lost, scared, and unsure. But they made it. 
-                You can too. Every small step counts. Every connection matters. You're building a new life, and that takes 
-                courage. We're here to help you every step of the way.
-              </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
                 <button
-                  type="button"
-                  onClick={() => window.location.href = "/groups?filter=mentors"}
-                  style={{
-                    padding: "12px 20px",
-                    borderRadius: 12,
-                    border: "none",
-                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                    color: "#ffffff",
-                    fontWeight: 700,
-                    fontSize: 14,
-                    cursor: "pointer",
+                  onClick={() => {
+                    window.location.href = "/new-in-finland";
                   }}
-                >
-                  Find a Mentor Who's Been Where You Are
-                </button>
-                <button
-                  type="button"
-                  onClick={() => window.location.href = "/events"}
                   style={{
-                    padding: "12px 20px",
-                    borderRadius: 12,
-                    border: "2px solid #3b82f6",
+                    padding: "24px",
+                    borderRadius: 16,
+                    border: "2px solid #e2e8f0",
                     background: "#ffffff",
-                    color: "#2563eb",
-                    fontWeight: 700,
-                    fontSize: 14,
                     cursor: "pointer",
+                    textAlign: "left",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "#667eea";
+                    e.currentTarget.style.boxShadow = "0 8px 24px rgba(102,126,234,0.15)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "#e2e8f0";
+                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
-                  Join a Community Event
+                  <div style={{ fontSize: 40, marginBottom: 12 }}>🆕</div>
+                  <h3 style={{ margin: "0 0 8px 0", fontSize: 20, fontWeight: 700, color: "#0f172a" }}>
+                    I am new in Finland
+                  </h3>
+                  <p style={{ margin: 0, fontSize: 14, color: "#64748b", lineHeight: 1.5 }}>
+                    Just arrived? Start here with your first steps.
+                  </p>
                 </button>
+
                 <button
-                  type="button"
-                  onClick={() => window.location.href = "/knuut-voice?prompt=I need someone to talk to"}
+                  onClick={() => {
+                    window.location.href = "/getting-unstuck";
+                  }}
                   style={{
-                    padding: "12px 20px",
-                    borderRadius: 12,
-                    border: "2px solid #3b82f6",
+                    padding: "24px",
+                    borderRadius: 16,
+                    border: "2px solid #e2e8f0",
                     background: "#ffffff",
-                    color: "#2563eb",
-                    fontWeight: 700,
-                    fontSize: 14,
                     cursor: "pointer",
+                    textAlign: "left",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "#667eea";
+                    e.currentTarget.style.boxShadow = "0 8px 24px rgba(102,126,234,0.15)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "#e2e8f0";
+                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
-                  Talk to Knuut AI
+                  <div style={{ fontSize: 40, marginBottom: 12 }}>💪</div>
+                  <h3 style={{ margin: "0 0 8px 0", fontSize: 20, fontWeight: 700, color: "#0f172a" }}>
+                    I have been here but feel stuck
+                  </h3>
+                  <p style={{ margin: 0, fontSize: 14, color: "#64748b", lineHeight: 1.5 }}>
+                    Need help moving forward? Find your path.
+                  </p>
                 </button>
               </div>
             </section>
 
-            {/* Emergency Help */}
+            {/* Essential Information for Everyone */}
             <section
               style={{
                 borderRadius: 24,
                 padding: "32px",
                 background: "#ffffff",
-                border: "2px solid #ef4444",
-                boxShadow: "0 12px 24px rgba(239,68,68,0.15)",
+                border: "2px solid #e2e8f0",
+                boxShadow: "0 12px 24px rgba(15,23,42,0.08)",
+                marginBottom: 24,
               }}
             >
-              <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a", marginBottom: 16 }}>
-                🆘 Emergency Help
-              </h2>
-              <p style={{ margin: 0, fontSize: 16, color: "#475569", lineHeight: 1.7, marginBottom: 20 }}>
-                If you're in immediate danger or need urgent help, don't wait. Contact these services right away.
-              </p>
-              <div style={{ display: "grid", gap: 12 }}>
-                <a
-                  href="tel:112"
-                  style={{
-                    padding: "16px 20px",
-                    borderRadius: 12,
-                    border: "2px solid #ef4444",
-                    background: "rgba(239,68,68,0.1)",
-                    color: "#dc2626",
-                    fontWeight: 700,
-                    fontSize: 16,
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                  }}
-                >
-                  <span style={{ fontSize: 24 }}>🚨</span>
-                  <span>Emergency Services: 112</span>
-                </a>
-                <a
-                  href="tel:+358205022211"
-                  style={{
-                    padding: "16px 20px",
-                    borderRadius: 12,
-                    border: "1px solid #e2e8f0",
-                    background: "#f8fafc",
-                    color: "#1e293b",
-                    fontWeight: 600,
-                    fontSize: 14,
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                  }}
-                >
-                  <span style={{ fontSize: 20 }}>📞</span>
-                  <span>Kajaani Info Point: +358 20 502 2211</span>
-                </a>
-                <a
-                  href="/knuut-voice?prompt=I need help right now"
-                  style={{
-                    padding: "16px 20px",
-                    borderRadius: 12,
-                    border: "1px solid #cbd5e1",
-                    background: "#ffffff",
-                    color: "#1d4ed8",
-                    fontWeight: 600,
-                    fontSize: 14,
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                  }}
-                >
-                  <span style={{ fontSize: 20 }}>🤖</span>
-                  <span>Talk to Knuut AI for immediate support</span>
-                </a>
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
+                <div style={{ fontSize: 48 }}>⭐</div>
+                <div style={{ flex: 1 }}>
+                  <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                    Essential Information
+                  </h2>
+                  <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
+                    Important things everyone should know
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gap: 20 }}>
+                {/* Emergency Contacts */}
+                <div style={{ padding: "20px", borderRadius: 16, background: "#fef2f2", border: "2px solid #fecaca" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                    <span style={{ fontSize: 32 }}>🆘</span>
+                    <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#0f172a" }}>
+                      Emergency: Call 112
+                    </h3>
+                  </div>
+                  <p style={{ margin: 0, fontSize: 15, color: "#475569", lineHeight: 1.6 }}>
+                    For police, fire, or medical emergencies. Available 24/7. Free call.
+                  </p>
+                </div>
+
+                {/* Key Services */}
+                <div style={{ padding: "20px", borderRadius: 16, background: "#f0f9ff", border: "2px solid #bae6fd" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                    <span style={{ fontSize: 32 }}>🏛️</span>
+                    <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#0f172a" }}>
+                      Key Services
+                    </h3>
+                  </div>
+                  <div style={{ display: "grid", gap: 12 }}>
+                    <div>
+                      <strong style={{ color: "#0f172a" }}>DVV</strong> — Register your address
+                      <br />
+                      <span style={{ fontSize: 13, color: "#64748b" }}>Needed for ID number and services</span>
+                    </div>
+                    <div>
+                      <strong style={{ color: "#0f172a" }}>Kela</strong> — Social security & healthcare
+                      <br />
+                      <span style={{ fontSize: 13, color: "#64748b" }}>Apply for benefits and healthcare card</span>
+                    </div>
+                    <div>
+                      <strong style={{ color: "#0f172a" }}>Vero</strong> — Tax administration
+                      <br />
+                      <span style={{ fontSize: 13, color: "#64748b" }}>Get tax card before working</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Help */}
+                <div style={{ padding: "20px", borderRadius: 16, background: "#f0fdf4", border: "2px solid #bbf7d0" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                    <span style={{ fontSize: 32 }}>💬</span>
+                    <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#0f172a" }}>
+                      Need Help Right Now?
+                    </h3>
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+                    <button
+                      onClick={() => window.location.href = "/work-opportunities?focus=cv-mentors-meetups"}
+                      style={{
+                        padding: "10px 20px",
+                        borderRadius: 12,
+                        border: "2px solid #22c55e",
+                        background: "#ffffff",
+                        color: "#16a34a",
+                        fontWeight: 700,
+                        fontSize: 14,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Talk to a Coach →
+                    </button>
+                    <button
+                      onClick={() => window.location.href = "/events"}
+                      style={{
+                        padding: "10px 20px",
+                        borderRadius: 12,
+                        border: "2px solid #22c55e",
+                        background: "#ffffff",
+                        color: "#16a34a",
+                        fontWeight: 700,
+                        fontSize: 14,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Find Events →
+                    </button>
+                  </div>
+                </div>
               </div>
             </section>
           </div>

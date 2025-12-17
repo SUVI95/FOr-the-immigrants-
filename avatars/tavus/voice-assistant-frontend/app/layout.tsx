@@ -5,6 +5,7 @@ import "./globals.css";
 import GlobalHeader from "@/components/GlobalHeader";
 import { TranslationProvider } from "@/components/i18n/TranslationProvider";
 import { UserProfileProvider } from "@/context/UserProfileContext";
+import OnboardingModal from "@/components/OnboardingModal";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function RootLayout({
         <UserProfileProvider>
         <TranslationProvider>
           <GlobalHeader />
+          <OnboardingModal />
           <div style={{ paddingTop: 72 }}>{children}</div>
         </TranslationProvider>
         </UserProfileProvider>

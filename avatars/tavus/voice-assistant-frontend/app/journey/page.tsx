@@ -196,6 +196,65 @@ export default function JourneyPage() {
         >
           <div style={{ display: "grid", gap: 32, maxWidth: "1400px", margin: "0 auto" }}>
             {/* Hero: Welcome & Value Proposition */}
+            {/* Visual Answer: "Am I moving forward?" */}
+            <section
+              style={{
+                borderRadius: 24,
+                padding: "32px",
+                background: "#ffffff",
+                border: "2px solid #e2e8f0",
+                boxShadow: "0 12px 24px rgba(15,23,42,0.08)",
+                marginBottom: 24,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+                <div style={{ fontSize: 48 }}>📈</div>
+                <div style={{ flex: 1 }}>
+                  <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                    Am I moving forward?
+                  </h2>
+                  <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
+                    {progressMetrics.progressPercentage === 0 ? "Start your journey below" : `${progressMetrics.progressPercentage}% complete`}
+                  </p>
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 16 }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: "#667eea", marginBottom: 4 }}>
+                    {progressMetrics.progressPercentage}%
+                  </div>
+                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Progress</div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: "#22c55e", marginBottom: 4 }}>
+                    {progressMetrics.completedNodes}
+                  </div>
+                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Completed</div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: "#f59e0b", marginBottom: 4 }}>
+                    {progressMetrics.inProgressNodes}
+                  </div>
+                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>In Progress</div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: "#ec4899", marginBottom: 4 }}>
+                    {progressMetrics.currentLevel === "Explorer" ? "🌱" : progressMetrics.currentLevel === "Connector" ? "🌿" : "🌳"}
+                  </div>
+                  <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>{progressMetrics.currentLevel}</div>
+                </div>
+              </div>
+              <div style={{ marginTop: 20, height: 12, borderRadius: 6, background: "#e2e8f0", overflow: "hidden" }}>
+                <div style={{
+                  height: "100%",
+                  width: `${progressMetrics.progressPercentage}%`,
+                  background: "linear-gradient(90deg, #667eea, #764ba2)",
+                  transition: "width 0.5s ease",
+                  borderRadius: 6,
+                }} />
+              </div>
+            </section>
+
             <section
               style={{
                 position: "relative",

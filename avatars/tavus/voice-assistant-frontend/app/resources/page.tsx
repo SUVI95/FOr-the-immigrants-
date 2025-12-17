@@ -5,6 +5,7 @@ import { Room } from "livekit-client";
 import { RoomContext } from "@livekit/components-react";
 import Sidebar from "@/components/Sidebar";
 import { motion } from "framer-motion";
+import CulturalQuiz from "@/components/CulturalQuiz";
 
 type CultureCard = {
   id: string;
@@ -12,9 +13,29 @@ type CultureCard = {
   title: string;
   description: string;
   bullets: string[];
+  links?: Array<{ label: string; href: string }>;
 };
 
 const CULTURE_CARDS: CultureCard[] = [
+  {
+    id: "wellbeing",
+    icon: "💚",
+    title: "Well-being & Mental Health",
+    description: "Take care of yourself - help is available",
+    bullets: [
+      "💚 It's OK to ask for help - many people struggle",
+      "📞 Free helplines: Mental Health Helpline 09 2525 0111",
+      "🤝 Peer support groups available in Kajaani",
+      "🏥 Public healthcare: Book appointment via Kela",
+      "🧘 Join activities: Nordic Walking, Sauna evenings",
+      "💬 Talk to someone: Connect with mentors on Knuut",
+    ],
+    links: [
+      { label: "Mental Health Helpline", href: "tel:+358925250111" },
+      { label: "Kela Healthcare", href: "https://www.kela.fi/web/en/health-insurance" },
+      { label: "Find Support Groups", href: "/events?category=Integration+Support" },
+    ],
+  },
   {
     id: "work-culture",
     icon: "⏰",
@@ -79,11 +100,19 @@ const CULTURE_CARDS: CultureCard[] = [
 ];
 
 export default function ResourcesPage() {
-  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
   const [room] = useState(new Room());
 
   const toggleCard = (id: string) => {
-    setExpandedCard(expandedCard === id ? null : id);
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
   return (
@@ -101,6 +130,73 @@ export default function ResourcesPage() {
           }}
         >
           <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gap: 32 }}>
+            {/* Visual Answer: "Do I understand how things work here?" */}
+            {(() => {
+              const cardsRead = expandedCards.size; // Count how many cards have been expanded
+              const totalCards = CULTURE_CARDS.length;
+              const understandingPercent = Math.round((cardsRead / totalCards) * 100);
+              
+              return (
+          <section
+            style={{
+                    borderRadius: 24,
+                    padding: "32px",
+                    background: "#ffffff",
+                    border: "2px solid #e2e8f0",
+                    boxShadow: "0 12px 24px rgba(15,23,42,0.08)",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+                    <div style={{ fontSize: 48 }}>💡</div>
+                    <div style={{ flex: 1 }}>
+                      <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+                        Do I understand how things work here?
+                      </h2>
+                      <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
+                        {cardsRead === 0 ? "Click cards below to learn" : `${cardsRead} of ${totalCards} topics explored`}
+                      </p>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    <div style={{ flex: 1, height: 12, borderRadius: 6, background: "#e2e8f0", overflow: "hidden", position: "relative" }}>
+                      <div style={{
+                        height: "100%",
+                        width: `${Math.max(understandingPercent, 10)}%`,
+                        background: "linear-gradient(90deg, #667eea, #764ba2)",
+                        transition: "width 0.5s ease",
+                        borderRadius: 6,
+                      }} />
+                      <div style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 10,
+                        fontWeight: 700,
+                        color: understandingPercent > 50 ? "#ffffff" : "#64748b",
+                      }}>
+                        {understandingPercent}%
+                      </div>
+                    </div>
+                  </div>
+                  {cardsRead === 0 && (
+                    <div style={{ marginTop: 20, padding: "16px", borderRadius: 12, background: "#fef3c7", border: "1px solid #fbbf24" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <span style={{ fontSize: 24 }}>👉</span>
+                        <span style={{ fontSize: 15, color: "#92400e", fontWeight: 600 }}>
+                          Click any card below to start learning about Finnish culture
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </section>
+              );
+            })()}
+
             {/* Hero Section */}
             <section
               style={{
@@ -140,7 +236,7 @@ export default function ResourcesPage() {
                       borderRadius: 24,
                       border: "2px solid #e2e8f0",
                       background: "#ffffff",
-                      boxShadow: expandedCard === card.id 
+                      boxShadow: expandedCards.has(card.id)
                         ? "0 16px 32px rgba(15,23,42,0.12)" 
                         : "0 4px 12px rgba(15,23,42,0.08)",
                       overflow: "hidden",
@@ -190,14 +286,14 @@ export default function ResourcesPage() {
                           alignItems: "center",
                           justifyContent: "center",
                           transition: "transform 0.3s ease",
-                          transform: expandedCard === card.id ? "rotate(180deg)" : "rotate(0deg)",
+                          transform: expandedCards.has(card.id) ? "rotate(180deg)" : "rotate(0deg)",
                         }}
                       >
                         <i className="fa-solid fa-chevron-down" style={{ color: "#64748b", fontSize: 14 }}></i>
                       </div>
                     </div>
 
-                    {expandedCard === card.id && (
+                    {expandedCards.has(card.id) && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
@@ -228,6 +324,40 @@ export default function ResourcesPage() {
                             </li>
                           ))}
                         </ul>
+                        {card.links && card.links.length > 0 && (
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 20 }}>
+                            {card.links.map((link, idx) => (
+                              <a
+                                key={idx}
+                                href={link.href}
+                                target={link.href.startsWith("tel:") || link.href.startsWith("mailto:") ? undefined : "_blank"}
+                                rel="noopener noreferrer"
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: 8,
+                                  padding: "10px 16px",
+                                  borderRadius: 12,
+                                  background: "#e0f2fe",
+                                  color: "#0284c7",
+                                  fontWeight: 600,
+                                  fontSize: 14,
+                                  textDecoration: "none",
+                                  boxShadow: "0 2px 8px rgba(2,132,199,0.1)",
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {link.label} <span style={{ fontSize: 12 }}>↗</span>
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                        {/* Add Cultural Quiz after content */}
+                        {expandedCards.has(card.id) && (
+                          <div style={{ padding: "0 28px 24px" }}>
+                            <CulturalQuiz cardId={card.id} />
+                          </div>
+                        )}
                       </motion.div>
                     )}
                   </motion.div>
@@ -333,10 +463,10 @@ export default function ResourcesPage() {
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 16 }}>Find Work</div>
                     <div style={{ fontSize: 14, color: "#64748b" }}>Job opportunities</div>
-                  </div>
+                </div>
                 </a>
-              </div>
-            </section>
+            </div>
+          </section>
           </div>
         </main>
       </div>
