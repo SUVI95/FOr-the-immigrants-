@@ -41,10 +41,6 @@ export default function GlobalHeader() {
     window.location.href = "/knuut-voice";
   };
 
-  const handleCreateEvent = () => {
-    window.location.href = "/knuut-voice";
-  };
-
   return (
     <div
       style={{
@@ -108,25 +104,6 @@ export default function GlobalHeader() {
         >
           <span aria-hidden>🎤</span>
           <span>{t("ask_knuut")}</span>
-        </button>
-
-        <button
-          onClick={handleCreateEvent}
-          style={{
-            padding: "10px 18px",
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            color: "white",
-            border: "none",
-            borderRadius: 10,
-            fontSize: "1rem",
-            fontWeight: 800,
-            letterSpacing: "0.3px",
-            cursor: "pointer",
-            boxShadow: "0 8px 20px rgba(102,126,234,0.25)",
-          }}
-        >
-          <span style={{ marginRight: 8 }} aria-hidden>＋</span>
-          {t("create_event")}
         </button>
       </div>
     </div>
