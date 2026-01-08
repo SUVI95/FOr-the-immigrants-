@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useUserProfile } from "@/context/UserProfileContext";
 import { JobCardWithLanguageCoach } from "./JobCardWithLanguageCoach";
+import { CVSubmissionForm } from "./CVSubmissionForm";
 
 interface MatchResult {
   jobId: string;
@@ -44,6 +45,8 @@ interface AISuggestion {
 
 export function SkillsJobMatching() {
   const { state, recordAction } = useUserProfile();
+  const [showCVForm, setShowCVForm] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<any>(null);
   const [matches, setMatches] = useState<MatchResult[]>([]);
   const [aiSuggestions, setAiSuggestions] = useState<Record<string, AISuggestion>>({});
   const [loading, setLoading] = useState(false);
@@ -192,14 +195,22 @@ export function SkillsJobMatching() {
                 job={job}
                 matchScore={match.matchScore}
                 onApply={() => {
-                  window.open(job.link, "_blank");
-                  recordAction({
-                    id: `job-apply-${job.id}-${Date.now()}`,
-                    label: `Applied for ${job.title}`,
-                    category: "jobs",
-                    xp: job.xpReward,
-                    impactPoints: Math.round(job.xpReward * 0.75),
-                  });
+                  // Check if job has an external link or use CV submission form
+                  if (job.link && job.link.startsWith("http")) {
+                    // External application link
+                    window.open(job.link, "_blank");
+                    recordAction({
+                      id: `job-apply-${job.id}-${Date.now()}`,
+                      label: `Applied for ${job.title}`,
+                      category: "jobs",
+                      xp: job.xpReward,
+                      impactPoints: Math.round(job.xpReward * 0.75),
+                    });
+                  } else {
+                    // Show CV submission form
+                    setSelectedJob(job);
+                    setShowCVForm(true);
+                  }
                 }}
               />
               
@@ -345,6 +356,36 @@ export function SkillsJobMatching() {
           You always decide which jobs to apply for. No AI is used in hiring decisions.
         </p>
       </div>
+
+      {/* CV Submission Form Modal */}
+      {showCVForm && selectedJob && (
+        <CVSubmissionForm
+          jobId={selectedJob.id}
+          jobTitle={selectedJob.title}
+          company={selectedJob.company}
+          onClose={() => {
+            setShowCVForm(false);
+            setSelectedJob(null);
+          }}
+          onSuccess={() => {
+            recordAction({
+              id: `job-apply-${selectedJob.id}-${Date.now()}`,
+              label: `Submitted CV for ${selectedJob.title}`,
+              category: "jobs",
+              xp: selectedJob.xpReward,
+              impactPoints: Math.round(selectedJob.xpReward * 0.75),
+              metadata: {
+                company: selectedJob.company,
+                type: selectedJob.type,
+                method: "cv_submission",
+              },
+            });
+            setShowCVForm(false);
+            setSelectedJob(null);
+          }}
+          userId={state.name || undefined}
+        />
+      )}
     </div>
   );
 }

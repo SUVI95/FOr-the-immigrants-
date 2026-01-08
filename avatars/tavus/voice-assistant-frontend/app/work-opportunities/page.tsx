@@ -6,6 +6,7 @@ import { useUserProfile } from "@/context/UserProfileContext";
 import { SkillsDiscoveryPanel } from "@/components/SkillsDiscoveryPanel";
 import { SkillsJobMatching } from "@/components/SkillsJobMatching";
 import { ProfessionalNetworking } from "@/components/ProfessionalNetworking";
+import { CVSubmissionForm } from "@/components/CVSubmissionForm";
 
 type OpportunityType = "Training" | "Internship" | "Full-time" | "Part-time";
 
@@ -242,6 +243,8 @@ export default function WorkOpportunitiesPage() {
   
   const [focusSection, setFocusSection] = useState<string | null>(null);
   const [fromGettingUnstuck, setFromGettingUnstuck] = useState(false);
+  const [showCVForm, setShowCVForm] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<JobOpportunity | null>(null);
 
   // Check URL for filters and focus
   useEffect(() => {
@@ -331,21 +334,48 @@ export default function WorkOpportunitiesPage() {
   };
 
   const handleApply = (job: JobOpportunity) => {
-    recordAction({
-      id: `job-apply-${job.id}-${Date.now()}`,
-      label: `Applied for ${job.title}`,
-      category: "jobs",
-      xp: job.xpReward,
-      impactPoints: Math.round(job.xpReward * 0.75),
-      metadata: {
-        link: job.link,
-        company: job.company,
-        type: job.type,
-      },
-    });
-    setFocusJobId(job.id);
-    window.open(job.link, "_blank");
-    window.setTimeout(() => setFocusJobId(null), 4000);
+    // Check if job has an external link or use CV submission form
+    if (job.link && job.link.startsWith("http")) {
+      // External application link
+      recordAction({
+        id: `job-apply-${job.id}-${Date.now()}`,
+        label: `Applied for ${job.title}`,
+        category: "jobs",
+        xp: job.xpReward,
+        impactPoints: Math.round(job.xpReward * 0.75),
+        metadata: {
+          link: job.link,
+          company: job.company,
+          type: job.type,
+        },
+      });
+      setFocusJobId(job.id);
+      window.open(job.link, "_blank");
+      window.setTimeout(() => setFocusJobId(null), 4000);
+    } else {
+      // Show CV submission form
+      setSelectedJob(job);
+      setShowCVForm(true);
+    }
+  };
+
+  const handleCVSubmissionSuccess = () => {
+    if (selectedJob) {
+      recordAction({
+        id: `job-apply-${selectedJob.id}-${Date.now()}`,
+        label: `Submitted CV for ${selectedJob.title}`,
+        category: "jobs",
+        xp: selectedJob.xpReward,
+        impactPoints: Math.round(selectedJob.xpReward * 0.75),
+        metadata: {
+          company: selectedJob.company,
+          type: selectedJob.type,
+          method: "cv_submission",
+        },
+      });
+      setFocusJobId(selectedJob.id);
+      window.setTimeout(() => setFocusJobId(null), 4000);
+    }
   };
 
   return (
@@ -357,7 +387,7 @@ export default function WorkOpportunitiesPage() {
           maxWidth: "1320px",
           margin: "0 auto",
           padding: "40px 24px",
-          background: "#f8fafc",
+          background: "linear-gradient(180deg, rgba(59, 130, 246, 0.02) 0%, rgba(16, 185, 129, 0.01) 50%, #f8fafc 100%)",
           minHeight: "100vh",
         }}
       >
@@ -378,11 +408,22 @@ export default function WorkOpportunitiesPage() {
                 borderRadius: 24,
                 padding: "32px",
                 background: "#ffffff",
-                border: "2px solid #e2e8f0",
+                border: "2px solid rgba(59, 130, 246, 0.15)",
                 boxShadow: "0 12px 24px rgba(15,23,42,0.08)",
                 marginBottom: 24,
+                position: "relative",
               }}
             >
+              {/* Subtle blue accent */}
+              <div style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "3px",
+                background: "linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)",
+                borderRadius: "24px 24px 0 0",
+              }} />
               <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
                 <div style={{ fontSize: 48 }}>💼</div>
                 <div style={{ flex: 1 }}>
@@ -1086,6 +1127,21 @@ export default function WorkOpportunitiesPage() {
             </button>
           </div>
         </section>
+
+        {/* CV Submission Form Modal */}
+        {showCVForm && selectedJob && (
+          <CVSubmissionForm
+            jobId={selectedJob.id}
+            jobTitle={selectedJob.title}
+            company={selectedJob.company}
+            onClose={() => {
+              setShowCVForm(false);
+              setSelectedJob(null);
+            }}
+            onSuccess={handleCVSubmissionSuccess}
+            userId={state.name || undefined}
+          />
+        )}
       </main>
     </div>
   );
