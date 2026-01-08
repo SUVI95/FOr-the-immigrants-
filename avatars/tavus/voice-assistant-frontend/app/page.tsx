@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Sidebar from "@/components/Sidebar";
 import { useState, useMemo, useEffect } from "react";
 import { IntegrationHubMap } from "@/components/dashboard/IntegrationHubMap";
@@ -53,6 +54,235 @@ export default function HomePage() {
         padding: 0,
         position: "relative",
       }}>
+        {/* Hero Section - Full Width */}
+        <section
+          style={{
+            position: "relative",
+            width: "100%",
+            padding: "50px 80px",
+            background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%)",
+            border: "none",
+            overflow: "hidden",
+            minHeight: "320px",
+            display: "flex",
+            alignItems: "center",
+            marginBottom: 48,
+          }}
+        >
+            {/* Cafe Scene with Happy People - Background Image */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundImage: "url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                zIndex: 0,
+              }}
+            />
+            
+            {/* Dark Overlay for Text Readability */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "rgba(0, 0, 0, 0.7)",
+                zIndex: 1,
+              }}
+            />
+            
+            {/* Blue Tinted Overlay */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "linear-gradient(135deg, rgba(30, 58, 138, 0.5) 0%, rgba(37, 99, 235, 0.45) 50%, rgba(59, 130, 246, 0.4) 100%)",
+                zIndex: 1,
+              }}
+            />
+            
+            {/* Decorative elements */}
+            <div
+              style={{
+                position: "absolute",
+                top: "-10%",
+                right: "10%",
+                width: "400px",
+                height: "400px",
+                background: "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
+                borderRadius: "50%",
+                pointerEvents: "none",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                bottom: "-5%",
+                left: "5%",
+                width: "300px",
+                height: "300px",
+                background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
+                borderRadius: "50%",
+                pointerEvents: "none",
+              }}
+            />
+            
+            <div style={{ maxWidth: "1400px", margin: "0 auto", width: "100%", padding: "0 40px" }}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                style={{ position: "relative", zIndex: 2, maxWidth: "800px", margin: "0 auto", textAlign: "center" }}
+              >
+              {/* Semi-transparent background behind text for extra readability */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-20px",
+                  left: "-40px",
+                  right: "-40px",
+                  bottom: "-20px",
+                  background: "rgba(0, 0, 0, 0.3)",
+                  borderRadius: "16px",
+                  backdropFilter: "blur(10px)",
+                  zIndex: -1,
+                }}
+              />
+              
+              {/* Headline */}
+              <h1
+                style={{
+                  margin: "0 0 12px 0",
+                  fontSize: "clamp(2.25rem, 4.5vw, 3rem)",
+                  fontWeight: 900,
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.03em",
+                  color: "#ffffff",
+                  textShadow: "0 4px 20px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.6), 0 0 4px rgba(0,0,0,0.5)",
+                }}
+              >
+                Welcome to <span style={{ color: "#3b82f6" }}>Duuni</span><span style={{ color: "#10b981" }}>jobs</span> Kajaani
+              </h1>
+
+              {/* Sub-headline */}
+              <p
+                style={{
+                  margin: "0 0 10px 0",
+                  fontSize: "clamp(1.15rem, 2.2vw, 1.35rem)",
+                  lineHeight: 1.3,
+                  color: "#ffffff",
+                  fontWeight: 600,
+                  textShadow: "0 3px 12px rgba(0,0,0,0.8), 0 1px 4px rgba(0,0,0,0.6), 0 0 2px rgba(0,0,0,0.5)",
+                }}
+              >
+                Your place to build work, skills, language, and life in Finland — together.
+              </p>
+
+              {/* Supporting line */}
+              <p
+                style={{
+                  margin: "0 0 16px 0",
+                  fontSize: "clamp(0.9rem, 1.4vw, 1rem)",
+                  lineHeight: 1.4,
+                  color: "#ffffff",
+                  fontWeight: 400,
+                  textShadow: "0 2px 10px rgba(0,0,0,0.8), 0 1px 3px rgba(0,0,0,0.6), 0 0 2px rgba(0,0,0,0.5)",
+                }}
+              >
+                Guided by Knuut AI, your personal companion for language, culture, and everyday questions.
+              </p>
+
+              {/* Value paragraph */}
+              <p
+                style={{
+                  margin: "0 0 24px 0",
+                  fontSize: "clamp(0.95rem, 1.6vw, 1.05rem)",
+                  lineHeight: 1.5,
+                  color: "#ffffff",
+                  fontWeight: 400,
+                  maxWidth: "600px",
+                  textShadow: "0 2px 10px rgba(0,0,0,0.8), 0 1px 3px rgba(0,0,0,0.6), 0 0 2px rgba(0,0,0,0.5)",
+                }}
+              >
+                Duunijobs Kajaani helps international residents find their place in work, society, and community. Small steps matter. Progress matters. You don't have to do this alone.
+              </p>
+
+              {/* CTA Buttons */}
+              <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
+                <button
+                  type="button"
+                  onClick={() => window.location.href = "/first-30-days"}
+                  style={{
+                    padding: "18px 44px",
+                    borderRadius: 12,
+                    border: "none",
+                    background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                    color: "#ffffff",
+                    fontWeight: 700,
+                    fontSize: 17,
+                    cursor: "pointer",
+                    boxShadow: "0 8px 24px rgba(59, 130, 246, 0.35)",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 12px 32px rgba(59, 130, 246, 0.45)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 8px 24px rgba(59, 130, 246, 0.35)";
+                  }}
+                >
+                  Start My Journey
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={() => window.location.href = "/events"}
+                  style={{
+                    padding: "18px 44px",
+                    borderRadius: 12,
+                    border: "2px solid rgba(16, 185, 129, 0.8)",
+                    background: "rgba(16, 185, 129, 0.15)",
+                    color: "#ffffff",
+                    fontWeight: 700,
+                    fontSize: 17,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    backdropFilter: "blur(10px)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(16, 185, 129, 0.25)";
+                    e.currentTarget.style.borderColor = "#10b981";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 8px 24px rgba(16, 185, 129, 0.3)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(16, 185, 129, 0.15)";
+                    e.currentTarget.style.borderColor = "rgba(16, 185, 129, 0.8)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                >
+                  Explore Community
+                </button>
+              </div>
+              </motion.div>
+            </div>
+          </section>
+
         {/* Content Section with Padding */}
         <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 40px", display: "grid", gap: 32 }}>
 

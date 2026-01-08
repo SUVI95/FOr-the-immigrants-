@@ -2,7 +2,6 @@ import "@livekit/components-styles";
 import { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
-import GlobalHeader from "@/components/GlobalHeader";
 import { TranslationProvider } from "@/components/i18n/TranslationProvider";
 import { UserProfileProvider } from "@/context/UserProfileContext";
 import OnboardingModal from "@/components/OnboardingModal";
@@ -43,9 +42,8 @@ export default function RootLayout({
       <body className="h-full">
         <UserProfileProvider>
         <TranslationProvider>
-          <GlobalHeader />
           <OnboardingModal />
-          <div style={{ paddingTop: 72 }}>{children}</div>
+          {children}
         </TranslationProvider>
         </UserProfileProvider>
       </body>
