@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Sidebar from "@/components/Sidebar";
 import { useState, useMemo, useEffect } from "react";
 import { IntegrationHubMap } from "@/components/dashboard/IntegrationHubMap";
@@ -49,224 +48,11 @@ export default function HomePage() {
       <Sidebar activeTab={activeTab} onTabChange={handleTabChange} />
       
       <main style={{ 
-        background: "linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%)",
+        background: "linear-gradient(180deg, rgba(59, 130, 246, 0.03) 0%, rgba(16, 185, 129, 0.02) 50%, #ffffff 100%)",
         minHeight: "100vh",
         padding: 0,
         position: "relative",
       }}>
-        {/* Hero Section - Full Width */}
-        <section
-          style={{
-            position: "relative",
-            width: "100%",
-            padding: "50px 80px",
-            background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%)",
-            border: "none",
-            overflow: "hidden",
-            minHeight: "320px",
-            display: "flex",
-            alignItems: "center",
-            marginBottom: 48,
-          }}
-        >
-            {/* Cafe Scene with Happy People - Using Provided Image */}
-            <img
-              src="https://instasize.com/p/a3936f8ecc0ac81057dc1286659cbc643d4fcc1b14842b3be5de39c4bc9bac8c"
-              alt="Happy people in cafe"
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center",
-                zIndex: 0,
-              }}
-              onError={(e) => {
-                console.error("Image failed to load");
-                // Try alternative approach
-                const div = document.createElement('div');
-                div.style.cssText = `
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  right: 0;
-                  bottom: 0;
-                  background-image: url('https://instasize.com/p/a3936f8ecc0ac81057dc1286659cbc643d4fcc1b14842b3be5de39c4bc9bac8c');
-                  background-size: cover;
-                  background-position: center;
-                  z-index: 0;
-                `;
-                e.currentTarget.parentElement?.appendChild(div);
-              }}
-            />
-            
-            {/* Blue Filter Overlay - Much Lighter so image shows */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: "linear-gradient(90deg, rgba(30, 58, 138, 0.35) 0%, rgba(37, 99, 235, 0.25) 50%, rgba(59, 130, 246, 0.15) 100%)",
-                zIndex: 1,
-              }}
-            />
-            
-            {/* Decorative elements */}
-            <div
-              style={{
-                position: "absolute",
-                top: "-10%",
-                right: "10%",
-                width: "400px",
-                height: "400px",
-                background: "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
-                borderRadius: "50%",
-                pointerEvents: "none",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                bottom: "-5%",
-                left: "5%",
-                width: "300px",
-                height: "300px",
-                background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
-                borderRadius: "50%",
-                pointerEvents: "none",
-              }}
-            />
-            
-            <div style={{ maxWidth: "1400px", margin: "0 auto", width: "100%", padding: "0 40px" }}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                style={{ position: "relative", zIndex: 2, maxWidth: "800px", margin: "0 auto", textAlign: "center" }}
-              >
-              {/* Headline */}
-              <h1
-                style={{
-                  margin: "0 0 12px 0",
-                  fontSize: "clamp(2.25rem, 4.5vw, 3rem)",
-                  fontWeight: 900,
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.03em",
-                  color: "#ffffff",
-                  textShadow: "0 2px 8px rgba(0,0,0,0.3)",
-                }}
-              >
-                Welcome to Duunijobs Kajaani
-              </h1>
-
-              {/* Sub-headline */}
-              <p
-                style={{
-                  margin: "0 0 10px 0",
-                  fontSize: "clamp(1.15rem, 2.2vw, 1.35rem)",
-                  lineHeight: 1.3,
-                  color: "rgba(255,255,255,0.98)",
-                  fontWeight: 600,
-                }}
-              >
-                Your place to build work, skills, language, and life in Finland — together.
-              </p>
-
-              {/* Supporting line */}
-              <p
-                style={{
-                  margin: "0 0 16px 0",
-                  fontSize: "clamp(0.9rem, 1.4vw, 1rem)",
-                  lineHeight: 1.4,
-                  color: "rgba(255,255,255,0.9)",
-                  fontWeight: 400,
-                }}
-              >
-                Guided by Knuut AI, your personal companion for language, culture, and everyday questions.
-              </p>
-
-              {/* Value paragraph */}
-              <p
-                style={{
-                  margin: "0 0 24px 0",
-                  fontSize: "clamp(0.95rem, 1.6vw, 1.05rem)",
-                  lineHeight: 1.5,
-                  color: "rgba(255,255,255,0.95)",
-                  fontWeight: 400,
-                  maxWidth: "600px",
-                }}
-              >
-                Duunijobs Kajaani helps international residents find their place in work, society, and community. Small steps matter. Progress matters. You don't have to do this alone.
-              </p>
-
-              {/* CTA Buttons */}
-              <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
-                <button
-                  type="button"
-                  onClick={() => window.location.href = "/first-30-days"}
-                  style={{
-                    padding: "18px 44px",
-                    borderRadius: 12,
-                    border: "none",
-                    background: "#ffffff",
-                    color: "#1e3a8a",
-                    fontWeight: 700,
-                    fontSize: 17,
-                    cursor: "pointer",
-                    boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
-                    transition: "all 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#f8fafc";
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.3)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#ffffff";
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.25)";
-                  }}
-                >
-                  Start My Journey
-                </button>
-                
-                <button
-                  type="button"
-                  onClick={() => window.location.href = "/events"}
-                  style={{
-                    padding: "18px 44px",
-                    borderRadius: 12,
-                    border: "2px solid rgba(255,255,255,0.9)",
-                    background: "rgba(255,255,255,0.1)",
-                    color: "#ffffff",
-                    fontWeight: 700,
-                    fontSize: 17,
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    backdropFilter: "blur(10px)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.2)";
-                    e.currentTarget.style.borderColor = "#ffffff";
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.1)";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.9)";
-                    e.currentTarget.style.transform = "translateY(0)";
-                  }}
-                >
-                  Explore Community
-                </button>
-              </div>
-              </motion.div>
-            </div>
-          </section>
-
         {/* Content Section with Padding */}
         <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 40px", display: "grid", gap: 32 }}>
 
@@ -287,6 +73,7 @@ export default function HomePage() {
               color: "#ffffff",
               textAlign: "center",
               boxShadow: "0 8px 24px rgba(59, 130, 246, 0.25)",
+              border: "1px solid rgba(59, 130, 246, 0.3)",
             }}>
               <div style={{ fontSize: 36, fontWeight: 800, marginBottom: 8 }}>
                 {COMMUNITY_LIVE_STATS.peopleOnline}
@@ -296,10 +83,11 @@ export default function HomePage() {
             <div style={{
               padding: "24px",
               borderRadius: 20,
-              background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+              background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
               color: "#ffffff",
               textAlign: "center",
-              boxShadow: "0 8px 24px rgba(139, 92, 246, 0.25)",
+              boxShadow: "0 8px 24px rgba(16, 185, 129, 0.25)",
+              border: "1px solid rgba(16, 185, 129, 0.3)",
             }}>
               <div style={{ fontSize: 36, fontWeight: 800, marginBottom: 8 }}>
                 {COMMUNITY_LIVE_STATS.eventsToday}
@@ -309,10 +97,11 @@ export default function HomePage() {
             <div style={{
               padding: "24px",
               borderRadius: 20,
-              background: "linear-gradient(135deg, #ec4899 0%, #db2777 100%)",
+              background: "linear-gradient(135deg, #3b82f6 0%, #10b981 100%)",
               color: "#ffffff",
               textAlign: "center",
-              boxShadow: "0 8px 24px rgba(236, 72, 153, 0.25)",
+              boxShadow: "0 8px 24px rgba(59, 130, 246, 0.2)",
+              border: "1px solid rgba(59, 130, 246, 0.2)",
             }}>
               <div style={{ fontSize: 36, fontWeight: 800, marginBottom: 8 }}>
                 {COMMUNITY_LIVE_STATS.newMembersThisWeek}
@@ -326,12 +115,23 @@ export default function HomePage() {
             style={{
               borderRadius: 28,
               padding: "48px",
-              background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-              border: "2px solid #e2e8f0",
+              background: "linear-gradient(135deg, #ffffff 0%, rgba(59, 130, 246, 0.02) 50%, rgba(16, 185, 129, 0.02) 100%)",
+              border: "2px solid rgba(59, 130, 246, 0.15)",
               boxShadow: "0 20px 60px rgba(15, 23, 42, 0.12)",
               marginBottom: 32,
+              position: "relative",
             }}
           >
+            {/* Subtle brand color accent */}
+            <div style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "4px",
+              background: "linear-gradient(90deg, #3b82f6 0%, #10b981 100%)",
+              borderRadius: "28px 28px 0 0",
+            }} />
             <div style={{ marginBottom: 32, textAlign: "center" }}>
               <div style={{ 
                 display: "inline-flex", 
@@ -339,11 +139,12 @@ export default function HomePage() {
                 gap: 12, 
                 padding: "12px 24px", 
                 borderRadius: 999, 
-                background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+                background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%)",
                 marginBottom: 20,
+                border: "1px solid rgba(59, 130, 246, 0.2)",
               }}>
                 <span style={{ fontSize: 28 }}>📍</span>
-                <span style={{ fontSize: 14, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.2, color: "#1e40af" }}>
+                <span style={{ fontSize: 14, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.2, background: "linear-gradient(135deg, #3b82f6 0%, #10b981 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
                   Find Local Help
                 </span>
               </div>
@@ -381,13 +182,24 @@ export default function HomePage() {
                 style={{
                   borderRadius: 20,
                   padding: 28,
-                  background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-                  border: "1px solid #e2e8f0",
+                  background: "linear-gradient(135deg, #ffffff 0%, rgba(16, 185, 129, 0.02) 100%)",
+                  border: "1px solid rgba(16, 185, 129, 0.2)",
                   boxShadow: "0 1px 3px rgba(15, 23, 42, 0.05), 0 8px 24px rgba(15, 23, 42, 0.04)",
                   display: "grid",
                   gap: 20,
+                  position: "relative",
                 }}
               >
+                {/* Subtle green accent */}
+                <div style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "4px",
+                  height: "100%",
+                  background: "linear-gradient(180deg, #10b981 0%, #059669 100%)",
+                  borderRadius: "20px 0 0 20px",
+                }} />
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div
                     style={{
@@ -449,13 +261,24 @@ export default function HomePage() {
                 style={{
                   borderRadius: 20,
                   padding: 28,
-                  background: "#ffffff",
-                  border: "1px solid #e2e8f0",
+                  background: "linear-gradient(135deg, #ffffff 0%, rgba(59, 130, 246, 0.02) 100%)",
+                  border: "1px solid rgba(59, 130, 246, 0.2)",
                   boxShadow: "0 1px 3px rgba(15, 23, 42, 0.05), 0 8px 24px rgba(15, 23, 42, 0.04)",
                   display: "grid",
                   gap: 20,
+                  position: "relative",
                 }}
               >
+                {/* Subtle blue accent */}
+                <div style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "4px",
+                  height: "100%",
+                  background: "linear-gradient(180deg, #3b82f6 0%, #2563eb 100%)",
+                  borderRadius: "20px 0 0 20px",
+                }} />
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div
                     style={{
@@ -515,20 +338,31 @@ export default function HomePage() {
                 style={{
                   borderRadius: 20,
                   padding: 28,
-                  background: "#ffffff",
-                  border: "1px solid #e2e8f0",
+                  background: "linear-gradient(135deg, #ffffff 0%, rgba(16, 185, 129, 0.02) 100%)",
+                  border: "1px solid rgba(16, 185, 129, 0.2)",
                   boxShadow: "0 1px 3px rgba(15, 23, 42, 0.05), 0 8px 24px rgba(15, 23, 42, 0.04)",
                   display: "grid",
                   gap: 20,
+                  position: "relative",
                 }}
               >
+                {/* Subtle green accent */}
+                <div style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "4px",
+                  height: "100%",
+                  background: "linear-gradient(180deg, #10b981 0%, #059669 100%)",
+                  borderRadius: "20px 0 0 20px",
+                }} />
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div
                     style={{
                       width: 48,
                       height: 48,
                       borderRadius: 12,
-                      background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+                      background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -557,20 +391,20 @@ export default function HomePage() {
                   style={{
                     padding: "14px 24px",
                     borderRadius: 12,
-                    border: "1px solid #8b5cf6",
-                    background: "rgba(139, 92, 246, 0.05)",
-                    color: "#8b5cf6",
+                    border: "1px solid #10b981",
+                    background: "rgba(16, 185, 129, 0.05)",
+                    color: "#10b981",
                     fontWeight: 600,
                     fontSize: 14,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(139, 92, 246, 0.1)";
+                    e.currentTarget.style.background = "rgba(16, 185, 129, 0.1)";
                     e.currentTarget.style.transform = "translateY(-1px)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(139, 92, 246, 0.05)";
+                    e.currentTarget.style.background = "rgba(16, 185, 129, 0.05)";
                     e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
